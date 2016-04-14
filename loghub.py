@@ -27,18 +27,22 @@ parser.add_argument('-f', action="store", dest="format", default='changelog',
                     help="Format for print, either 'changelog' (for our "
                          "Changelog.md file) or 'release' (for the Github "
                          "Releases page)")
-parser.add_argument('-p', action="store", dest="page", default='1',
-                    help="What page to select when asking Github for issues "
-                         "and pull requests of a given milestone. Default is "
-                         "1, and it contains 100 results")
 parser.add_argument('-r', action="store", dest="repo", default='',
                     help="Repo name to generate the Changelog for, in the form "
                          "user/repo or org/repo (e.g. spyder-ide/spyder) ")
+parser.add_argument('-u', '--user', action="store", dest="user", default='',
+                    help="Github user name")
+parser.add_argument('-p', '--password', action="store", dest="password", default='',
+                    help="Github user password")
+parser.add_argument('--page', action="store", dest="page", default='1',
+                    help="What page to select when asking Github for issues "
+                         "and pull requests of a given milestone. Default is "
+                         "1, and it contains 100 results")
 options = parser.parse_args()
 
 
 # Instantiate Github API
-gh = github.GitHub()
+gh = github.GitHub(username=options.user, password=options.password)
 
 
 # Set repo
