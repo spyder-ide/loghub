@@ -60,6 +60,7 @@ milestone_number = -1
 for ms in milestones:
     if ms['title'] == options.milestone:
         milestone_number = ms['number']
+        closed_at = ms['closed_at']
 
 if milestone_number == -1:
     print("You didn't pass a valid milestone name!")
@@ -73,7 +74,8 @@ issues = repo.issues.get(milestone=milestone_number, state='closed',
 
 # Print header
 version = options.milestone.replace('v', '')
-print('\n## Version %s\n' % version)
+close_date = closed_at.split('T')[0]
+print( '\n## Version %s (%s)\n' % (version, close_date) )
 print('### Bugfixes\n')
 
 
