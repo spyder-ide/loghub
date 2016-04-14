@@ -16,6 +16,7 @@ import sys
 # Local imports
 import github
 
+
 # Cli options
 parser = argparse.ArgumentParser(description='Script to print the list of '
                                  'issues and pull requests closed in a given '
@@ -30,17 +31,30 @@ parser.add_argument('-p', action="store", dest="page", default='1',
                     help="What page to select when asking Github for issues "
                          "and pull requests of a given milestone. Default is "
                          "1, and it contains 100 results")
+parser.add_argument('-r', action="store", dest="repo", default='',
+                    help="Repo name to generate the Changelog for, in the form "
+                         "user/repo or org/repo (e.g. spyder-ide/spyder) ")
 options = parser.parse_args()
 
-# Creating the main class to interact with Github
-gh = github.GitHub()
-repo = gh.repos('spyder-ide')('spyder')
 
+# Instantiate Github API
+gh = github.GitHub()
+
+
+# Set repo
+if not options.repo:
+    print('Please pass a repo name to this script. See its help')
+    sys.exit(1)
+else:
+    repo_name = options.repo.split('/')
+    repo = gh.repos(repo_name[0])(repo_name[1])
+
+
+# Set milestone
 if not options.milestone:
     print('Please pass a milestone to this script. See its help')
     sys.exit(1)
 
-# Get milestone number, given its name
 milestones = repo.milestones.get(state='all')
 milestone_number = -1
 for ms in milestones:
@@ -51,9 +65,11 @@ if milestone_number == -1:
     print("You didn't pass a valid milestone name!")
     sys.exit(1)
 
+
 # This returns issues and pull requests
 issues = repo.issues.get(milestone=milestone_number, state='closed',
                          per_page='100', page=options.page)
+
 
 # Printing issues
 print('\n**Issues**\n')
@@ -69,6 +85,7 @@ for i in issues:
             issue_link = "* Issue #%d" % number
         print(issue_link + ' - ' + i['title'])
 print('\nIn this release %d issues were closed' % number_of_issues)
+
 
 # Printing pull requests
 print('\n**Pull requests**\n')
