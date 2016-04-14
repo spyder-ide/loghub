@@ -21,13 +21,16 @@ import github
 parser = argparse.ArgumentParser(description='Script to print the list of '
                                  'issues and pull requests closed in a given '
                                  'milestone')
-parser.add_argument('-m', action="store", dest="milestone", default='',
-                    help='Milestone')
-parser.add_argument('-f', action="store", dest="format", default='changelog',
-                    help="Format for print, either 'changelog' (for our "
+parser.add_argument('-m', '--milestone', action="store", dest="milestone",
+                    default='',
+                    help="Github milestone to get issues and pull requests "
+                         "for")
+parser.add_argument('-f', '--format', action="store", dest="format",
+                    default='changelog',
+                    help="Format for print, either 'changelog' (for "
                          "Changelog.md file) or 'release' (for the Github "
-                         "Releases page)")
-parser.add_argument('-r', action="store", dest="repo", default='',
+                         "Releases page). Default is 'changelog'.")
+parser.add_argument('-r', '--repo', action="store", dest="repo", default='',
                     help="Repo name to generate the Changelog for, in the form "
                          "user/repo or org/repo (e.g. spyder-ide/spyder) ")
 parser.add_argument('-u', '--user', action="store", dest="user", default='',
