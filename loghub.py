@@ -71,8 +71,14 @@ issues = repo.issues.get(milestone=milestone_number, state='closed',
                          per_page='100', page=options.page)
 
 
+# Print header
+version = options.milestone.replace('v', '')
+print('\n## Version %s\n' % version)
+print('### Bugfixes\n')
+
+
 # Printing issues
-print('\n**Issues**\n')
+print('**Issues**\n')
 number_of_issues = 0
 for i in issues:
     pr = i.get('pull_request', '')
