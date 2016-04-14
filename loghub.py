@@ -68,7 +68,7 @@ for i in issues:
         else:
             issue_link = "* Issue #%d" % number
         print(issue_link + ' - ' + i['title'])
-print('\nIn this release they were closed %d issues' % number_of_issues)
+print('\nIn this release %d issues were closed' % number_of_issues)
 
 # Printing pull requests
 print('\n**Pull requests**\n')
@@ -83,4 +83,4 @@ for i in issues:
         else:
             pr_link = "* PR #%d" % number
         print(pr_link + ' - ' + i['title'])
-print('\nIn this release they were merged %d pull requests' % number_of_prs)
+print('\nIn this release %d pull requests were merged ' % number_of_prs)
