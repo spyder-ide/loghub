@@ -78,8 +78,11 @@ issues = repo.issues.get(milestone=milestone_number, state='closed',
 
 # Print header
 version = options.milestone.replace('v', '')
-close_date = closed_at.split('T')[0]
-print( '\n## Version %s (%s)\n' % (version, close_date) )
+if closed_at:
+    close_date = closed_at.split('T')[0]
+    print( '\n## Version %s (%s)\n' % (version, close_date) )
+else:
+    print( '\n## Version %s \n' % version )
 print('### Bugfixes\n')
 
 
