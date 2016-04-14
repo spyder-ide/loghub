@@ -29,7 +29,9 @@ parser.add_argument('-f', '--format', action="store", dest="format",
                     default='changelog',
                     help="Format for print, either 'changelog' (for "
                          "Changelog.md file) or 'release' (for the Github "
-                         "Releases page). Default is 'changelog'.")
+                         "Releases page). Default is 'changelog'. The "
+                         "'release' option doesn't generate Markdown "
+                         "hyperlinks.")
 parser.add_argument('-r', '--repo', action="store", dest="repo", default='',
                     help="Repo name to generate the Changelog for, in the form "
                          "user/repo or org/repo (e.g. spyder-ide/spyder) ")
