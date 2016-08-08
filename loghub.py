@@ -90,38 +90,42 @@ else:
     print( '\n## Version %s \n' % version )
 print('### Bugfixes\n')
 
-
 # Printing issues
-print('**Issues**\n')
-number_of_issues = 0
-for i in issues:
-    pr = i.get('pull_request', '')
-    if not pr:
-        number_of_issues += 1
-        number = i['number']
-        if options.format == 'changelog':
-            issue_link = "* [Issue %d](https://github.com/%s/issues/%d)" % (number,
-                                                                            options.repo,
-                                                                            number)
-        else:
-            issue_link = "* Issue #%d" % number
-        print(issue_link + ' - ' + i['title'])
-print('\nIn this release %d issues were closed' % number_of_issues)
+number_of_issues = len([i for i in issues if not i.get('pull_request', '')])
+
+if number_of_issues > 0:
+    print('**Issues**\n')
+    for i in issues:
+        pr = i.get('pull_request', '')
+        if not pr:
+            number = i['number']
+            if options.format == 'changelog':
+                issue_link = "* [Issue %d](https://github.com/%s/issues/%d)" % (number,
+                                                                                options.repo,
+                                                                                number)
+            else:
+                issue_link = "* Issue #%d" % number
+            print(issue_link + ' - ' + i['title'])
+    print('\nIn this release %d issues were closed' % number_of_issues)
 
 
 # Printing pull requests
-print('\n**Pull requests**\n')
-number_of_prs = 0
-for i in issues:
-    pr = i.get('pull_request', '')
-    if pr:
-        number_of_prs += 1
-        number = i['number']
-        if options.format == 'changelog':
-            pr_link = "* [PR %d](https://github.com/%s/pull/%d)" % (number,
-                                                                    options.repo,
-                                                                    number)
-        else:
-            pr_link = "* PR #%d" % number
-        print(pr_link + ' - ' + i['title'])
-print('\nIn this release %d pull requests were merged ' % number_of_prs)
+number_of_prs = len([i for i in issues if i.get('pull_request', '')])
+
+if number_of_prs > 0:
+    if number_of_issues > 0:
+        print('\n**Pull requests**\n')
+    else:
+        print('**Pull requests**\n')
+    for i in issues:
+        pr = i.get('pull_request', '')
+        if pr:
+            number = i['number']
+            if options.format == 'changelog':
+                pr_link = "* [PR %d](https://github.com/%s/pull/%d)" % (number,
+                                                                        options.repo,
+                                                                        number)
+            else:
+                pr_link = "* PR #%d" % number
+            print(pr_link + ' - ' + i['title'])
+    print('\nIn this release %d pull requests were merged ' % number_of_prs)
