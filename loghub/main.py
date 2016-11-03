@@ -28,37 +28,32 @@ def main():
     # Cli options
     parser = argparse.ArgumentParser(
         description='Script to print the list of issues and pull requests '
-                    'closed in a given milestone',
-        )
+        'closed in a given milestone')
     parser.add_argument(
         'repository',
         help="Repository name to generate the Changelog for, in the form "
-             "user/repo or org/repo (e.g. spyder-ide/spyder)",
-        )
+        "user/repo or org/repo (e.g. spyder-ide/spyder)")
     parser.add_argument(
         '-m',
         '--milestone',
         action="store",
         dest="milestone",
         default='',
-        help="Github milestone to get issues and pull requests for",
-        )
+        help="Github milestone to get issues and pull requests for")
     parser.add_argument(
         '-st',
         '--since-tag',
         action="store",
         dest="since_tag",
         default='',
-        help="Github issues and pull requests since tag",
-        )
+        help="Github issues and pull requests since tag")
     parser.add_argument(
         '-ut',
         '--until-tag',
         action="store",
         dest="until_tag",
         default='',
-        help="Github issues and pull requests until tag",
-        )
+        help="Github issues and pull requests until tag")
     parser.add_argument(
         '-f',
         '--format',
@@ -66,27 +61,24 @@ def main():
         dest="output_format",
         default='changelog',
         help="Format for print, either 'changelog' (for "
-             "Changelog.md file) or 'release' (for the Github "
-             "Releases page). Default is 'changelog'. The "
-             "'release' option doesn't generate Markdown "
-             "hyperlinks.",
-        )
+        "Changelog.md file) or 'release' (for the Github "
+        "Releases page). Default is 'changelog'. The "
+        "'release' option doesn't generate Markdown "
+        "hyperlinks.")
     parser.add_argument(
         '-u',
         '--user',
         action="store",
         dest="user",
         default='',
-        help="Github user name",
-        )
+        help="Github user name")
     parser.add_argument(
         '-p',
         '--password',
         action="store",
         dest="password",
         default='',
-        help="Github user password",
-        )
+        help="Github user password")
     options = parser.parse_args()
 
     # Check if repo given
@@ -106,12 +98,11 @@ def main():
         milestone=options.milestone,
         since_tag=options.since_tag,
         until_tag=options.until_tag,
-        output_format=options.output_format,
-        )
+        output_format=options.output_format, )
 
 
-def create_changelog(repo, username, password, milestone, since_tag,
-                     until_tag, output_format):
+def create_changelog(repo, username, password, milestone, since_tag, until_tag,
+                     output_format):
     """Create changelog data."""
     # Instantiate Github API
     gh = GitHubRepo(username=username, password=password, repo=repo)
@@ -135,14 +126,21 @@ def create_changelog(repo, username, password, milestone, since_tag,
             closed_at = until
 
     # This returns issues and pull requests
-    issues = gh.issues(milestone=milestone_number, state='closed',
-                       since=since, until=until)
+    issues = gh.issues(
+        milestone=milestone_number, state='closed', since=since, until=until)
 
-    format_changelog(repo, issues, version, closed_at=closed_at,
-                     output_format=output_format)
+    format_changelog(
+        repo,
+        issues,
+        version,
+        closed_at=closed_at,
+        output_format=output_format)
 
 
-def format_changelog(repo, issues, version, closed_at=None,
+def format_changelog(repo,
+                     issues,
+                     version,
+                     closed_at=None,
                      output_format='changelog',
                      output_file='CHANGELOG.temp'):
     """Create changelog data."""
@@ -160,9 +158,8 @@ def format_changelog(repo, issues, version, closed_at=None,
         close_date = time.strftime("%Y/%m/%d")
 
     quotes = '"' if version and ' ' in version else ''
-    header = '## Version {q}{version}{q} ({date})\n'.format(version=version,
-                                                            date=close_date,
-                                                            q=quotes)
+    header = '## Version {q}{version}{q} ({date})\n'.format(
+        version=version, date=close_date, q=quotes)
 
     lines.append(header)
     lines.append('\n### Issues closed\n')
@@ -176,8 +173,7 @@ def format_changelog(repo, issues, version, closed_at=None,
             number_of_issues += 1
             number = i['number']
             if output_format == 'changelog':
-                issue_link = ISSUE_LONG.format(number=number,
-                                               repo=repo)
+                issue_link = ISSUE_LONG.format(number=number, repo=repo)
             else:
                 issue_link = ISSUE_SHORT.format(number=number)
             lines.append(issue_link + ' - ' + i['title'] + '\n')
@@ -185,9 +181,8 @@ def format_changelog(repo, issues, version, closed_at=None,
     tense = 'was' if number_of_issues == 1 else 'were'
     plural = '' if number_of_issues == 1 else 's'
     lines.append('\nIn this release {number} issue{plural} {tense} closed\n'
-                 ''.format(number=number_of_issues,
-                           tense=tense,
-                           plural=plural))
+                 ''.format(
+                     number=number_of_issues, tense=tense, plural=plural))
 
     # Pull requests
     lines.append('\n**Pull requests**\n\n')
@@ -205,9 +200,8 @@ def format_changelog(repo, issues, version, closed_at=None,
     tense = 'was' if number_of_prs == 1 else 'were'
     plural = '' if number_of_prs == 1 else 's'
     lines.append('\nIn this release {number} pull request{plural} {tense} '
-                 'merged\n'.format(number=number_of_prs,
-                                   tense=tense,
-                                   plural=plural))
+                 'merged\n'.format(
+                     number=number_of_prs, tense=tense, plural=plural))
 
     # Print everything
     for line in lines:
@@ -266,18 +260,31 @@ class GitHubRepo(object):
 
         return milestone
 
-    def issues(self, milestone=None, state=None, assignee=None, creator=None,
-               mentioned=None, labels=None, sort=None, direction=None,
-               since=None, until=None):
-        """Return all issues (and pull requests)."""
+    def issues(self,
+               milestone=None,
+               state=None,
+               assignee=None,
+               creator=None,
+               mentioned=None,
+               labels=None,
+               sort=None,
+               direction=None,
+               since=None,
+               until=None):
+        """Return Issues and Pull Requests."""
         page = 1
         issues = []
         while True:
-            result = self.repo.issues.get(page=page, per_page=100,
-                                          milestone=milestone, state=state,
-                                          assignee=assignee, creator=creator,
-                                          mentioned=mentioned, labels=labels,
-                                          sort=sort, firection=direction,
+            result = self.repo.issues.get(page=page,
+                                          per_page=100,
+                                          milestone=milestone,
+                                          state=state,
+                                          assignee=assignee,
+                                          creator=creator,
+                                          mentioned=mentioned,
+                                          labels=labels,
+                                          sort=sort,
+                                          firection=direction,
                                           since=since)
             if len(result) > 0:
                 issues += result

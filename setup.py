@@ -9,10 +9,11 @@
 """Setup script for loghub."""
 
 # Standard library imports
-from setuptools import setup, find_packages
 import ast
 import os
 
+# Third party imports
+from setuptools import find_packages, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -50,11 +51,7 @@ setup(
     description='Generate changelogs based on Github milestones or tags',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    entry_points={
-        'console_scripts': [
-            'loghub = loghub.main:main'
-        ]
-    },
+    entry_points={'console_scripts': ['loghub = loghub.main:main']},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -62,5 +59,5 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5']
-)
+        'Programming Language :: Python :: 3.5'
+    ])
