@@ -1,7 +1,7 @@
 {% set name = "loghub" %}
 {% set version = "0.1.1" %}
 {% set hash_type = "sha256" %}
-{% set hash = "" %}
+{% set hash = "79c4867319f61257e7a643494910d35891fb08791951656731f315c73924b289" %}
 
 package:
   name: {{ name|lower }}
@@ -22,13 +22,12 @@ requirements:
   build:
     - python
     - setuptools
-
   run:
     - python
 
 test:
-  imports:
-    - loghub
+  commands:
+    - loghub --help
 
 about:
   home: https://github.com/spyder-ide/loghub
