@@ -19,6 +19,28 @@ Using conda
 
 ## Usage
 
+loghub can be used to generate changelog based on milestones or on tags.
+
+In projects where milestones are used to track a release we can use for example:
+
+```python
+loghub spyder-ide/spyder -m v3.0
+```
+
+In projects where milestones are used to track chunks of work but not releases, we can use tags to get the changes after the latest release, for example:
+
+```python
+loghub spyder-ide/spyder -st v3.0.0b7
+```
+
+Or if loghub is used to generate old changelogs (or update changelogs), we can also use tags to limit the range , for example:
+
+```python
+loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0
+```
+
+## Detailed CLI arguments
+
 ```bash
 usage: loghub [-h] [-m MILESTONE] [-st SINCE_TAG] [-ut UNTIL_TAG]
               [-f OUTPUT_FORMAT] [-u USER] [-p PASSWORD]
