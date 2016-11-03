@@ -100,7 +100,7 @@ def _encode_params(kw):
                     v = str(v)
                 qv = v.encode('utf-8') if isinstance(v, unicode) else str(v)
             except:
-                # Make sure all values
+                # Make sure all values are strings
                 qv = str(v)
             args.append('%s=%s' % (k, urlquote(qv)))
     return '&'.join(args)
