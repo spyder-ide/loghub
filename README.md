@@ -41,7 +41,7 @@ loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0
 
 ## Detailed CLI arguments
 
-```bash
+```text
 usage: loghub [-h] [-m MILESTONE] [-st SINCE_TAG] [-ut UNTIL_TAG]
               [-f OUTPUT_FORMAT] [-u USER] [-p PASSWORD]
               repository
