@@ -4,6 +4,9 @@
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/b5e47eec1e564a66a8c52c989880637b/badge.svg)](https://www.quantifiedcode.com/app/project/b5e47eec1e564a66a8c52c989880637b)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spyder-ide/loghub/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spyder-ide/loghub/?branch=master)
 
+## Project information
+[![Join the chat at https://gitter.im/spyder-ide/public](https://badges.gitter.im/spyder-ide/public.svg)](https://gitter.im/spyder-ide/public)
+
 ## Description
 Changelog generator based on milestone or tags for github.
 
