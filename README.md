@@ -1,6 +1,9 @@
 # loghub
 
 ## Build status
+[![Build Status](https://travis-ci.org/spyder-ide/loghub.svg?branch=master)](https://travis-ci.org/spyder-ide/loghub)
+[![Build status](https://ci.appveyor.com/api/projects/status/8v5n191gy3c06dfc?svg=true)](https://ci.appveyor.com/project/goanpeca/loghub)
+[![CircleCI](https://circleci.com/gh/spyder-ide/loghub/tree/master.svg?style=shield)](https://circleci.com/gh/spyder-ide/loghub/tree/master)
 [![Code Issues](https://www.quantifiedcode.com/api/v1/project/b5e47eec1e564a66a8c52c989880637b/badge.svg)](https://www.quantifiedcode.com/app/project/b5e47eec1e564a66a8c52c989880637b)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spyder-ide/loghub/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spyder-ide/loghub/?branch=master)
 
