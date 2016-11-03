@@ -1,0 +1,32 @@
+# https://travis-ci.org/spyder-ide/loghub
+
+language: c
+
+sudo: false
+
+branches:
+  only:
+    - master
+
+os:
+  - osx
+
+env:
+  global:
+    # Used by qthelpers to close widgets after a defined time
+    - TEST_CI="True"
+
+  matrix:
+    - TRAVIS_PYTHON_VERSION=3.5
+    - TRAVIS_PYTHON_VERSION=3.4
+    - TRAVIS_PYTHON_VERSION=2.7
+
+install:
+  # Use Astropy ci helpers for initial setup
+  - git clone git://github.com/astropy/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+  - $CONDA_INSTALL ciocheck -c conda-forge
+  - python setup.py develop
+
+script:
+  - ciocheck loghub
