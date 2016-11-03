@@ -7,5 +7,5 @@
 # -----------------------------------------------------------------------------
 """Changelog generator for github."""
 
-VERSION_INFO = (0, 1, 0)
-__version__ = '0.1.0'
+VERSION_INFO = (0, 1, 1)
+__version__ = '.'.join(map(str, VERSION_INFO))
