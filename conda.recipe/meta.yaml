@@ -1,5 +1,5 @@
 {% set name = "loghub" %}
-{% set version = "0.1.0" %}
+{% set version = "0.1.1" %}
 {% set hash_type = "sha256" %}
 {% set hash = "" %}
 
@@ -16,7 +16,7 @@ build:
   number: 0
   script: python setup.py install --single-version-externally-managed --record=record.txt
   entry_points:
-    - loghub = loghub.loghub:main
+    - loghub = loghub.main:main
 
 requirements:
   build:
@@ -25,7 +25,6 @@ requirements:
 
   run:
     - python
-    - six
 
 test:
   imports:
@@ -36,10 +35,10 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE.txt
-  summary: Spyder plugin that integrates popular unit test frameworks.
+  summary: Changelog generator based on milestone or tags for github.
   description: |
-    It allows you to run tests and view the results.
-  dev_url: https://github.com/spyder-ide/spyder-unittest
+    Changelog generator based on milestone or tags for github.
+  dev_url: https://github.com/spyder-ide/loghub
 
 extra:
   recipe-maintainers:
