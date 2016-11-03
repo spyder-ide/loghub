@@ -61,7 +61,15 @@ except:
     from urllib.parse import quote as urlquote
     from io import StringIO
 
-import re, os, time, hmac, base64, hashlib, urllib, mimetypes, json
+import base64
+import hashlib
+import hmac
+import json
+import mimetypes
+import os
+import re
+import time
+import urllib
 from collections import Iterable
 from datetime import datetime, timedelta, tzinfo
 
@@ -84,12 +92,17 @@ def _encode_params(kw):
     '''
     args = []
     for k, v in kw.items():
-        try:
-            # Python 2
-            qv = v.encode('utf-8') if isinstance(v, unicode) else str(v)
-        except:
-            qv = v
-        args.append('%s=%s' % (k, urlquote(qv)))
+        # If value is None or empty, ignore
+        if v:
+            try:
+                # Python 2
+                if not isinstance(v, [unicode, str]):
+                    v = str(v)
+                qv = v.encode('utf-8') if isinstance(v, unicode) else str(v)
+            except:
+                # Make sure all values
+                qv = str(v)
+            args.append('%s=%s' % (k, urlquote(qv)))
     return '&'.join(args)
 
 def _encode_json(obj):
