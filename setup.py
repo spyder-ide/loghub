@@ -47,13 +47,12 @@ setup(
     author_email='ccordoba12@gmail.com',
     maintainer='Gonzalo Peña-Castellanos',
     maintainer_email='goanpeca@gmail.com',
-    description='Generate changelog based on github milestones',
+    description='Generate changelog based on github milestones or tags',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    dependencies=['six'],
     entry_points={
         'console_scripts': [
-            'loghub = loghub.loghub:main'
+            'loghub = loghub.main:main'
         ]
     },
     classifiers=[
