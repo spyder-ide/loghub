@@ -149,7 +149,7 @@ def format_changelog(repo, issues, version, closed_at=None,
     lines = []
 
     # Header
-    if version[0] == 'v':
+    if version and version[0] == 'v':
         version = version.replace('v', '')
     else:
         '<RELEASE_VERSION>'
@@ -159,7 +159,7 @@ def format_changelog(repo, issues, version, closed_at=None,
     else:
         close_date = time.strftime("%Y/%m/%d")
 
-    quotes = '"' if ' ' in version else ''
+    quotes = '"' if version and ' ' in version else ''
     header = '## Version {q}{version}{q} ({date})\n'.format(version=version,
                                                             date=close_date,
                                                             q=quotes)
