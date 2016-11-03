@@ -42,6 +42,12 @@ Or if loghub is used to generate old changelogs (or update changelogs), we can a
 loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0
 ```
 
+For private repos, just add the username and password arguments, for example:
+
+```python
+loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -u <username> -p <password>
+```
+
 ## Detailed CLI arguments
 
 ```text
