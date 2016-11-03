@@ -54,19 +54,27 @@ positional arguments:
                         form user/repo or org/repo (e.g. spyder-ide/spyder)
 
 optional arguments:
-  -h, --help            show this help message and exit
+  -h, --help           
+                        Show this help message and exit
+
   -m MILESTONE, --milestone MILESTONE
                         Github milestone to get issues and pull requests for
+
   -st SINCE_TAG, --since-tag SINCE_TAG
                         Github issues and pull requests since tag
+
   -ut UNTIL_TAG, --until-tag UNTIL_TAG
                         Github issues and pull requests until tag
+
   -f OUTPUT_FORMAT, --format OUTPUT_FORMAT
                         Format for print, either 'changelog' (for Changelog.md
                         file) or 'release' (for the Github Releases page).
                         Default is 'changelog'. The 'release' option doesn't
                         generate Markdown hyperlinks.
-  -u USER, --user USER  Github user name
+
+  -u USER, --user USER
+                        Github user name
+
   -p PASSWORD, --password PASSWORD
                         Github user password
 ```
