@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2016 The Spyder Development Team
+# Copyright (c) The Spyder Development Team
 #
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
@@ -41,13 +41,13 @@ setup(
     name='loghub',
     version=get_version(),
     keywords=["github changelog milestone"],
-    url='https://github.com/spyder-ide/qtpy',
+    url='https://github.com/spyder-ide/loghub',
     license='MIT',
     author='Carlos Cordoba',
     author_email='ccordoba12@gmail.com',
-    maintainer='Gonzalo Peña-Castellanos',
-    maintainer_email='goanpeca@gmail.com',
-    description='Generate changelog based on github milestones or tags',
+    maintainer='Carlos Cordoba',
+    maintainer_email='ccordoba12@gmail.com',
+    description='Generate changelogs based on Github milestones or tags',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     entry_points={
@@ -60,10 +60,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5']
 )
