@@ -1,0 +1,27 @@
+# Compiled python files
+*.py[oc]
+
+# gedit files
+*~
+
+# kate files
+.directory
+
+# Special dirs and files
+build/
+dist/
+bin/
+anaconda_ui.egg-info/
+anaconda_navigator.egg-info
+Thumbs.db
+.DS_Store/
+.DS_Store
+.cache
+.coverage
+
+# git .orig files
+*.orig
+
+loghub.egg-info/
+
+CHANGELOG.temp
