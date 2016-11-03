@@ -35,9 +35,9 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE.txt
-  summary: Changelog generator based on milestone or tags for github.
+  summary: Generate changelogs based on Github milestones or tags.
   description: |
-    Changelog generator based on milestone or tags for github.
+    Generate changelogs based on Github milestones or tags.
   dev_url: https://github.com/spyder-ide/loghub
 
 extra:
