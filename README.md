@@ -15,7 +15,7 @@ Using pip
 
 Using conda
 
-`conda install loghub -c conda-forge
+`conda install loghub -c conda-forge`
 
 ## Usage
 
