@@ -33,7 +33,7 @@ def get_version(module='loghub'):
 
 def get_description():
     """Get long description."""
-    with open(os.path.join(HERE, 'README.md'), 'r') as f:
+    with open(os.path.join(HERE, 'README.rst'), 'r') as f:
         data = f.read()
     return data
 
