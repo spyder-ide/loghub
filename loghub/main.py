@@ -195,7 +195,7 @@ def format_changelog(repo,
             if output_format == 'changelog':
                 pr_link = PR_LONG.format(number=number, repo=repo)
             else:
-                pr_link = PR_SHORT.format(number)
+                pr_link = PR_SHORT.format(number=number)
             lines.append(pr_link + ' - ' + i['title'] + '\n')
     tense = 'was' if number_of_prs == 1 else 'were'
     plural = '' if number_of_prs == 1 else 's'
