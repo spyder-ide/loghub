@@ -162,10 +162,10 @@ def format_changelog(repo,
         version=version, date=close_date, q=quotes)
 
     lines.append(header)
-    lines.append('\n### Issues closed\n')
+    lines.append('### Bugs fixed\n')
 
     # Issues
-    lines.append('\n**Issues**\n\n')
+    lines.append('**Issues**\n')
     number_of_issues = 0
     for i in issues:
         pr = i.get('pull_request', '')
@@ -176,7 +176,7 @@ def format_changelog(repo,
                 issue_link = ISSUE_LONG.format(number=number, repo=repo)
             else:
                 issue_link = ISSUE_SHORT.format(number=number)
-            lines.append(issue_link + ' - ' + i['title'] + '\n')
+            lines.append(issue_link + ' - ' + i['title'])
 
     tense = 'was' if number_of_issues == 1 else 'were'
     plural = '' if number_of_issues == 1 else 's'
@@ -185,7 +185,7 @@ def format_changelog(repo,
                      number=number_of_issues, tense=tense, plural=plural))
 
     # Pull requests
-    lines.append('\n**Pull requests**\n\n')
+    lines.append('**Pull requests**\n')
     number_of_prs = 0
     for i in issues:
         pr = i.get('pull_request', '')
@@ -196,7 +196,7 @@ def format_changelog(repo,
                 pr_link = PR_LONG.format(number=number, repo=repo)
             else:
                 pr_link = PR_SHORT.format(number=number)
-            lines.append(pr_link + ' - ' + i['title'] + '\n')
+            lines.append(pr_link + ' - ' + i['title'])
     tense = 'was' if number_of_prs == 1 else 'were'
     plural = '' if number_of_prs == 1 else 's'
     lines.append('\nIn this release {number} pull request{plural} {tense} '
