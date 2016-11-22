@@ -182,9 +182,10 @@ def format_changelog(repo,
 
     tense = 'was' if number_of_issues == 1 else 'were'
     plural = '' if number_of_issues == 1 else 's'
-    issue_lines.append('\nIn this release {number} issue{plural} {tense} closed\n'
-                 ''.format(
-                     number=number_of_issues, tense=tense, plural=plural))
+    issue_lines.append('\nIn this release {number} issue{plural} {tense} '
+                       'closed\n'.format(number=number_of_issues,
+                                         tense=tense,
+                                         plural=plural))
     if number_of_issues > 0:
         lines = lines + issue_lines
 
@@ -204,8 +205,9 @@ def format_changelog(repo,
     tense = 'was' if number_of_prs == 1 else 'were'
     plural = '' if number_of_prs == 1 else 's'
     pr_lines.append('\nIn this release {number} pull request{plural} {tense} '
-                 'merged\n'.format(
-                     number=number_of_prs, tense=tense, plural=plural))
+                    'merged\n'.format(number=number_of_prs,
+                                      tense=tense,
+                                      plural=plural))
     if number_of_prs > 0:
         lines = lines + pr_lines
 
