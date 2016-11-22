@@ -166,9 +166,9 @@ def format_changelog(repo,
     lines.append(header)
     lines.append('### Bugs fixed\n')
 
-    # Issues
-    lines.append('**Issues**\n')
+    # --- Issues
     number_of_issues = 0
+    issue_lines = ['**Issues**\n']
     for i in issues:
         pr = i.get('pull_request', '')
         if not pr:
@@ -178,17 +178,20 @@ def format_changelog(repo,
                 issue_link = ISSUE_LONG.format(number=number, repo=repo)
             else:
                 issue_link = ISSUE_SHORT.format(number=number)
-            lines.append(issue_link + ' - ' + i['title'])
+            issue_lines.append(issue_link + ' - ' + i['title'])
 
     tense = 'was' if number_of_issues == 1 else 'were'
     plural = '' if number_of_issues == 1 else 's'
-    lines.append('\nIn this release {number} issue{plural} {tense} closed\n'
-                 ''.format(
-                     number=number_of_issues, tense=tense, plural=plural))
+    issue_lines.append('\nIn this release {number} issue{plural} {tense} '
+                       'closed\n'.format(
+                           number=number_of_issues, tense=tense,
+                           plural=plural))
+    if number_of_issues > 0:
+        lines = lines + issue_lines
 
-    # Pull requests
-    lines.append('**Pull requests**\n')
+    # --- Pull requests
     number_of_prs = 0
+    pr_lines = ['**Pull requests**\n']
     for i in issues:
         pr = i.get('pull_request', '')
         if pr:
@@ -198,12 +201,14 @@ def format_changelog(repo,
                 pr_link = PR_LONG.format(number=number, repo=repo)
             else:
                 pr_link = PR_SHORT.format(number=number)
-            lines.append(pr_link + ' - ' + i['title'])
+            pr_lines.append(pr_link + ' - ' + i['title'])
     tense = 'was' if number_of_prs == 1 else 'were'
     plural = '' if number_of_prs == 1 else 's'
-    lines.append('\nIn this release {number} pull request{plural} {tense} '
-                 'merged\n'.format(
-                     number=number_of_prs, tense=tense, plural=plural))
+    pr_lines.append('\nIn this release {number} pull request{plural} {tense} '
+                    'merged\n'.format(
+                        number=number_of_prs, tense=tense, plural=plural))
+    if number_of_prs > 0:
+        lines = lines + pr_lines
 
     # Print everything
     for line in lines:
