@@ -7,6 +7,8 @@
 # -----------------------------------------------------------------------------
 """Build a list of issues and pull requests per Github milestone."""
 
+from __future__ import print_function
+
 # Standard library imports
 import argparse
 import datetime
@@ -209,7 +211,8 @@ def format_changelog(repo,
 
     # Write to file
     with open(output_file, 'w') as f:
-        f.write(''.join(lines))
+        for line in lines:
+            print(line, file=f)
 
 
 class GitHubRepo(object):
