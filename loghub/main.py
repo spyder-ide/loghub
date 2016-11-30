@@ -14,6 +14,7 @@ import argparse
 import datetime
 import sys
 import time
+import getpass
 
 # Local imports
 from loghub.external.github import GitHub
@@ -106,6 +107,9 @@ def main():
 def create_changelog(repo, username, password, milestone, since_tag, until_tag,
                      output_format):
     """Create changelog data."""
+    if username and not password:
+        password = getpass.getpass()
+
     # Instantiate Github API
     gh = GitHubRepo(username=username, password=password, repo=repo)
 
