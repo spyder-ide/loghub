@@ -19,6 +19,8 @@ import time
 # Local imports
 from loghub.external.github import GitHub
 
+PY2 = sys.version[0] == '2'
+
 # TEMPLATES
 ISSUE_LONG = "* [Issue {number}](https://github.com/{repo}/issues/{number})"
 ISSUE_SHORT = "* Issue #{number}"
@@ -168,7 +170,7 @@ def format_changelog(repo,
         version=version, date=close_date, q=quotes)
 
     lines.append(header)
-    lines.append('### Bugs fixed\n')
+    lines.append('### Issues closed\n')
 
     # --- Issues
     number_of_issues = 0
@@ -216,12 +218,20 @@ def format_changelog(repo,
 
     # Print everything
     for line in lines:
+        # Make the text file and console output identical
+        if line.endswith('\n'):
+            line = line[:-1]
         print(line)
+    print()
 
     # Write to file
+    text = ''.join(lines)
+
+    if PY2:
+        text = unicode(text).encode('utf-8')  # NOQA
+
     with open(output_file, 'w') as f:
-        for line in lines:
-            print(line, file=f)
+        f.write(text)
 
 
 class GitHubRepo(object):
@@ -304,7 +314,15 @@ class GitHubRepo(object):
             else:
                 break
 
-        # If until was provided, fix it!
+        # If since was provided, filter the issue
+        if since:
+            since_date = self.str_to_date(since)
+            for issue in issues[:]:
+                close_date = self.str_to_date(issue['closed_at'])
+                if close_date < since_date:
+                    issues.remove(issue)
+
+        # If until was provided, filter the issue
         if until:
             until_date = self.str_to_date(until)
             for issue in issues[:]:
