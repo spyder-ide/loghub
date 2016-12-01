@@ -12,9 +12,9 @@ from __future__ import print_function
 # Standard library imports
 import argparse
 import datetime
+import getpass
 import sys
 import time
-import getpass
 
 # Local imports
 from loghub.external.github import GitHub
