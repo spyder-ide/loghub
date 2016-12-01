@@ -12,6 +12,7 @@ from __future__ import print_function
 # Standard library imports
 import argparse
 import datetime
+import getpass
 import sys
 import time
 
@@ -106,6 +107,9 @@ def main():
 def create_changelog(repo, username, password, milestone, since_tag, until_tag,
                      output_format):
     """Create changelog data."""
+    if username and not password:
+        password = getpass.getpass()
+
     # Instantiate Github API
     gh = GitHubRepo(username=username, password=password, repo=repo)
 
