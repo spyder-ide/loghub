@@ -170,11 +170,10 @@ def format_changelog(repo,
         version=version, date=close_date, q=quotes)
 
     lines.append(header)
-    lines.append('### Issues closed\n')
 
     # --- Issues
     number_of_issues = 0
-    issue_lines = ['**Issues**\n']
+    issue_lines = ['### Issues Closed\n']
     for i in issues:
         pr = i.get('pull_request', '')
         if not pr:
@@ -197,7 +196,7 @@ def format_changelog(repo,
 
     # --- Pull requests
     number_of_prs = 0
-    pr_lines = ['**Pull requests**\n']
+    pr_lines = ['### Pull Requests merged\n']
     for i in issues:
         pr = i.get('pull_request', '')
         if pr:
