@@ -23,6 +23,7 @@ requirements:
     - python
     - setuptools
   run:
+    - jinja2
     - python
 
 test:

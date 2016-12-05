@@ -38,6 +38,9 @@ def get_description():
     return data
 
 
+REQUIREMENTS = ['jinja2']
+
+
 setup(
     name='loghub',
     version=get_version(),
@@ -51,6 +54,7 @@ setup(
     description='Generate changelogs based on Github milestones or tags',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
+    install_requires=REQUIREMENTS,
     entry_points={'console_scripts': ['loghub = loghub.main:main']},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
