@@ -5,7 +5,7 @@
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Changelog generator based on github milestones or tags."""
+"""Templates for output formatting."""
 
 # Standard library imports
 import os
