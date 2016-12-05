@@ -24,7 +24,6 @@ from jinja2 import Template
 from loghub.external.github import GitHub
 from loghub.templates import CHANGELOG_TEMPLATE_PATH, RELEASE_TEMPLATE_PATH
 
-
 PY2 = sys.version[0] == '2'
 
 
@@ -243,11 +242,12 @@ def format_changelog(repo,
         data = f.read()
 
     template = Template(data)
-    rendered = template.render(issues=issues,
-                               pull_requests=prs,
-                               version=version,
-                               close_date=close_date,
-                               repo=repo,)
+    rendered = template.render(
+        issues=issues,
+        pull_requests=prs,
+        version=version,
+        close_date=close_date,
+        repo=repo, )
     print('\n')
     print(rendered)
     print('\n')
