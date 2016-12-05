@@ -8,7 +8,6 @@
 """Changelog generator based on github milestones or tags."""
 
 # Standard library imports
-# Standar library imports
 import os
 
 HERE = os.path.dirname(os.path.realpath(__file__))
