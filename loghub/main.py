@@ -13,6 +13,7 @@ from __future__ import print_function
 import argparse
 import datetime
 import getpass
+import re
 import sys
 import time
 
@@ -45,6 +46,20 @@ def main():
         dest="milestone",
         default='',
         help="Github milestone to get issues and pull requests for")
+    parser.add_argument(
+        '-il',
+        '--issue-label-regex',
+        action="store",
+        dest="issue_label_regex",
+        default='',
+        help="Label issue filter using a regular expression filter")
+    parser.add_argument(
+        '-pl',
+        '--pr-label-regex',
+        action="store",
+        dest="pr_label_regex",
+        default='',
+        help="Label pull requets filter using a regular expression filter")
     parser.add_argument(
         '-st',
         '--since-tag',
@@ -111,11 +126,13 @@ def main():
         milestone=options.milestone,
         since_tag=options.since_tag,
         until_tag=options.until_tag,
-        output_format=options.output_format, )
+        output_format=options.output_format,
+        issue_label_regex=options.issue_label_regex,
+        pr_label_regex=options.pr_label_regex)
 
 
 def create_changelog(repo, username, password, token, milestone, since_tag,
-                     until_tag, output_format):
+                     until_tag, output_format, issue_label_regex, pr_label_regex):
     """Create changelog data."""
     if username and not password:
         password = getpass.getpass()
@@ -149,9 +166,32 @@ def create_changelog(repo, username, password, token, milestone, since_tag,
     issues = gh.issues(
         milestone=milestone_number, state='closed', since=since, until=until)
 
+    # Filter by regex if available
+    filtered_issues, filtered_prs = [], []
+    issue_pattern = re.compile(issue_label_regex)
+    pr_pattern = re.compile(pr_label_regex)
+    for issue in issues:
+        is_pr = bool(issue.get('pull_request'))
+        is_issue = not is_pr
+        labels = ' '.join(issue.get('_label_names'))
+
+        if is_issue and issue_label_regex:
+            issue_valid = bool(issue_pattern.search(labels))
+            if issue_valid:
+                filtered_issues.append(issue)
+        elif is_pr and pr_label_regex:
+            pr_valid = bool(pr_pattern.search(labels))
+            if pr_valid:
+                filtered_prs.append(issue)
+        elif is_issue and not issue_label_regex:
+            filtered_issues.append(issue)
+        elif is_pr and not pr_label_regex:
+            filtered_prs.append(issue)
+
     format_changelog(
         repo,
-        issues,
+        filtered_issues,
+        filtered_prs,
         version,
         closed_at=closed_at,
         output_format=output_format)
@@ -159,6 +199,7 @@ def create_changelog(repo, username, password, token, milestone, since_tag,
 
 def format_changelog(repo,
                      issues,
+                     prs,
                      version,
                      closed_at=None,
                      output_format='changelog',
@@ -185,17 +226,15 @@ def format_changelog(repo,
 
     # --- Issues
     number_of_issues = 0
-    issue_lines = ['### Issues Closed\n']
+    issue_lines = ['\n### Issues Closed\n']
     for i in issues:
-        pr = i.get('pull_request', '')
-        if not pr:
-            number_of_issues += 1
-            number = i['number']
-            if output_format == 'changelog':
-                issue_link = ISSUE_LONG.format(number=number, repo=repo)
-            else:
-                issue_link = ISSUE_SHORT.format(number=number)
-            issue_lines.append(issue_link + ' - ' + i['title'])
+        number_of_issues += 1
+        number = i['number']
+        if output_format == 'changelog':
+            issue_link = ISSUE_LONG.format(number=number, repo=repo)
+        else:
+            issue_link = ISSUE_SHORT.format(number=number)
+        issue_lines.append(issue_link + ' - ' + i['title'])
 
     tense = 'was' if number_of_issues == 1 else 'were'
     plural = '' if number_of_issues == 1 else 's'
@@ -208,10 +247,10 @@ def format_changelog(repo,
 
     # --- Pull requests
     number_of_prs = 0
-    pr_lines = ['### Pull Requests merged\n']
-    for i in issues:
-        pr = i.get('pull_request', '')
-        if pr:
+    pr_lines = ['\n### Pull Requests merged\n']
+    for i in prs:
+        pr_state = i.get('_pr_state', '')  # This key is added by GithubRepo
+        if pr_state == 'merged':
             number_of_prs += 1
             number = i['number']
             if output_format == 'changelog':
@@ -328,7 +367,27 @@ class GitHubRepo(object):
             else:
                 break
 
-        # If since was provided, filter the issue
+        # If it is a pr check if it is merged or closed
+        for issue in issues:
+            pr = issue.get('pull_request', '')
+
+            # Add label names inside additional key
+            issue['_label_names'] = [l['name'] for l in issue.get('labels')]
+
+            if pr:
+                number = issue['number']
+                merged = self.is_merged(number)
+                issue['_pr_state'] = 'merged' if merged else 'closed'
+
+#                import json
+#                print(json.dumps(issue, sort_keys=True, indent=4,
+#                                 separators=(',', ': ')))
+#            else:
+#                import json
+#                print(json.dumps(issue, sort_keys=True, indent=4,
+#                                 separators=(',', ': ')))
+
+# If since was provided, filter the issue
         if since:
             since_date = self.str_to_date(since)
             for issue in issues[:]:
@@ -346,6 +405,19 @@ class GitHubRepo(object):
 
         return issues
 
+    def is_merged(self, pr):
+        """
+        Return wether a PR was merged, or if it was closed and discarded.
+
+        https://developer.github.com/v3/pulls/#get-if-a-pull-request-has-been-merged
+        """
+        merged = True
+        try:
+            self.repo('pulls')(str(pr))('merge').get()
+        except Exception as e:
+            merged = False
+        return merged
+
     @staticmethod
     def str_to_date(string):
         """Convert ISO date string to datetime object."""
@@ -357,5 +429,5 @@ class GitHubRepo(object):
         return datetime.datetime(year, month, day, hour, minutes, seconds)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # yapf: disable
     main()
