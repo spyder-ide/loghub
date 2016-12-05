@@ -1,9 +1,9 @@
 ## Version {{ version }} ({{ close_date }})
 
-{%- if issues|length %}
+{% if issues|length -%}
 ### Issues Closed
 
-{%-   for i in issues %}
+{%   for i in issues -%}
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
 {%-   endfor %}
 
@@ -18,4 +18,4 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 {%-   endfor %}
 
 In this release {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
-{%- end if%}
+{%- endif%}
