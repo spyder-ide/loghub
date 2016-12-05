@@ -5,17 +5,15 @@
 
 {%   for i in issues -%}
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
-{%-   endfor %}
-
+{%   endfor %}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
-{%- endif %}
+{% endif -%}
 
-{%- if pull_requests|length %}
+{% if pull_requests|length %}
 ### Pull Requests Merged
 
-{%-   for pr in pull_requests %}
+{%   for pr in pull_requests -%}
 * [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}
-{%-   endfor %}
-
+{%   endfor %}
 In this release {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
-{%- endif%}
+{% endif -%}

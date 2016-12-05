@@ -121,14 +121,16 @@ def main():
 
     # Check if repo given
     if not options.repository:
-        print('Please define a repository name to this script. See its help')
+        print('LOGHUB: Please define a repository name to this script. '
+              'See its help')
         sys.exit(1)
 
     # Check if milestone or tag given
     if not milestone and not options.since_tag:
-        print('\nQuerying all issues\n')
+        print('\nLOGHUB: Querying all issues\n')
     elif milestone:
-        print('\nQuerying issues for milestone {0}\n'.format(milestone))
+        print('\nLOGHUB: Querying issues for milestone {0}'
+              '\n'.format(milestone))
 
     create_changelog(
         repo=options.repository,
@@ -250,11 +252,11 @@ def format_changelog(repo,
         close_date=close_date,
         repo_full_name=repo,
         repo_owner=repo_owner,
-        repo_name=repo_name,)
+        repo_name=repo_name, )
 
-    print('\n')
+    print('#' * 79)
     print(rendered)
-    print('\n')
+    print('#' * 79)
 
     with open(output_file, 'w') as f:
         f.write(rendered)
