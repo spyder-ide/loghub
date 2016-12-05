@@ -84,6 +84,13 @@ def main():
         dest="password",
         default='',
         help="Github user password")
+    parser.add_argument(
+        '-t',
+        '--token',
+        action="store",
+        dest="token",
+        default='',
+        help="Github access token")
     options = parser.parse_args()
 
     # Check if repo given
@@ -100,20 +107,25 @@ def main():
         repo=options.repository,
         username=options.user,
         password=options.password,
+        token=options.token,
         milestone=options.milestone,
         since_tag=options.since_tag,
         until_tag=options.until_tag,
         output_format=options.output_format, )
 
 
-def create_changelog(repo, username, password, milestone, since_tag, until_tag,
-                     output_format):
+def create_changelog(repo, username, password, token, milestone, since_tag,
+                     until_tag, output_format):
     """Create changelog data."""
     if username and not password:
         password = getpass.getpass()
 
     # Instantiate Github API
-    gh = GitHubRepo(username=username, password=password, repo=repo)
+    gh = GitHubRepo(
+        username=username,
+        password=password,
+        token=token,
+        repo=repo, )
 
     version = until_tag or None
     milestone_number = None
@@ -236,9 +248,12 @@ def format_changelog(repo,
 class GitHubRepo(object):
     """Github repository wrapper."""
 
-    def __init__(self, username=None, password=None, repo=None):
+    def __init__(self, username=None, password=None, token=None, repo=None):
         """Github repository wrapper."""
-        self.gh = GitHub(username=username, password=password)
+        self.gh = GitHub(
+            username=username,
+            password=password,
+            access_token=token, )
         repo_organization, repo_name = repo.split('/')
         self.repo = self.gh.repos(repo_organization)(repo_name)
 
