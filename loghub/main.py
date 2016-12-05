@@ -108,22 +108,30 @@ def main():
         help="Github access token")
     options = parser.parse_args()
 
+    username = options.user
+    password = options.password
+    milestone = options.milestone
+
+    if username and not password:
+        password = getpass.getpass()
+
     # Check if repo given
     if not options.repository:
         print('Please define a repository name to this script. See its help')
         sys.exit(1)
 
     # Check if milestone or tag given
-    if not options.milestone and not options.since_tag:
-        print('Please pass a milestone or a tag to this script. See its help')
-        sys.exit(1)
+    if not milestone and not options.since_tag:
+        print('\nQuerying all issues\n')
+    elif milestone:
+        print('\nQuerying issues for milestone {0}\n'.format(milestone))
 
     create_changelog(
         repo=options.repository,
-        username=options.user,
-        password=options.password,
+        username=username,
+        password=password,
         token=options.token,
-        milestone=options.milestone,
+        milestone=milestone,
         since_tag=options.since_tag,
         until_tag=options.until_tag,
         output_format=options.output_format,
@@ -135,9 +143,6 @@ def create_changelog(repo, username, password, token, milestone, since_tag,
                      until_tag, output_format, issue_label_regex,
                      pr_label_regex):
     """Create changelog data."""
-    if username and not password:
-        password = getpass.getpass()
-
     # Instantiate Github API
     gh = GitHubRepo(
         username=username,
