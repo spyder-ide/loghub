@@ -16,4 +16,4 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 * [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}
 {%   endfor %}
 In this release {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
-{% endif -%}
+{% endif %}
