@@ -241,13 +241,17 @@ def format_changelog(repo,
     with open(filepath) as f:
         data = f.read()
 
+    repo_owner, repo_name = repo.split('/')
     template = Template(data)
     rendered = template.render(
         issues=issues,
         pull_requests=prs,
         version=version,
         close_date=close_date,
-        repo=repo, )
+        repo_full_name=repo,
+        repo_owner=repo_owner,
+        repo_name=repo_name,)
+
     print('\n')
     print(rendered)
     print('\n')
