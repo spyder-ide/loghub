@@ -132,7 +132,8 @@ def main():
 
 
 def create_changelog(repo, username, password, token, milestone, since_tag,
-                     until_tag, output_format, issue_label_regex, pr_label_regex):
+                     until_tag, output_format, issue_label_regex,
+                     pr_label_regex):
     """Create changelog data."""
     if username and not password:
         password = getpass.getpass()
@@ -379,15 +380,7 @@ class GitHubRepo(object):
                 merged = self.is_merged(number)
                 issue['_pr_state'] = 'merged' if merged else 'closed'
 
-#                import json
-#                print(json.dumps(issue, sort_keys=True, indent=4,
-#                                 separators=(',', ': ')))
-#            else:
-#                import json
-#                print(json.dumps(issue, sort_keys=True, indent=4,
-#                                 separators=(',', ': ')))
-
-# If since was provided, filter the issue
+        # If since was provided, filter the issue
         if since:
             since_date = self.str_to_date(since)
             for issue in issues[:]:
