@@ -407,7 +407,7 @@ class GitHubRepo(object):
         merged = True
         try:
             self.repo('pulls')(str(pr))('merge').get()
-        except Exception as e:
+        except Exception:
             merged = False
         return merged
 
