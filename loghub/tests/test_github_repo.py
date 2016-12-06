@@ -104,7 +104,7 @@ def test_issues(gh_repo):
     print(milestone_data)
     milestone_number = milestone_data['number']
     issues = gh_repo.issues(milestone=milestone_number, state='closed')
-    assert len(issues) == 3
+    assert len(issues) == 4
 
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')

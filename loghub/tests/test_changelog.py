@@ -33,6 +33,7 @@ def test_changelog():
         repo=REPO,
         token=TEST_TOKEN,
         milestone=TEST_MILESTONE,
+        branch='master',
         output_format='changelog')
     expected = '''## Version <RELEASE_VERSION> (2016-12-05)
 
@@ -60,6 +61,7 @@ def test_changelog_release():
         repo=REPO,
         token=TEST_TOKEN,
         milestone=TEST_MILESTONE,
+        branch='master',
         output_format='release')
     expected = '''## Version <RELEASE_VERSION> (2016-12-05)
 
