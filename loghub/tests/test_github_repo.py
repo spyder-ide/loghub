@@ -117,6 +117,18 @@ def test_pr_closed(gh_repo):
     assert not gh_repo.is_merged(22)
 
 
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_pr_valid(gh_repo):
+    pr = gh_repo.pr(32)
+    assert bool(pr)
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_pr_invalid(gh_repo):
+    with pytest.raises(ApiError):
+        gh_repo.pr(1000000)
+
+
 def test_dates():
     date = GitHubRepo.str_to_date('2016-10-10T08:08:08Z')
     assert date.year == 2016
