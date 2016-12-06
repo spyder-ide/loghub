@@ -5,7 +5,7 @@
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Build a list of issues and pull requests per Github milestone."""
+"""Github repo wrapper."""
 
 from __future__ import print_function
 
