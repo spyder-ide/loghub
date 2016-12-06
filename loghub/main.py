@@ -146,9 +146,17 @@ def main():
         template_file=options.template)
 
 
-def create_changelog(repo, username, password, token, milestone, since_tag,
-                     until_tag, output_format, issue_label_regex,
-                     pr_label_regex, template_file):
+def create_changelog(repo=None,
+                     username=None,
+                     password=None,
+                     token=None,
+                     milestone=None,
+                     since_tag=None,
+                     until_tag=None,
+                     output_format='changelog',
+                     issue_label_regex='',
+                     pr_label_regex='',
+                     template_file=None):
     """Create changelog data."""
     # Instantiate Github API
     gh = GitHubRepo(
@@ -201,7 +209,7 @@ def create_changelog(repo, username, password, token, milestone, since_tag,
         elif is_pr and not pr_label_regex:
             filtered_prs.append(issue)
 
-    format_changelog(
+    return format_changelog(
         repo,
         filtered_issues,
         filtered_prs,
@@ -260,6 +268,8 @@ def format_changelog(repo,
 
     with open(output_file, 'w') as f:
         f.write(rendered)
+
+    return rendered
 
 
 class GitHubRepo(object):

@@ -8,7 +8,7 @@
 {%   endfor %}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
 {%- endif %}
-                
+
 {% if pull_requests|length -%}
 ### Pull Requests Merged
 
