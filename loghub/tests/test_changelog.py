@@ -5,7 +5,7 @@
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Tests github repo."""
+"""Tests changelog output."""
 
 # Standard library imports
 import os

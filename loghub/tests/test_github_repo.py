@@ -15,7 +15,7 @@ import pytest
 
 # Local imports
 from loghub.external.github import ApiError
-from loghub.main import GitHubRepo
+from loghub.repo import GitHubRepo
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
