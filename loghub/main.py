@@ -17,16 +17,14 @@ import re
 import sys
 import time
 
+# Third party imports
+from jinja2 import Template
+
 # Local imports
 from loghub.external.github import GitHub
+from loghub.templates import CHANGELOG_TEMPLATE_PATH, RELEASE_TEMPLATE_PATH
 
 PY2 = sys.version[0] == '2'
-
-# TEMPLATES
-ISSUE_LONG = "* [Issue {number}](https://github.com/{repo}/issues/{number})"
-ISSUE_SHORT = "* Issue #{number}"
-PR_LONG = "* [PR {number}](https://github.com/{repo}/pull/{number})"
-PR_SHORT = "* PR #{number}"
 
 
 def main():
@@ -86,6 +84,12 @@ def main():
         "'release' option doesn't generate Markdown "
         "hyperlinks.")
     parser.add_argument(
+        '--template',
+        action="store",
+        dest="template",
+        default='',
+        help="Use a custom Jinja2 template file ")
+    parser.add_argument(
         '-u',
         '--user',
         action="store",
@@ -117,14 +121,16 @@ def main():
 
     # Check if repo given
     if not options.repository:
-        print('Please define a repository name to this script. See its help')
+        print('LOGHUB: Please define a repository name to this script. '
+              'See its help')
         sys.exit(1)
 
     # Check if milestone or tag given
     if not milestone and not options.since_tag:
-        print('\nQuerying all issues\n')
+        print('\nLOGHUB: Querying all issues\n')
     elif milestone:
-        print('\nQuerying issues for milestone {0}\n'.format(milestone))
+        print('\nLOGHUB: Querying issues for milestone {0}'
+              '\n'.format(milestone))
 
     create_changelog(
         repo=options.repository,
@@ -136,12 +142,21 @@ def main():
         until_tag=options.until_tag,
         output_format=options.output_format,
         issue_label_regex=options.issue_label_regex,
-        pr_label_regex=options.pr_label_regex)
+        pr_label_regex=options.pr_label_regex,
+        template_file=options.template)
 
 
-def create_changelog(repo, username, password, token, milestone, since_tag,
-                     until_tag, output_format, issue_label_regex,
-                     pr_label_regex):
+def create_changelog(repo=None,
+                     username=None,
+                     password=None,
+                     token=None,
+                     milestone=None,
+                     since_tag=None,
+                     until_tag=None,
+                     output_format='changelog',
+                     issue_label_regex='',
+                     pr_label_regex='',
+                     template_file=None):
     """Create changelog data."""
     # Instantiate Github API
     gh = GitHubRepo(
@@ -194,13 +209,14 @@ def create_changelog(repo, username, password, token, milestone, since_tag,
         elif is_pr and not pr_label_regex:
             filtered_prs.append(issue)
 
-    format_changelog(
+    return format_changelog(
         repo,
         filtered_issues,
         filtered_prs,
         version,
         closed_at=closed_at,
-        output_format=output_format)
+        output_format=output_format,
+        template_file=template_file)
 
 
 def format_changelog(repo,
@@ -209,85 +225,51 @@ def format_changelog(repo,
                      version,
                      closed_at=None,
                      output_format='changelog',
-                     output_file='CHANGELOG.temp'):
+                     output_file='CHANGELOG.temp',
+                     template_file=None):
     """Create changelog data."""
-    lines = []
-
     # Header
     if version and version[0] == 'v':
         version = version.replace('v', '')
     else:
-        '<RELEASE_VERSION>'
+        version = '<RELEASE_VERSION>'
 
     if closed_at:
         close_date = closed_at.split('T')[0]
     else:
         close_date = time.strftime("%Y/%m/%d")
 
-    quotes = '"' if version and ' ' in version else ''
-    header = '## Version {q}{version}{q} ({date})\n'.format(
-        version=version, date=close_date, q=quotes)
-
-    lines.append(header)
-
-    # --- Issues
-    number_of_issues = 0
-    issue_lines = ['\n### Issues Closed\n']
-    for i in issues:
-        number_of_issues += 1
-        number = i['number']
+    # Load template
+    if template_file:
+        filepath = template_file
+    else:
         if output_format == 'changelog':
-            issue_link = ISSUE_LONG.format(number=number, repo=repo)
+            filepath = CHANGELOG_TEMPLATE_PATH
         else:
-            issue_link = ISSUE_SHORT.format(number=number)
-        issue_lines.append(issue_link + ' - ' + i['title'])
+            filepath = RELEASE_TEMPLATE_PATH
 
-    tense = 'was' if number_of_issues == 1 else 'were'
-    plural = '' if number_of_issues == 1 else 's'
-    issue_lines.append('\nIn this release {number} issue{plural} {tense} '
-                       'closed\n'.format(
-                           number=number_of_issues, tense=tense,
-                           plural=plural))
-    if number_of_issues > 0:
-        lines = lines + issue_lines
+    with open(filepath) as f:
+        data = f.read()
 
-    # --- Pull requests
-    number_of_prs = 0
-    pr_lines = ['\n### Pull Requests merged\n']
-    for i in prs:
-        pr_state = i.get('_pr_state', '')  # This key is added by GithubRepo
-        if pr_state == 'merged':
-            number_of_prs += 1
-            number = i['number']
-            if output_format == 'changelog':
-                pr_link = PR_LONG.format(number=number, repo=repo)
-            else:
-                pr_link = PR_SHORT.format(number=number)
-            pr_lines.append(pr_link + ' - ' + i['title'])
-    tense = 'was' if number_of_prs == 1 else 'were'
-    plural = '' if number_of_prs == 1 else 's'
-    pr_lines.append('\nIn this release {number} pull request{plural} {tense} '
-                    'merged\n'.format(
-                        number=number_of_prs, tense=tense, plural=plural))
-    if number_of_prs > 0:
-        lines = lines + pr_lines
+    repo_owner, repo_name = repo.split('/')
+    template = Template(data)
+    rendered = template.render(
+        issues=issues,
+        pull_requests=prs,
+        version=version,
+        close_date=close_date,
+        repo_full_name=repo,
+        repo_owner=repo_owner,
+        repo_name=repo_name, )
 
-    # Print everything
-    for line in lines:
-        # Make the text file and console output identical
-        if line.endswith('\n'):
-            line = line[:-1]
-        print(line)
-    print()
-
-    # Write to file
-    text = ''.join(lines)
-
-    if PY2:
-        text = unicode(text).encode('utf-8')  # NOQA
+    print('#' * 79)
+    print(rendered)
+    print('#' * 79)
 
     with open(output_file, 'w') as f:
-        f.write(text)
+        f.write(rendered)
+
+    return rendered
 
 
 class GitHubRepo(object):
@@ -373,18 +355,6 @@ class GitHubRepo(object):
             else:
                 break
 
-        # If it is a pr check if it is merged or closed
-        for issue in issues:
-            pr = issue.get('pull_request', '')
-
-            # Add label names inside additional key
-            issue['_label_names'] = [l['name'] for l in issue.get('labels')]
-
-            if pr:
-                number = issue['number']
-                merged = self.is_merged(number)
-                issue['_pr_state'] = 'merged' if merged else 'closed'
-
         # If since was provided, filter the issue
         if since:
             since_date = self.str_to_date(since)
@@ -399,6 +369,18 @@ class GitHubRepo(object):
             for issue in issues[:]:
                 close_date = self.str_to_date(issue['closed_at'])
                 if close_date > until_date:
+                    issues.remove(issue)
+
+        # If it is a pr check if it is merged or closed, removed closed ones
+        for issue in issues[:]:
+            pr = issue.get('pull_request', '')
+
+            # Add label names inside additional key
+            issue['_label_names'] = [l['name'] for l in issue.get('labels')]
+
+            if pr:
+                number = issue['number']
+                if not self.is_merged(number):
                     issues.remove(issue)
 
         return issues
