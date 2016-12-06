@@ -68,6 +68,10 @@ class GitHubRepo(object):
 
         return milestone
 
+    def pr(self, pr_number):
+        """Get PR information."""
+        return self.repo('pulls')(str(pr_number)).get()
+
     def issues(self,
                milestone=None,
                state=None,
@@ -78,7 +82,8 @@ class GitHubRepo(object):
                sort=None,
                direction=None,
                since=None,
-               until=None):
+               until=None,
+               branch=None):
         """Return Issues and Pull Requests."""
         page = 1
         issues = []
@@ -127,6 +132,13 @@ class GitHubRepo(object):
                 number = issue['number']
                 if not self.is_merged(number):
                     issues.remove(issue)
+
+                if branch:
+                    # Get PR info and get base branch
+                    pr_data = self.pr(number)
+                    base_ref = pr_data['base']['ref']
+                    if base_ref != branch:
+                        issues.remove(issue)
 
         return issues
 
