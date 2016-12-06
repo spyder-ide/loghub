@@ -193,8 +193,11 @@ def create_changelog(repo=None,
 
     # This returns issues and pull requests
     issues = gh.issues(
-        milestone=milestone_number, state='closed', since=since, until=until,
-        branch=branch,)
+        milestone=milestone_number,
+        state='closed',
+        since=since,
+        until=until,
+        branch=branch, )
 
     # Filter by regex if available
     filtered_issues, filtered_prs = [], []
