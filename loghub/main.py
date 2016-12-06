@@ -261,6 +261,7 @@ def format_changelog(repo,
         repo_owner=repo_owner,
         repo_name=repo_name, )
 
+    print('Test change')
     print('#' * 79)
     print(rendered)
     print('#' * 79)
