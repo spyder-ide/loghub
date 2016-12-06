@@ -19,7 +19,7 @@ from loghub.external.github import ApiError
 
 
 REPO = 'spyder-ide/loghub'
-TEST_TOKEN = os.environ.get('TEST_TOKEN', '')
+TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
 TEST_USER = os.environ.get('TEST_USER', '').replace('x', '')
 TEST_PASS = os.environ.get('TEST_CODE', '').replace('x', '')
 TEST_MILESTONE = 'test-milestone'
