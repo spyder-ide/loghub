@@ -20,10 +20,14 @@ dependencies:
       export PATH="$HOME/miniconda/bin:$PATH" &&
       source activate test &&
       conda install ciocheck -c conda-forge &&
+      pip install coveralls &&
       python setup.py develop;
 
 test:
   override:
     # Check style
     - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && ciocheck loghub: # note the colon
+        parallel: true
+    # Upload coverage
+    - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && coveralls: # note the colon
         parallel: true

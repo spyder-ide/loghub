@@ -3,7 +3,7 @@ loghub
 
 Build status
 ------------
-|travis status| |appveyor status| |circleci status| |quantified code| |scrutinizer|
+|travis status| |appveyor status| |circleci status| |coverage| |quantified code| |scrutinizer|
 
 Project information
 -------------------
@@ -33,6 +33,10 @@ Project information
 .. |gitter| image:: https://badges.gitter.im/spyder-ide/public.svg
    :target: https://gitter.im/spyder-ide/public
    :alt: Join the chat at https://gitter.im/spyder-ide/public
+.. |coverage| image:: https://coveralls.io/repos/github/spyder-ide/loghub/badge.svg?branch=master
+   :target: https://coveralls.io/github/spyder-ide/loghub?branch=master
+   :alt: Code Coverage
+
 
 Description
 -----------

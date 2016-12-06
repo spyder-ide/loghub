@@ -365,7 +365,7 @@ class GitHubRepo(object):
                                           mentioned=mentioned,
                                           labels=labels,
                                           sort=sort,
-                                          firection=direction,
+                                          direction=direction,
                                           since=since)
             if len(result) > 0:
                 issues += result
