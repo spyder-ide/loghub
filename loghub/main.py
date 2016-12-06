@@ -72,6 +72,13 @@ def main():
         default='',
         help="Github issues and pull requests until tag")
     parser.add_argument(
+        '-b',
+        '--branch',
+        action="store",
+        dest="branch",
+        default='',
+        help="Github base branch for merged PRs")
+    parser.add_argument(
         '-f',
         '--format',
         action="store",
@@ -139,9 +146,10 @@ def main():
         milestone=milestone,
         since_tag=options.since_tag,
         until_tag=options.until_tag,
-        output_format=options.output_format,
+        branch=options.branch,
         issue_label_regex=options.issue_label_regex,
         pr_label_regex=options.pr_label_regex,
+        output_format=options.output_format,
         template_file=options.template)
 
 
@@ -152,6 +160,7 @@ def create_changelog(repo=None,
                      milestone=None,
                      since_tag=None,
                      until_tag=None,
+                     branch=None,
                      output_format='changelog',
                      issue_label_regex='',
                      pr_label_regex='',
@@ -184,7 +193,11 @@ def create_changelog(repo=None,
 
     # This returns issues and pull requests
     issues = gh.issues(
-        milestone=milestone_number, state='closed', since=since, until=until)
+        milestone=milestone_number,
+        state='closed',
+        since=since,
+        until=until,
+        branch=branch, )
 
     # Filter by regex if available
     filtered_issues, filtered_prs = [], []
