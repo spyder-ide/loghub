@@ -14,9 +14,8 @@ import os
 import pytest
 
 # Local imports
-from loghub.main import GitHubRepo
 from loghub.external.github import ApiError
-
+from loghub.main import GitHubRepo
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
@@ -24,7 +23,7 @@ TEST_USER = os.environ.get('TEST_USER', '').replace('x', '')
 TEST_PASS = os.environ.get('TEST_CODE', '').replace('x', '')
 TEST_MILESTONE = 'test-milestone'
 TEST_TAG = 'v0.1.2'
-NOT_ON_CI = not bool(TEST_TOKEN)
+NOT_ON_CI = os.environ.get('CIRCLECI') != 'true'
 
 
 # --- Fixtures
@@ -38,15 +37,14 @@ def gh_repo():
 # -----------------------------------------------------------------------------
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_valid_user_password():
-    gh = GitHubRepo(username=TEST_USER, password='invalid-password',
-                    repo=REPO)
-    with pytest.raises(ApiError):
-        gh.milestone(TEST_MILESTONE)
+    gh = GitHubRepo(username=TEST_USER, password=TEST_PASS, repo=REPO)
+    assert bool(gh.milestone(TEST_MILESTONE))
 
 
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_invalid_user_password():
-    gh = GitHubRepo(username=TEST_USER, password='invalid-password',
-                    repo=REPO)
+    gh = GitHubRepo(
+        username='invalid-user', password='invalid-password', repo=REPO)
     with pytest.raises(ApiError):
         gh.milestone(TEST_MILESTONE)
 
