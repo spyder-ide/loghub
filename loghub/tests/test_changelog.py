@@ -178,4 +178,4 @@ def test_argument_parser_valid():
     args = ['prog', 'spyder-ide/loghub', '-ilg', 'type:bug', 'Bugs fixed']
     with patch.object(sys, 'argv', args):
         options = parse_arguments()
-    assert options.issue_label_group == [['type:bug', 'Bugs fixed']]
+    assert options.issue_label_groups == [['type:bug', 'Bugs fixed']]
