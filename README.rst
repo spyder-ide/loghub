@@ -104,6 +104,12 @@ Or generate a Github access token and use that instead, for example:
     loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -t <token>
 
 
+**Important**
+
+Because of git api rate limitations it is advised to always use authentication
+by either access token or user and password.
+
+    
 Advanced Usage
 --------------
 
