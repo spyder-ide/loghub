@@ -27,7 +27,7 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
 PY2 = sys.version[0] == '2'
 
 
-def main():
+def parse_arguments(skip=False):
     """Main script."""
     # Cli options
     parser = argparse.ArgumentParser(
@@ -162,20 +162,23 @@ def main():
                 dic['name'] = item[1]
             new_issue_label_groups.append(dic)
 
-    create_changelog(
-        repo=options.repository,
-        username=username,
-        password=password,
-        token=options.token,
-        milestone=milestone,
-        since_tag=options.since_tag,
-        until_tag=options.until_tag,
-        branch=options.branch,
-        issue_label_regex=options.issue_label_regex,
-        pr_label_regex=options.pr_label_regex,
-        output_format=options.output_format,
-        template_file=options.template,
-        issue_label_groups=new_issue_label_groups)
+    if not skip:
+        create_changelog(
+            repo=options.repository,
+            username=username,
+            password=password,
+            token=options.token,
+            milestone=milestone,
+            since_tag=options.since_tag,
+            until_tag=options.until_tag,
+            branch=options.branch,
+            issue_label_regex=options.issue_label_regex,
+            pr_label_regex=options.pr_label_regex,
+            output_format=options.output_format,
+            template_file=options.template,
+            issue_label_groups=new_issue_label_groups)
+
+    return options
 
 
 def create_changelog(repo=None,
@@ -329,4 +332,4 @@ def format_changelog(repo,
 
 
 if __name__ == '__main__':  # yapf: disable
-    main()
+    parse_arguments()
