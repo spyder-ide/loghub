@@ -126,8 +126,9 @@ class GitHubRepo(object):
             pr = issue.get('pull_request', '')
 
             # Add label names inside additional key
-            issue['loghub_label_names'] = [l['name'] for l in
-                                           issue.get('labels')]
+            issue['loghub_label_names'] = [
+                l['name'] for l in issue.get('labels')
+            ]
 
             if pr:
                 number = issue['number']
