@@ -90,6 +90,55 @@ For private repos, just add the username and password arguments, for example:
     loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -u <username> -p <password>
 
 
+Or, just add the username and a password prompt will appear, for example:
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -u <username>
+
+
+Or generate a Github access token and use that instead, for example:
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -t <token>
+
+
+Advanced Usage
+--------------
+
+Filter PR base branch
+~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+Filter issues by labels
+~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+Filter PRs by labels
+~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+Group issues by label
+~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+Output format
+~~~~~~~~~~~~~
+
+TODO
+
+Custom templates
+~~~~~~~~~~~~~~~~
+
+TODO
+
+
+
 Detailed CLI arguments
 ----------------------
 
@@ -119,15 +168,36 @@ Detailed CLI arguments
       -ut UNTIL_TAG, --until-tag UNTIL_TAG
                             Github issues and pull requests until tag
 
+      -ilg ISSUE_LABEL [TEXT TO PRINT AS SUBHEADER], --issue-label-group ISSUE_LABEL [TEXT TO PRINT AS SUBHEADER]
+                            Groups the generated issues by the specified label.
+                            This option takes 1 or 2 arguments, where the first one
+                            is the label to match and the second one is the label
+                            to print on the final output
+
+      -ilr ISSUE_LABEL_REGEX, --issue-label-regex ISSUE_LABEL_REGEX
+                            Label issue filter using a regular expression filter
+
+      -plr PR_LABEL_REGEX, --pr-label-regex PR_LABEL_REGEX
+                            Label pull requets filter using a regular expression
+                            filter
+
+      -b BRANCH, --branch BRANCH
+                            Filter merged PRs on base branch
+
       -f OUTPUT_FORMAT, --format OUTPUT_FORMAT
                             Format for print, either 'changelog' (for Changelog.md
                             file) or 'release' (for the Github Releases page).
                             Default is 'changelog'. The 'release' option doesn't
                             generate Markdown hyperlinks.
 
+      -te, --template TEMPLATE
+                            Use a custom Jinja2 template file
+  
       -u USER, --user USER
                             Github user name
 
       -p PASSWORD, --password PASSWORD
                             Github user password
 
+      -t TOKEN, --token TOKEN
+                            Github access token
