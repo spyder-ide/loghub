@@ -45,21 +45,24 @@ def main():
         default='',
         help="Github milestone to get issues and pull requests for")
     parser.add_argument(
-        '-ig',
-        '--issue-label-groups',
+        '-ilg',
+        '--issue-label-group',
         action="append",
         nargs='+',
         dest="issue_label_groups",
-        help="Groups the generated issues by the specified label")
+        help="Groups the generated issues by the specified label. This option"
+        "Takes 1 or 2 arguments, where the first one is the label to "
+        "match and the second one is the label to print on the final"
+        "output")
     parser.add_argument(
-        '-il',
+        '-ilr',
         '--issue-label-regex',
         action="store",
         dest="issue_label_regex",
         default='',
         help="Label issue filter using a regular expression filter")
     parser.add_argument(
-        '-pl',
+        '-plr',
         '--pr-label-regex',
         action="store",
         dest="pr_label_regex",
