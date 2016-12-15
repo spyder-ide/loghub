@@ -9,12 +9,15 @@
 
 # Standard library imports
 import os
+import sys
+import tempfile
 
 # Third party imports
+from mock import patch
 import pytest
 
 # Local imports
-from loghub.main import create_changelog
+from loghub.main import create_changelog, parse_arguments
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
@@ -109,3 +112,70 @@ In this release 1 pull request was closed.
     print([log])
     print([expected])
     assert log == expected
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_changelog_release_groups():
+    issue_label_groups = [{'label': 'type:bug', 'name': 'Bugs fixed'}]
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        output_format='release',
+        issue_label_groups=issue_label_groups)
+    expected = '''## Version <RELEASE_VERSION> (2016-12-05)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 26](https://github.com/spyder-ide/loghub/issues/26) - Test number 2
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 33](https://github.com/spyder-ide/loghub/pull/33) - PR: Test change
+
+In this release 1 pull request was closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_changelog_template():
+    template = '''{%   for i in issues -%}
+* Issue #{{ i['number'] }} - {{ i['title'] }}
+{%   endfor %}'''
+    desc, path = tempfile.mkstemp()
+    with open(path, 'w') as f:
+        f.write(template)
+
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        template_file=path)
+    expected = '* Issue #26 - Test number 2\n* Issue #24 - Issue test\n'
+    print([log])
+    print([expected])
+    assert log == expected
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_argument_parser_invalid():
+    args = ['prog']
+    with pytest.raises(SystemExit):
+        with patch.object(sys, 'argv', args):
+            parse_arguments(skip=True)
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_argument_parser_valid():
+    args = ['prog', 'spyder-ide/loghub', '-ilg', 'type:bug', 'Bugs fixed']
+    with patch.object(sys, 'argv', args):
+        options = parse_arguments()
+    assert options.issue_label_groups == [['type:bug', 'Bugs fixed']]

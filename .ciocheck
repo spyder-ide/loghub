@@ -59,7 +59,8 @@ import_heading_firstparty = Local imports
 import_heading_thirdparty = Third party imports
 indent = '    '
 known_first_party = loghub
-#known_third_party = 
+known_third_party = mock
+known_standard_library = mimetypes
 line_length = 79
 sections = FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 

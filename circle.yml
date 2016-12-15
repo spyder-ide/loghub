@@ -19,6 +19,7 @@ dependencies:
       source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh &&
       export PATH="$HOME/miniconda/bin:$PATH" &&
       source activate test &&
+      conda install mock &&
       conda install ciocheck -c conda-forge &&
       pip install coveralls &&
       python setup.py develop;
