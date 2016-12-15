@@ -21,7 +21,8 @@ from jinja2 import Template
 
 # Local imports
 from loghub.repo import GitHubRepo
-from loghub.templates import CHANGELOG_TEMPLATE_PATH, RELEASE_TEMPLATE_PATH
+from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
+                              CHANGELOG_TEMPLATE_PATH, RELEASE_TEMPLATE_PATH)
 
 PY2 = sys.version[0] == '2'
 
@@ -43,6 +44,13 @@ def main():
         dest="milestone",
         default='',
         help="Github milestone to get issues and pull requests for")
+    parser.add_argument(
+        '-ig',
+        '--issue-label-groups',
+        action="append",
+        nargs='+',
+        dest="issue_label_groups",
+        help="Groups the generated issues by the specified label")
     parser.add_argument(
         '-il',
         '--issue-label-regex',
@@ -121,6 +129,7 @@ def main():
     username = options.user
     password = options.password
     milestone = options.milestone
+    issue_label_groups = options.issue_label_groups
 
     if username and not password:
         password = getpass.getpass()
@@ -138,6 +147,18 @@ def main():
         print('\nLOGHUB: Querying issues for milestone {0}'
               '\n'.format(milestone))
 
+    new_issue_label_groups = []
+    if issue_label_groups:
+        for item in issue_label_groups:
+            dic = {}
+            if len(item) == 1:
+                dic['label'] = item[0]
+                dic['name'] = item[0]
+            elif len(item) >= 2:
+                dic['label'] = item[0]
+                dic['name'] = item[1]
+            new_issue_label_groups.append(dic)
+
     create_changelog(
         repo=options.repository,
         username=username,
@@ -150,7 +171,8 @@ def main():
         issue_label_regex=options.issue_label_regex,
         pr_label_regex=options.pr_label_regex,
         output_format=options.output_format,
-        template_file=options.template)
+        template_file=options.template,
+        issue_label_groups=new_issue_label_groups)
 
 
 def create_changelog(repo=None,
@@ -164,7 +186,8 @@ def create_changelog(repo=None,
                      output_format='changelog',
                      issue_label_regex='',
                      pr_label_regex='',
-                     template_file=None):
+                     template_file=None,
+                     issue_label_groups=None):
     """Create changelog data."""
     # Instantiate Github API
     gh = GitHubRepo(
@@ -206,7 +229,7 @@ def create_changelog(repo=None,
     for issue in issues:
         is_pr = bool(issue.get('pull_request'))
         is_issue = not is_pr
-        labels = ' '.join(issue.get('_label_names'))
+        labels = ' '.join(issue.get('loghub_label_names'))
 
         if is_issue and issue_label_regex:
             issue_valid = bool(issue_pattern.search(labels))
@@ -221,14 +244,27 @@ def create_changelog(repo=None,
         elif is_pr and not pr_label_regex:
             filtered_prs.append(issue)
 
+    # If issue label grouping, filter issues
+    new_filtered_issues = []
+    if issue_label_groups:
+        for issue in issues:
+            for label_group_dic in issue_label_groups:
+                labels = issue.get('loghub_label_names')
+                label = label_group_dic['label']
+                if label in labels:
+                    new_filtered_issues.append(issue)
+    else:
+        new_filtered_issues = filtered_issues
+
     return format_changelog(
         repo,
-        filtered_issues,
+        new_filtered_issues,
         filtered_prs,
         version,
         closed_at=closed_at,
         output_format=output_format,
-        template_file=template_file)
+        template_file=template_file,
+        issue_label_groups=issue_label_groups)
 
 
 def format_changelog(repo,
@@ -238,7 +274,8 @@ def format_changelog(repo,
                      closed_at=None,
                      output_format='changelog',
                      output_file='CHANGELOG.temp',
-                     template_file=None):
+                     template_file=None,
+                     issue_label_groups=None):
     """Create changelog data."""
     # Header
     if version and version[0] == 'v':
@@ -260,6 +297,9 @@ def format_changelog(repo,
         else:
             filepath = RELEASE_TEMPLATE_PATH
 
+    if issue_label_groups:
+        filepath = CHANGELOG_GROUPS_TEMPLATE_PATH
+
     with open(filepath) as f:
         data = f.read()
 
@@ -272,7 +312,8 @@ def format_changelog(repo,
         close_date=close_date,
         repo_full_name=repo,
         repo_owner=repo_owner,
-        repo_name=repo_name, )
+        repo_name=repo_name,
+        issue_label_groups=issue_label_groups, )
 
     print('#' * 79)
     print(rendered)
