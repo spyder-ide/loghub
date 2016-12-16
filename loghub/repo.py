@@ -93,6 +93,23 @@ class GitHubRepo(object):
                     issues.remove(issue)
         return issues
 
+    def _filter_by_branch(self, issues, issue, branch):
+        """"""
+        number = issue['number']
+
+        if not self.is_merged(number) and issue in issues:
+            issues.remove(issue)
+
+        if branch:
+            # Get PR info and get base branch
+            pr_data = self.pr(number)
+            base_ref = pr_data['base']['ref']
+
+            if base_ref != branch and issue in issues:
+                issues.remove(issue)
+
+        return issues
+
     def _filer_closed_prs(self, issues, branch):
         """Filter out closed PRs."""
         for issue in issues[:]:
@@ -104,16 +121,8 @@ class GitHubRepo(object):
             ]
 
             if pr:
-                number = issue['number']
-                if not self.is_merged(number) and issue in issues:
-                    issues.remove(issue)
+                issues = self._filter_by_branch(issues, issue, branch)
 
-                if branch:
-                    # Get PR info and get base branch
-                    pr_data = self.pr(number)
-                    base_ref = pr_data['base']['ref']
-                    if base_ref != branch and issue in issues:
-                        issues.remove(issue)
         return issues
 
     def tags(self):
