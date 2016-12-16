@@ -278,6 +278,13 @@ class GitHub(object):
         if _method in ['POST', 'PATCH', 'PUT']:
             request.add_header('Content-Type',
                                'application/x-www-form-urlencoded')
+
+        class Resp():
+            code = None
+
+        resp = Resp()
+        req = None
+
         try:
             response = opener.open(request, timeout=TIMEOUT)
             is_json = self._process_resp(response.headers)
@@ -291,9 +298,11 @@ class GitHub(object):
                 json = e.read().decode('utf-8')
             req = JsonObject(method=_method, url=url)
             resp = JsonObject(code=e.code, json=json)
+        finally:
             if resp.code == 404:
                 raise ApiNotFoundError(url, req, resp)
-            raise ApiError(url, req, resp)
+            elif req:
+                raise ApiError(url, req, resp)
 
     def _process_resp(self, headers):
         is_json = False

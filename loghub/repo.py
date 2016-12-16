@@ -14,7 +14,7 @@ import datetime
 import sys
 
 # Local imports
-from loghub.external.github import GitHub
+from loghub.external.github import GitHub, ApiError, ApiNotFoundError
 
 
 class GitHubRepo(object):
@@ -22,6 +22,9 @@ class GitHubRepo(object):
 
     def __init__(self, username=None, password=None, token=None, repo=None):
         """Github repository wrapper."""
+        self._username = username
+        self._password = password
+        self._repo = repo
         self.gh = GitHub(
             username=username,
             password=password,
@@ -29,12 +32,46 @@ class GitHubRepo(object):
         repo_organization, repo_name = repo.split('/')
         self.repo = self.gh.repos(repo_organization)(repo_name)
 
+        # Check organization/username
+        try:
+            self.gh.users(repo_organization).get()
+        except ApiNotFoundError as error:
+            print('LOGHUB: Organization/user `{}` seems to be '
+                  'invalid.\n'.format(repo_organization))
+            sys.exit(1)
+        except ApiError as error:
+            self._check_rate()
+
+        # Check repo
+        try:
+            self.repo.get()
+        except ApiNotFoundError as error:
+            print('LOGHUB: Repository `{0}` for organization/username `{1}` '
+                  'seems to be invalid.\n'.format(repo_name,
+                                                  repo_organization))
+            sys.exit(1)
+        except ApiError as error:
+            self._check_rate()
+
+        sys.exit(1)
+
+    def _check_rate(self):
+        """Check and handle if api rate limit has been exceeded."""
+        if self.gh.x_ratelimit_remaining == 0:
+            print('LOGHUB: GitHub API rate limit exceeded!\n')
+            if not self._username and not self._password or not self._token:
+                print('LOGHUB: Try running loghub with user/password or '
+                      'token.\n')
+            sys.exit(1)
+
     def tags(self):
         """Return all tags."""
+        self._check_rate()
         return self.repo('git')('refs')('tags').get()
 
     def tag(self, tag_name):
         """Get tag information."""
+        self._check_rate()
         refs = self.repo('git')('refs')('tags').get()
         sha = -1
         for ref in refs:
@@ -51,10 +88,12 @@ class GitHubRepo(object):
 
     def milestones(self):
         """Return all milestones."""
+        self._check_rate()
         return self.repo.milestones.get(state='all')
 
     def milestone(self, milestone_title):
         """Return milestone with given title."""
+        self._check_rate()
         milestones = self.milestones()
         milestone_number = -1
         for milestone in milestones:
@@ -70,6 +109,7 @@ class GitHubRepo(object):
 
     def pr(self, pr_number):
         """Get PR information."""
+        self._check_rate()
         return self.repo('pulls')(str(pr_number)).get()
 
     def issues(self,
@@ -85,6 +125,7 @@ class GitHubRepo(object):
                until=None,
                branch=None):
         """Return Issues and Pull Requests."""
+        self._check_rate()
         page = 1
         issues = []
         while True:
@@ -150,6 +191,7 @@ class GitHubRepo(object):
 
         https://developer.github.com/v3/pulls/#get-if-a-pull-request-has-been-merged
         """
+        self._check_rate()
         merged = True
         try:
             self.repo('pulls')(str(pr))('merge').get()
