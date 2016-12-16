@@ -192,7 +192,7 @@ Detailed CLI arguments
                   repository
 
     Script to print the list of issues and pull requests closed in a given
-    milestone
+    milestone, tag including additional filtering options.
 
     positional arguments:
       repository            Repository name to generate the Changelog for, in the

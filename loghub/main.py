@@ -42,7 +42,8 @@ def parse_arguments(skip=False):
     # Cli options
     parser = argparse.ArgumentParser(
         description='Script to print the list of issues and pull requests '
-        'closed in a given milestone')
+        'closed in a given milestone, tag including additional filtering '
+        'options.')
     parser.add_argument(
         'repository',
         help="Repository name to generate the Changelog for, in the form "
