@@ -108,7 +108,7 @@ Or generate a Github access token and use that instead, for example:
 
 **Important**
 
-Because of git api rate limitations it is advised to always use authentication
+Because of the Github API rate limitations it is advised to always use authentication
 by either access token or user and password.
 
     
@@ -172,7 +172,7 @@ Custom templates
 ~~~~~~~~~~~~~~~~
 
 Loghub uses Jinja2 templates to format the output. If the current template
-does not  yur needs, you can copy the default `templates <https://github.com/spyder-ide/loghub/tree/master/loghub/templates>`_ 
+does not your needs, you can copy the default `templates <https://github.com/spyder-ide/loghub/tree/master/loghub/templates>`_ 
 and create a new one and provide the path to it as:
 
 .. code-block:: text
