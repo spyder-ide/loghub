@@ -43,9 +43,9 @@ def test_valid_user_password():
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_invalid_user_password():
-    gh = GitHubRepo(
-        username='invalid-user', password='invalid-password', repo=REPO)
-    with pytest.raises(ApiError):
+    with pytest.raises(SystemExit):
+        gh = GitHubRepo(username='invalid-user', password='invalid-password',
+                        repo=REPO)
         gh.milestone(TEST_MILESTONE)
 
 
@@ -56,8 +56,8 @@ def test_valid_token():
 
 
 def test_invalid_token():
-    gh = GitHubRepo(token='this-is-an-invalid-token', repo=REPO)
-    with pytest.raises(ApiError):
+    with pytest.raises(SystemExit):
+        gh = GitHubRepo(token='this-is-an-invalid-token', repo=REPO)
         gh.milestone(TEST_MILESTONE)
 
 

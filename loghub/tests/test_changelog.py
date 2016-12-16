@@ -175,7 +175,8 @@ def test_argument_parser_invalid():
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_argument_parser_valid():
-    args = ['prog', 'spyder-ide/loghub', '-ilg', 'type:bug', 'Bugs fixed']
+    args = ['prog', 'spyder-ide/loghub', '-ilg', 'type:bug', 'Bugs fixed',
+            '-t', TEST_TOKEN]
     with patch.object(sys, 'argv', args):
         options = parse_arguments()
     assert options.issue_label_groups == [['type:bug', 'Bugs fixed']]
