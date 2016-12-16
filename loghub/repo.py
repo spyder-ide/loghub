@@ -31,27 +31,35 @@ class GitHubRepo(object):
             password=password,
             access_token=token, )
         repo_organization, repo_name = repo.split('/')
+        self._repo_organization = repo_organization
+        self._repo_name = repo_name
         self.repo = self.gh.repos(repo_organization)(repo_name)
 
-        # Check organization/username
+        # Check username and repo name
+        self._check_user()
+        self._check_repo_name()
+
+    def _check_user(self):
+        """Check if the supplied username is valid."""
         try:
-            self.gh.users(repo_organization).get()
+            self.gh.users(self._repo_organization).get()
         except ApiNotFoundError as error:
             print('LOGHUB: Organization/user `{}` seems to be '
-                  'invalid.\n'.format(repo_organization))
+                  'invalid.\n'.format(self._repo_organization))
             sys.exit(1)
         except ApiError as error:
             self._check_rate()
             print('LOGHUB: The credentials seems to be invalid!\n')
             sys.exit(1)
 
-        # Check repo
+    def _check_repo_name(self):
+        """Check if the supplied repository exists."""
         try:
             self.repo.get()
         except ApiNotFoundError as error:
             print('LOGHUB: Repository `{0}` for organization/username `{1}` '
-                  'seems to be invalid.\n'.format(repo_name,
-                                                  repo_organization))
+                  'seems to be invalid.\n'.format(self._repo_name,
+                                                  self._repo_organization))
             sys.exit(1)
         except ApiError as error:
             self._check_rate()
@@ -64,6 +72,58 @@ class GitHubRepo(object):
                 print('LOGHUB: Try running loghub with user/password or '
                       'a valid token.\n')
             sys.exit(1)
+
+    def _filter_since(self, issues, since):
+        """Filter out all issues before `since` date."""
+        if since:
+            since_date = self.str_to_date(since)
+            for issue in issues[:]:
+                close_date = self.str_to_date(issue['closed_at'])
+                if close_date < since_date and issue in issues:
+                    issues.remove(issue)
+        return issues
+
+    def _filter_until(self, issues, until):
+        """Filter out all issues after `until` date."""
+        if until:
+            until_date = self.str_to_date(until)
+            for issue in issues[:]:
+                close_date = self.str_to_date(issue['closed_at'])
+                if close_date > until_date and issue in issues:
+                    issues.remove(issue)
+        return issues
+
+    def _filter_by_branch(self, issues, issue, branch):
+        """"""
+        number = issue['number']
+
+        if not self.is_merged(number) and issue in issues:
+            issues.remove(issue)
+
+        if branch:
+            # Get PR info and get base branch
+            pr_data = self.pr(number)
+            base_ref = pr_data['base']['ref']
+
+            if base_ref != branch and issue in issues:
+                issues.remove(issue)
+
+        return issues
+
+    def _filer_closed_prs(self, issues, branch):
+        """Filter out closed PRs."""
+        for issue in issues[:]:
+            pr = issue.get('pull_request', '')
+
+            # Add label names inside additional key
+            issue['loghub_label_names'] = [
+                l['name'] for l in issue.get('labels')
+            ]
+
+            if pr:
+                issues = self._filter_by_branch(issues, issue, branch)
+
+        return issues
 
     def tags(self):
         """Return all tags."""
@@ -155,41 +215,13 @@ class GitHubRepo(object):
                 break
 
         # If since was provided, filter the issue
-        if since:
-            since_date = self.str_to_date(since)
-            for issue in issues[:]:
-                close_date = self.str_to_date(issue['closed_at'])
-                if close_date < since_date and issue in issues:
-                    issues.remove(issue)
+        issues = self._filter_since(issues, since)
 
         # If until was provided, filter the issue
-        if until:
-            until_date = self.str_to_date(until)
-            for issue in issues[:]:
-                close_date = self.str_to_date(issue['closed_at'])
-                if close_date > until_date and issue in issues:
-                    issues.remove(issue)
+        issues = self._filter_until(issues, until)
 
         # If it is a pr check if it is merged or closed, removed closed ones
-        for issue in issues[:]:
-            pr = issue.get('pull_request', '')
-
-            # Add label names inside additional key
-            issue['loghub_label_names'] = [
-                l['name'] for l in issue.get('labels')
-            ]
-
-            if pr:
-                number = issue['number']
-                if not self.is_merged(number) and issue in issues:
-                    issues.remove(issue)
-
-                if branch:
-                    # Get PR info and get base branch
-                    pr_data = self.pr(number)
-                    base_ref = pr_data['base']['ref']
-                    if base_ref != branch and issue in issues:
-                        issues.remove(issue)
+        issues = self._filer_closed_prs(issues, branch)
 
         return issues
 
