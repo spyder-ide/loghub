@@ -1,0 +1,11 @@
+# https://www.quantifiedcode.com/app/
+
+# Test folders
+**/tests/**
+**/tests/
+tests/**
+
+# External libraries
+**/external/**
+**/external/
+external/**
