@@ -194,6 +194,49 @@ def parse_arguments(skip=False):
     return options
 
 
+def filter_issues_prs_regex(issues, issue_label_regex, pr_label_regex):
+    """Filter issues by issue and pr regex."""
+    filtered_issues, filtered_prs = [], []
+    issue_pattern = re.compile(issue_label_regex)
+    pr_pattern = re.compile(pr_label_regex)
+
+    for issue in issues:
+        is_pr = bool(issue.get('pull_request'))
+        is_issue = not is_pr
+        labels = ' '.join(issue.get('loghub_label_names'))
+
+        if is_issue and issue_label_regex:
+            issue_valid = bool(issue_pattern.search(labels))
+            if issue_valid:
+                filtered_issues.append(issue)
+        elif is_pr and pr_label_regex:
+            pr_valid = bool(pr_pattern.search(labels))
+            if pr_valid:
+                filtered_prs.append(issue)
+        elif is_issue and not issue_label_regex:
+            filtered_issues.append(issue)
+        elif is_pr and not pr_label_regex:
+            filtered_prs.append(issue)
+
+    return filtered_issues, filtered_prs
+
+
+def filter_issue_label_groups(issues, issue_label_groups):
+    """"""
+    new_filtered_issues = []
+    if issue_label_groups:
+        for issue in issues:
+            for label_group_dic in issue_label_groups:
+                labels = issue.get('loghub_label_names')
+                label = label_group_dic['label']
+                if label in labels:
+                    new_filtered_issues.append(issue)
+    else:
+        new_filtered_issues = issues
+
+    return new_filtered_issues
+
+
 def create_changelog(repo=None,
                      username=None,
                      password=None,
@@ -242,38 +285,13 @@ def create_changelog(repo=None,
         branch=branch, )
 
     # Filter by regex if available
-    filtered_issues, filtered_prs = [], []
-    issue_pattern = re.compile(issue_label_regex)
-    pr_pattern = re.compile(pr_label_regex)
-    for issue in issues:
-        is_pr = bool(issue.get('pull_request'))
-        is_issue = not is_pr
-        labels = ' '.join(issue.get('loghub_label_names'))
-
-        if is_issue and issue_label_regex:
-            issue_valid = bool(issue_pattern.search(labels))
-            if issue_valid:
-                filtered_issues.append(issue)
-        elif is_pr and pr_label_regex:
-            pr_valid = bool(pr_pattern.search(labels))
-            if pr_valid:
-                filtered_prs.append(issue)
-        elif is_issue and not issue_label_regex:
-            filtered_issues.append(issue)
-        elif is_pr and not pr_label_regex:
-            filtered_prs.append(issue)
+    filtered_issues, filtered_prs = filter_issues_prs_regex(issues,
+                                                            issue_label_regex,
+                                                            pr_label_regex)
 
     # If issue label grouping, filter issues
-    new_filtered_issues = []
-    if issue_label_groups:
-        for issue in issues:
-            for label_group_dic in issue_label_groups:
-                labels = issue.get('loghub_label_names')
-                label = label_group_dic['label']
-                if label in labels:
-                    new_filtered_issues.append(issue)
-    else:
-        new_filtered_issues = filtered_issues
+    new_filtered_issues = filter_issue_label_groups(filtered_issues,
+                                                    issue_label_groups)
 
     return format_changelog(
         repo,
