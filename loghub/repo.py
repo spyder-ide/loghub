@@ -43,11 +43,11 @@ class GitHubRepo(object):
         """Check if the supplied username is valid."""
         try:
             self.gh.users(self._repo_organization).get()
-        except ApiNotFoundError as error:
+        except ApiNotFoundError:
             print('LOGHUB: Organization/user `{}` seems to be '
                   'invalid.\n'.format(self._repo_organization))
             sys.exit(1)
-        except ApiError as error:
+        except ApiError:
             self._check_rate()
             print('LOGHUB: The credentials seems to be invalid!\n')
             sys.exit(1)
@@ -56,12 +56,12 @@ class GitHubRepo(object):
         """Check if the supplied repository exists."""
         try:
             self.repo.get()
-        except ApiNotFoundError as error:
+        except ApiNotFoundError:
             print('LOGHUB: Repository `{0}` for organization/username `{1}` '
                   'seems to be invalid.\n'.format(self._repo_name,
                                                   self._repo_organization))
             sys.exit(1)
-        except ApiError as error:
+        except ApiError:
             self._check_rate()
 
     def _check_rate(self):
