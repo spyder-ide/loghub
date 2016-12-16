@@ -12,6 +12,7 @@ from __future__ import print_function
 # Standard library imports
 import datetime
 import sys
+import time
 
 # Local imports
 from loghub.external.github import ApiError, ApiNotFoundError, GitHub
@@ -67,7 +68,11 @@ class GitHubRepo(object):
     def _check_rate(self):
         """Check and handle if api rate limit has been exceeded."""
         if self.gh.x_ratelimit_remaining == 0:
-            print('LOGHUB: GitHub API rate limit exceeded!\n')
+            reset_struct = time.gmtime(self.gh.x_ratelimit_reset)
+            reset_format = time.strftime('%Y/%m/%d %H:%M', reset_struct)
+            print('LOGHUB: GitHub API rate limit exceeded!')
+            print('LOGHUB: GitHub API rate limit resets on '
+                  '{}'.format(reset_format))
             if not self._username and not self._password or not self._token:
                 print('LOGHUB: Try running loghub with user/password or '
                       'a valid token.\n')
