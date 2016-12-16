@@ -167,9 +167,12 @@ def parse_arguments(skip=False):
             if len(item) == 1:
                 dic['label'] = item[0]
                 dic['name'] = item[0]
-            elif len(item) >= 2:
+            elif len(item) == 2:
                 dic['label'] = item[0]
                 dic['name'] = item[1]
+            else:
+                print('LOGHUB: Issue label group takes 1 or 2 arguments\n')
+                sys.exit(1)
             new_issue_label_groups.append(dic)
 
     if not skip:
