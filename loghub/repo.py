@@ -111,7 +111,8 @@ class GitHubRepo(object):
             for issue in issues[:]:
                 close_date = self.str_to_date(issue['closed_at'])
                 if close_date < since_date:
-                    issues.remove(issue)
+                    if issue in issues:
+                        issues.remove(issue)
 
         # If until was provided, filter the issue
         if until:
@@ -119,7 +120,8 @@ class GitHubRepo(object):
             for issue in issues[:]:
                 close_date = self.str_to_date(issue['closed_at'])
                 if close_date > until_date:
-                    issues.remove(issue)
+                    if issue in issues:
+                        issues.remove(issue)
 
         # If it is a pr check if it is merged or closed, removed closed ones
         for issue in issues[:]:
@@ -133,14 +135,16 @@ class GitHubRepo(object):
             if pr:
                 number = issue['number']
                 if not self.is_merged(number):
-                    issues.remove(issue)
+                    if issue in issues:
+                        issues.remove(issue)
 
                 if branch:
                     # Get PR info and get base branch
                     pr_data = self.pr(number)
                     base_ref = pr_data['base']['ref']
                     if base_ref != branch:
-                        issues.remove(issue)
+                        if issue in issues:
+                            issues.remove(issue)
 
         return issues
 
