@@ -184,8 +184,11 @@ Detailed CLI arguments
 
 .. code-block:: text
 
-    usage: loghub [-h] [-m MILESTONE] [-st SINCE_TAG] [-ut UNTIL_TAG]
-                  [-f OUTPUT_FORMAT] [-u USER] [-p PASSWORD]
+    usage: loghub [-h] [-m MILESTONE]
+                  [-ilg ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...]]
+                  [-ilr ISSUE_LABEL_REGEX] [-plr PR_LABEL_REGEX] [-st SINCE_TAG]
+                  [-ut UNTIL_TAG] [-b BRANCH] [-f OUTPUT_FORMAT]
+                  [--template TEMPLATE] [-u USER] [-p PASSWORD] [-t TOKEN]
                   repository
 
     Script to print the list of issues and pull requests closed in a given
