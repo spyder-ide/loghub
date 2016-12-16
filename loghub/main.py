@@ -27,8 +27,13 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
 PY2 = sys.version[0] == '2'
 
 
-def parse_arguments(skip=False):
+def main():
     """Main script."""
+    parse_arguments(skip=False)
+
+
+def parse_arguments(skip=False):
+    """Parse CLI arguments."""
     # Cli options
     parser = argparse.ArgumentParser(
         description='Script to print the list of issues and pull requests '
@@ -332,4 +337,4 @@ def format_changelog(repo,
 
 
 if __name__ == '__main__':  # yapf: disable
-    parse_arguments()
+    main()
