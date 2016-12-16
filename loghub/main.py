@@ -20,9 +20,14 @@ import time
 from jinja2 import Template
 
 # Local imports
+# yapf: disable
 from loghub.repo import GitHubRepo
 from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
-                              CHANGELOG_TEMPLATE_PATH, RELEASE_TEMPLATE_PATH)
+                              CHANGELOG_TEMPLATE_PATH,
+                              RELEASE_GROUPS_TEMPLATE_PATH,
+                              RELEASE_TEMPLATE_PATH)
+
+# yapf: enable
 
 PY2 = sys.version[0] == '2'
 
@@ -303,13 +308,16 @@ def format_changelog(repo,
     if template_file:
         filepath = template_file
     else:
-        if output_format == 'changelog':
-            filepath = CHANGELOG_TEMPLATE_PATH
+        if issue_label_groups:
+            if output_format == 'changelog':
+                filepath = CHANGELOG_GROUPS_TEMPLATE_PATH
+            else:
+                filepath = RELEASE_GROUPS_TEMPLATE_PATH
         else:
-            filepath = RELEASE_TEMPLATE_PATH
-
-    if issue_label_groups:
-        filepath = CHANGELOG_GROUPS_TEMPLATE_PATH
+            if output_format == 'changelog':
+                filepath = CHANGELOG_TEMPLATE_PATH
+            else:
+                filepath = RELEASE_TEMPLATE_PATH
 
     with open(filepath) as f:
         data = f.read()

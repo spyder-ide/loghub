@@ -115,14 +115,13 @@ In this release 1 pull request was closed.
 
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
-def test_changelog_release_groups():
+def test_changelog_groups():
     issue_label_groups = [{'label': 'type:bug', 'name': 'Bugs fixed'}]
     log = create_changelog(
         repo=REPO,
         token=TEST_TOKEN,
         milestone=TEST_MILESTONE,
         branch='test-branch',
-        output_format='release',
         issue_label_groups=issue_label_groups)
     expected = '''## Version <RELEASE_VERSION> (2016-12-05)
 
