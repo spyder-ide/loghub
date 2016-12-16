@@ -44,8 +44,10 @@ def test_valid_user_password():
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_invalid_user_password():
     with pytest.raises(SystemExit):
-        gh = GitHubRepo(username='invalid-user', password='invalid-password',
-                        repo=REPO)
+        gh = GitHubRepo(
+            username='invalid-user',
+            password='invalid-password',
+            repo=REPO, )
         gh.milestone(TEST_MILESTONE)
 
 
