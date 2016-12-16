@@ -94,7 +94,7 @@ class GitHubRepo(object):
         return issues
 
     def _filter_by_branch(self, issues, issue, branch):
-        """"""
+        """Filter prs by the branch they were merged into."""
         number = issue['number']
 
         if not self.is_merged(number) and issue in issues:
