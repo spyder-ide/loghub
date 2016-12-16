@@ -194,11 +194,29 @@ def parse_arguments(skip=False):
     return options
 
 
-def filter_issues_prs_regex(issues, issue_label_regex, pr_label_regex):
-    """Filter issues by issue and pr regex."""
-    filtered_issues, filtered_prs = [], []
-    issue_pattern = re.compile(issue_label_regex)
+def filter_prs_by_regex(issues, pr_label_regex):
+    """Filter prs by issue regex."""
+    filtered_prs = []
     pr_pattern = re.compile(pr_label_regex)
+
+    for issue in issues:
+        is_pr = bool(issue.get('pull_request'))
+        labels = ' '.join(issue.get('loghub_label_names'))
+
+        if is_pr and pr_label_regex:
+            pr_valid = bool(pr_pattern.search(labels))
+            if pr_valid:
+                filtered_prs.append(issue)
+        if is_pr and not pr_label_regex:
+            filtered_prs.append(issue)
+
+    return filtered_prs
+
+
+def filter_issues_by_regex(issues, issue_label_regex):
+    """Filter issues by issue regex."""
+    filtered_issues = []
+    issue_pattern = re.compile(issue_label_regex)
 
     for issue in issues:
         is_pr = bool(issue.get('pull_request'))
@@ -209,20 +227,14 @@ def filter_issues_prs_regex(issues, issue_label_regex, pr_label_regex):
             issue_valid = bool(issue_pattern.search(labels))
             if issue_valid:
                 filtered_issues.append(issue)
-        elif is_pr and pr_label_regex:
-            pr_valid = bool(pr_pattern.search(labels))
-            if pr_valid:
-                filtered_prs.append(issue)
         elif is_issue and not issue_label_regex:
             filtered_issues.append(issue)
-        elif is_pr and not pr_label_regex:
-            filtered_prs.append(issue)
 
-    return filtered_issues, filtered_prs
+    return filtered_issues
 
 
 def filter_issue_label_groups(issues, issue_label_groups):
-    """"""
+    """Filter issues by the label groups."""
     new_filtered_issues = []
     if issue_label_groups:
         for issue in issues:
@@ -285,9 +297,8 @@ def create_changelog(repo=None,
         branch=branch, )
 
     # Filter by regex if available
-    filtered_issues, filtered_prs = filter_issues_prs_regex(issues,
-                                                            issue_label_regex,
-                                                            pr_label_regex)
+    filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
+    filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
 
     # If issue label grouping, filter issues
     new_filtered_issues = filter_issue_label_groups(filtered_issues,
