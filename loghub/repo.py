@@ -14,7 +14,7 @@ import datetime
 import sys
 
 # Local imports
-from loghub.external.github import GitHub, ApiError, ApiNotFoundError
+from loghub.external.github import ApiError, ApiNotFoundError, GitHub
 
 
 class GitHubRepo(object):
@@ -24,7 +24,8 @@ class GitHubRepo(object):
         """Github repository wrapper."""
         self._username = username
         self._password = password
-        self._repo = repo
+        self._token = token
+
         self.gh = GitHub(
             username=username,
             password=password,
@@ -41,6 +42,8 @@ class GitHubRepo(object):
             sys.exit(1)
         except ApiError as error:
             self._check_rate()
+            print('LOGHUB: The credentials seems to be invalid!\n')
+            sys.exit(1)
 
         # Check repo
         try:
@@ -53,15 +56,13 @@ class GitHubRepo(object):
         except ApiError as error:
             self._check_rate()
 
-        sys.exit(1)
-
     def _check_rate(self):
         """Check and handle if api rate limit has been exceeded."""
         if self.gh.x_ratelimit_remaining == 0:
             print('LOGHUB: GitHub API rate limit exceeded!\n')
             if not self._username and not self._password or not self._token:
                 print('LOGHUB: Try running loghub with user/password or '
-                      'token.\n')
+                      'a valid token.\n')
             sys.exit(1)
 
     def tags(self):
@@ -74,14 +75,17 @@ class GitHubRepo(object):
         self._check_rate()
         refs = self.repo('git')('refs')('tags').get()
         sha = -1
+
+        tags = []
         for ref in refs:
             ref_name = 'refs/tags/{tag}'.format(tag=tag_name)
             if 'object' in ref and ref['ref'] == ref_name:
                 sha = ref['object']['sha']
-                break
+            tags.append(ref['ref'].split('/')[-1])
 
         if sha == -1:
-            print("You didn't pass a valid tag name!")
+            print("LOGHUB: You didn't pass a valid tag name!")
+            print('LOGHUB: The available tags are: {0}\n'.format(tags))
             sys.exit(1)
 
         return self.repo('git')('tags')(sha).get()
@@ -96,13 +100,17 @@ class GitHubRepo(object):
         self._check_rate()
         milestones = self.milestones()
         milestone_number = -1
+
+        milestone_titles = []
         for milestone in milestones:
             if milestone['title'] == milestone_title:
                 milestone_number = milestone['number']
-                break
+            milestone_titles.append(milestone['title'])
 
         if milestone_number == -1:
-            print("You didn't pass a valid milestone name!")
+            print("LOGHUB: You didn't pass a valid milestone name!")
+            print('LOGHUB: The available milestones are: {0}\n'
+                  ''.format(milestone_titles))
             sys.exit(1)
 
         return milestone
