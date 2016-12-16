@@ -69,14 +69,16 @@ In projects where milestones are used to track a release we can use for example:
     loghub spyder-ide/spyder -m v3.0
 
 
-In projects where milestones are used to track chunks of work but not releases, we can use tags to get the changes after the latest release, for example:
+In projects where milestones are used to track chunks of work but not releases,
+we can use tags to get the changes after the latest release, for example:
 
 .. code-block:: python
 
     loghub spyder-ide/spyder -st v3.0.0b7
 
 
-Or if loghub is used to generate old changelogs (or update changelogs), we can also use tags to limit the range , for example:
+Or if loghub is used to generate old changelogs (or update changelogs),
+we can also use tags to limit the range , for example:
 
 .. code-block:: python
 
@@ -116,34 +118,66 @@ Advanced Usage
 Filter PR base branch
 ~~~~~~~~~~~~~~~~~~~~~
 
-TODO
+Pull requests to display can be filtered depending on the branch they were
+merge against (base branch):
+              
+.. code-block:: python
 
-Filter issues by labels
-~~~~~~~~~~~~~~~~~~~~~~~
+    loghub spyder-ide/spyder -b 3.x
 
-TODO
 
-Filter PRs by labels
-~~~~~~~~~~~~~~~~~~~~
+Filter issues/PRs by labels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO
+To filter issues to display, we can use a regular expression:
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -ilr "Type.*" -m v3.1
+
+This will filter all the issues that start with *Type*
+
+The same can be done with PRs
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -ipr "<some-regex>" -m v3.1
+
 
 Group issues by label
 ~~~~~~~~~~~~~~~~~~~~~
 
-TODO
+Issues displayed can be grouped by labels:
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -ilg "Type-Bug" "Bugs Fixed" "Type-Enhancement" "New Features" -m v3.1
+
+This will result in issues being grouped in two sections with the headings
+*Bugs Fixed* and *New Features* respectively.
 
 Output format
 ~~~~~~~~~~~~~
 
-TODO
+Loghub provides two formats:
+
+* 'changelog', which is the default and includes links to issues and PRs
+* 'release', which does not include links
+
+.. code-block:: python
+
+    loghub spyder-ide/spyder -m v3.1 -f release
 
 Custom templates
 ~~~~~~~~~~~~~~~~
 
-TODO
+Loghub uses Jinja2 templates to format the output. If the current template
+does not  yur needs, you can copy the default `templates <https://github.com/spyder-ide/loghub/tree/master/loghub/templates>`_ 
+and create a new one and provide the path to it as:
 
+.. code-block:: python
 
+    loghub spyder-ide/spyder -m v3.1 --template <PATH_TO_TEMPLATE>
 
 Detailed CLI arguments
 ----------------------
@@ -174,7 +208,7 @@ Detailed CLI arguments
       -ut UNTIL_TAG, --until-tag UNTIL_TAG
                             Github issues and pull requests until tag
 
-      -ilg ISSUE_LABEL [TEXT TO PRINT AS SUBHEADER], --issue-label-group ISSUE_LABEL [TEXT TO PRINT AS SUBHEADER]
+      -ilg ISSUE_LABEL [TEXT TO PRINT], --issue-label-group ISSUE_LABEL [TEXT TO PRINT]
                             Groups the generated issues by the specified label.
                             This option takes 1 or 2 arguments, where the first one
                             is the label to match and the second one is the label
