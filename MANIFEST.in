@@ -1,3 +1,5 @@
 include CHANGELOG.md
 include LICENSE.txt
 include README.md
+include versioneer.py
+include loghub/_version.py
