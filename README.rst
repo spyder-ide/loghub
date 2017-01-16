@@ -12,8 +12,8 @@ Project information
 .. |travis status| image:: https://travis-ci.org/spyder-ide/loghub.svg?branch=master
    :target: https://travis-ci.org/spyder-ide/loghub
    :alt: Travis-CI build status
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/8v5n191gy3c06dfc?svg=true
-   :target: https://ci.appveyor.com/project/goanpeca/loghub
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/vlvwisroqjaf6jvl?svg=true
+   :target: https://ci.appveyor.com/project/spyder-ide/loghub
    :alt: Appveyor build status
 .. |circleci status| image:: https://circleci.com/gh/spyder-ide/loghub/tree/master.svg?style=shield
    :target: https://circleci.com/gh/spyder-ide/loghub/tree/master
