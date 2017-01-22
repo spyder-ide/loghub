@@ -166,11 +166,11 @@ class GitHubRepo(object):
         milestones = self.milestones()
         milestone_number = -1
 
-        milestone_titles = []
+        milestone_titles = [milestone['title'] for milestone in milestones]
         for milestone in milestones:
             if milestone['title'] == milestone_title:
                 milestone_number = milestone['number']
-            milestone_titles.append(milestone['title'])
+                break
 
         if milestone_number == -1:
             print("LOGHUB: You didn't pass a valid milestone name!")
@@ -219,6 +219,7 @@ class GitHubRepo(object):
             else:
                 break
 
+#        print(issues)
         # If since was provided, filter the issue
         issues = self._filter_since(issues, since)
 
