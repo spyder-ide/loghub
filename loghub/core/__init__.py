@@ -5,8 +5,4 @@
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Create github labels from a text file."""
-
-# yapf: disable
-
-# yapf: enable
+"""Main components for loghub."""

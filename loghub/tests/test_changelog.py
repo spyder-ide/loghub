@@ -17,7 +17,7 @@ from mock import patch
 import pytest
 
 # Local imports
-from loghub.main import create_changelog, parse_arguments
+from loghub.cli.main import create_changelog, parse_arguments
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')

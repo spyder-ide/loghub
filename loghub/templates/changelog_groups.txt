@@ -2,13 +2,11 @@
 
 {% if issues|length -%}
 ### Issues Closed
-{%   for label_group in issue_label_groups %}
-#### {{ label_group['name'] }}
+{%   for label_group, grouped_issues in issue_label_groups.items() %}
+#### {{ label_group }}
 
-{%     for i in issues -%}
-{%       if label_group['label'] in i['loghub_label_names'] -%}
+{%     for i in grouped_issues -%}
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
-{%       endif -%}
 {%     endfor -%}
 {%   endfor %}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
