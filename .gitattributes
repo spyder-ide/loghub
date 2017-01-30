@@ -3,5 +3,3 @@
 meta.yaml text eol=lf
 build.sh text eol=lf
 bld.bat text eol=crlf
-
-loghub/_version.py export-subst
