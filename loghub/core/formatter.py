@@ -69,9 +69,9 @@ def filter_issues_by_regex(issues, issue_label_regex):
 
 def filter_issue_label_groups(issues, issue_label_groups):
     """Filter issues by the label groups."""
+    grouped_filtered_issues = OrderedDict()
     if issue_label_groups:
         new_filtered_issues = []
-        grouped_filtered_issues = OrderedDict()
         for label_group_dic in issue_label_groups:
             grouped_filtered_issues[label_group_dic['name']] = []
 
@@ -120,13 +120,18 @@ def create_changelog(repo=None,
     closed_at = None
     since = None
     until = None
+    version_tag_prefix = 'v'
 
     # Set milestone or from tag
     if milestone and not since_tag:
         milestone_data = gh.milestone(milestone)
         milestone_number = milestone_data['number']
         closed_at = milestone_data['closed_at']
-        version = milestone.replace('v', '')
+        version = milestone
+
+        if version.startswith(version_tag_prefix):
+            version = version[len(version_tag_prefix):]
+
     elif not milestone and since_tag:
         since = gh.tag(since_tag)['tagger']['date']
         if until_tag:
