@@ -66,7 +66,7 @@ In projects where milestones are used to track a release we can use for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -m v3.0
+    loghub spyder-ide/spyder --milestone v3.0
 
 
 In projects where milestones are used to track chunks of work but not releases,
@@ -74,7 +74,7 @@ we can use tags to get the changes after the latest release, for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -st v3.0.0b7
+    loghub spyder-ide/spyder --since-tag v3.0.0b7
 
 
 Or if loghub is used to generate old changelogs (or update changelogs),
@@ -82,28 +82,28 @@ we can also use tags to limit the range , for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0
+    loghub spyder-ide/spyder --since-tag v3.0.0b7 --until-tag v3.0.0
 
 
 For private repos, just add the username and password arguments, for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -u <username> -p <password>
+    loghub spyder-ide/spyder --since-tag v3.0.0b7 --since-tag v3.0.0 --username <username> --password <password>
 
 
 Or, just add the username and a password prompt will appear, for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -u <username>
+    loghub spyder-ide/spyder --since-tag v3.0.0b7 --since-tag v3.0.0 --username <username>
 
 
 Or generate a Github access token and use that instead, for example:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -st v3.0.0b7 -ut v3.0.0 -t <token>
+    loghub spyder-ide/spyder --since-tag v3.0.0b7 -until-tag v3.0.0 --token <token>
 
 
 **Important**
@@ -123,7 +123,7 @@ merge against (base branch):
               
 .. code-block:: text
 
-    loghub spyder-ide/spyder -b 3.x
+    loghub spyder-ide/spyder --branch 3.x
 
 
 Filter issues/PRs by labels
@@ -133,7 +133,7 @@ To filter issues to display, we can use a regular expression:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -ilr "Type.*" -m v3.1
+    loghub spyder-ide/spyder --issue-label-regex "Type.*" --milestone v3.1
 
 This will filter all the issues that start with *Type*
 
@@ -141,7 +141,7 @@ The same can be done with PRs
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -ipr "<some-regex>" -m v3.1
+    loghub spyder-ide/spyder --pr-label-regex "<some-regex>" --milestone v3.1
 
 
 Group issues by label
@@ -151,7 +151,7 @@ Issues displayed can be grouped by labels:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -ilg "Type-Bug" "Bugs Fixed" "Type-Enhancement" "New Features" -m v3.1
+    loghub spyder-ide/spyder --issue-label-group "Type-Bug" "Bugs Fixed" --issue-label-group "Type-Enhancement" "New Features" --milestone v3.1
 
 This will result in issues being grouped in two sections with the headings
 *Bugs Fixed* and *New Features* respectively.
@@ -161,12 +161,12 @@ Output format
 
 Loghub provides two formats:
 
-* 'changelog', which is the default and includes links to issues and PRs
-* 'release', which does not include links
+* ***changelog***, which is the default and includes links to issues and PRs
+* ***release***, which does not include links
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -m v3.1 -f release
+    loghub spyder-ide/spyder --milestone v3.1 --format release
 
 Custom templates
 ~~~~~~~~~~~~~~~~
@@ -177,7 +177,7 @@ and create a new one and provide the path to it as:
 
 .. code-block:: text
 
-    loghub spyder-ide/spyder -m v3.1 --template <PATH_TO_TEMPLATE>
+    loghub spyder-ide/spyder --milestone v3.1 --template <PATH_TO_TEMPLATE>
 
 Detailed CLI arguments
 ----------------------
@@ -188,7 +188,7 @@ Detailed CLI arguments
                   [-ilg ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...]]
                   [-ilr ISSUE_LABEL_REGEX] [-plr PR_LABEL_REGEX] [-st SINCE_TAG]
                   [-ut UNTIL_TAG] [-b BRANCH] [-f OUTPUT_FORMAT]
-                  [--template TEMPLATE] [-u USER] [-p PASSWORD] [-t TOKEN]
+                  [--template TEMPLATE] [-u USERNAME] [-p PASSWORD] [-t TOKEN]
                   repository
 
     Script to print the list of issues and pull requests closed in a given
@@ -199,8 +199,17 @@ Detailed CLI arguments
                             form user/repo or org/repo (e.g. spyder-ide/spyder)
 
     optional arguments:
-      -h, --help           
+      -h, --help
                             Show this help message and exit
+
+      -u USERNAME, --username USERNAME
+                            Github user name
+
+      -p PASSWORD, --password PASSWORD
+                            Github user password
+
+      -t TOKEN, --token TOKEN
+                            Github access token
 
       -m MILESTONE, --milestone MILESTONE
                             Github milestone to get issues and pull requests for
@@ -235,12 +244,3 @@ Detailed CLI arguments
 
       -te, --template TEMPLATE
                             Use a custom Jinja2 template file
-  
-      -u USER, --user USER
-                            Github user name
-
-      -p PASSWORD, --password PASSWORD
-                            Github user password
-
-      -t TOKEN, --token TOKEN
-                            Github access token

@@ -17,7 +17,7 @@ from mock import patch
 import pytest
 
 # Local imports
-from loghub.main import create_changelog, parse_arguments
+from loghub.cli.main import create_changelog, parse_arguments
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
@@ -38,7 +38,7 @@ def test_changelog():
         milestone=TEST_MILESTONE,
         branch='master',
         output_format='changelog')
-    expected = '''## Version <RELEASE_VERSION> (2016-12-05)
+    expected = '''## Version test-milestone (2016-12-05)
 
 ### Issues Closed
 
@@ -66,7 +66,7 @@ def test_changelog_release():
         milestone=TEST_MILESTONE,
         branch='master',
         output_format='release')
-    expected = '''## Version <RELEASE_VERSION> (2016-12-05)
+    expected = '''## Version test-milestone (2016-12-05)
 
 ### Issues Closed
 
@@ -94,7 +94,7 @@ def test_changelog_release_branch():
         milestone=TEST_MILESTONE,
         branch='test-branch',
         output_format='release')
-    expected = '''## Version <RELEASE_VERSION> (2016-12-05)
+    expected = '''## Version test-milestone (2016-12-05)
 
 ### Issues Closed
 
@@ -123,7 +123,7 @@ def test_changelog_groups():
         milestone=TEST_MILESTONE,
         branch='test-branch',
         issue_label_groups=issue_label_groups)
-    expected = '''## Version <RELEASE_VERSION> (2016-12-05)
+    expected = '''## Version test-milestone (2016-12-05)
 
 ### Issues Closed
 

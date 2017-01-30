@@ -220,7 +220,7 @@ class GitHubRepo(object):
                 break
 
 #        print(issues)
-        # If since was provided, filter the issue
+# If since was provided, filter the issue
         issues = self._filter_since(issues, since)
 
         # If until was provided, filter the issue
