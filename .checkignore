@@ -9,7 +9,3 @@ tests/**
 **/external/**
 **/external/
 external/**
-
-# Ignore files
-versioneer.py
-loghub/_version.py

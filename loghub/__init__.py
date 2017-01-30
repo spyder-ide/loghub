@@ -7,7 +7,6 @@
 # -----------------------------------------------------------------------------
 """Changelog generator based on github milestones or tags."""
 
-from ._version import get_versions
 
-__version__ = get_versions()['version']
-del get_versions
+VERSION_INFO = (0, 2, 'dev0')
+__version__ = '.'.join(map(str, VERSION_INFO))
