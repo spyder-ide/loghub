@@ -115,6 +115,12 @@ def parse_arguments(skip=False):
         default=None,
         choices=['milestones', 'tags'],
         help="Run loghub for all milestones or all tags")
+    parser.add_argument(
+        '--no-prs',
+        action="store_false",
+        dest="show_prs",
+        default=True,
+        help="Run loghub without any pull requests output")
 
     options = parser.parse_args()
 
@@ -177,7 +183,8 @@ def parse_arguments(skip=False):
             output_format=options.output_format,
             template_file=options.template,
             issue_label_groups=new_issue_label_groups,
-            batch=batch)
+            batch=batch,
+            show_prs=options.show_prs)
 
     return options
 

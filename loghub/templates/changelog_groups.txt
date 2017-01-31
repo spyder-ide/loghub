@@ -12,7 +12,7 @@
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
 {% endif -%}
 
-{% if pull_requests|length %}
+{% if pull_requests|length and show_prs %}
 ### Pull Requests Merged
 
 {%   for pr in pull_requests -%}
