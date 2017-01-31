@@ -1,0 +1,11 @@
+# Build dependencies
+#python
+#setuptools
+
+# Run dependencies
+jinja2
+
+# Test/Dev dependencies
+ciocheck
+coveralls
+mock

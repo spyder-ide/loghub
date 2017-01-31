@@ -5,7 +5,7 @@ machine:
     # Used by qthelpers to close widgets after a defined time
     TEST_CI: "True"
     # Python versions to tests (Maximum of 4 different versions)
-    PY_VERSIONS: "3.5 3.4 2.7"
+    PY_VERSIONS: "3.6 3.5 2.7"
     # Environment variables used by astropy helpers
     TRAVIS_OS_NAME: "linux"
 
@@ -16,12 +16,10 @@ dependencies:
       export TRAVIS_PYTHON_VERSION=${PY_VERSIONS[$CIRCLE_NODE_INDEX]} && 
       echo -e "PYTHON = $TRAVIS_PYTHON_VERSION \n============" &&
       git clone git://github.com/astropy/ci-helpers.git &&
-      source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh &&
-      export PATH="$HOME/miniconda/bin:$PATH" &&
+      source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh;
+    - export PATH="$HOME/miniconda/bin:$PATH" &&
       source activate test &&
-      conda install mock &&
-      conda install ciocheck -c conda-forge &&
-      pip install coveralls &&
+      conda install --file requirements.txt -c spyder-ide -q &&
       python setup.py develop;
 
 test:
