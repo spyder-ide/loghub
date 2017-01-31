@@ -71,6 +71,7 @@ def filter_issues_by_regex(issues, issue_label_regex):
 def filter_issue_label_groups(issues, issue_label_groups):
     """Filter issues by the label groups."""
     grouped_filtered_issues = OrderedDict()
+    print(issue_label_groups)
     if issue_label_groups:
         new_filtered_issues = []
         for label_group_dic in issue_label_groups:
@@ -107,15 +108,82 @@ def create_changelog(repo=None,
                      issue_label_regex='',
                      pr_label_regex='',
                      template_file=None,
-                     issue_label_groups=None):
-    """Create changelog data."""
-    # Instantiate Github API
+                     issue_label_groups=None,
+                     batch=None):
+    """Create changelog data for single and batched mode."""
     gh = GitHubRepo(
         username=username,
         password=password,
         token=token,
         repo=repo, )
 
+    all_changelogs = []
+
+    if batch:
+        base_issues = []
+        if batch == 'milestones':
+            milestones = [milestone]
+        elif batch == 'tags':
+            tags = [(since_tag, until_tag)]
+    else:
+        base_issues = None
+        if milestone:
+            milestones = [milestone]
+        else:
+            tags = [(since_tag, until_tag)]
+
+    for milestone in milestones:
+        since_tag, until_tag = None, None
+        ch = create_single_changelog(
+            gh=gh,
+            repo=repo,
+            milestone=milestone,
+            since_tag=since_tag,
+            until_tag=until_tag,
+            branch=branch,
+            issue_label_regex=issue_label_regex,
+            pr_label_regex=pr_label_regex,
+            issue_label_groups=issue_label_groups,
+            output_format=output_format,
+            template_file=template_file,
+            base_issues=base_issues)
+        all_changelogs.append(ch)
+    for (since_tag, until_tag) in tags:
+        milestone = None
+        ch = create_single_changelog(
+            gh=gh,
+            repo=repo,
+            milestone=milestone,
+            since_tag=since_tag,
+            until_tag=until_tag,
+            branch=branch,
+            issue_label_regex=issue_label_regex,
+            pr_label_regex=pr_label_regex,
+            issue_label_groups=issue_label_groups,
+            output_format=output_format,
+            template_file=template_file,
+            base_issues=base_issues)
+        all_changelogs.append(ch)
+
+    changelog = '\n'.join(all_changelogs)
+    write_changelog(changelog=changelog)
+
+    return changelog
+
+
+def create_single_changelog(gh,
+                            repo,
+                            milestone,
+                            since_tag,
+                            until_tag,
+                            branch,
+                            issue_label_regex,
+                            pr_label_regex,
+                            issue_label_groups,
+                            output_format,
+                            template_file,
+                            base_issues=None):
+    """Create changelog data for single mode."""
     version = until_tag or None
     milestone_number = None
     closed_at = None
@@ -145,7 +213,8 @@ def create_changelog(repo=None,
         state='closed',
         since=since,
         until=until,
-        branch=branch, )
+        branch=branch,
+        base_issues=base_issues, )
 
     # Filter by regex if available
     filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
@@ -155,7 +224,7 @@ def create_changelog(repo=None,
     new_filtered_issues, issue_label_groups = filter_issue_label_groups(
         filtered_issues, issue_label_groups)
 
-    return format_changelog(
+    return render_changelog(
         repo,
         new_filtered_issues,
         filtered_prs,
@@ -166,16 +235,15 @@ def create_changelog(repo=None,
         issue_label_groups=issue_label_groups)
 
 
-def format_changelog(repo,
+def render_changelog(repo,
                      issues,
                      prs,
-                     version,
+                     version=None,
                      closed_at=None,
                      output_format='changelog',
-                     output_file='CHANGELOG.temp',
                      template_file=None,
                      issue_label_groups=None):
-    """Create changelog data."""
+    """Render changelog data on a jinja template."""
     # Header
     if not version:
         version = '<RELEASE_VERSION>'
@@ -215,11 +283,14 @@ def format_changelog(repo,
         repo_name=repo_name,
         issue_label_groups=issue_label_groups, )
 
+    return rendered
+
+
+def write_changelog(changelog, output_file='CHANGELOG.temp'):
+    """"""
     print('#' * 79)
-    print(rendered)
+    print(changelog)
     print('#' * 79)
 
     with codecs.open(output_file, "w", "utf-8") as f:
-       f.write(rendered)
-
-    return rendered
+        f.write(changelog)

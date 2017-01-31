@@ -78,6 +78,10 @@ class GitHubRepo(object):
                       'a valid token.\n')
             sys.exit(1)
 
+    def _filter_milestone(self, issues, milestone):
+        """Filter out all issues in milestone """
+        return issues
+
     def _filter_since(self, issues, since):
         """Filter out all issues before `since` date."""
         if since:
@@ -220,34 +224,41 @@ class GitHubRepo(object):
                direction=None,
                since=None,
                until=None,
-               branch=None):
+               branch=None,
+               cache=False,
+               base_issues=None):
         """Return Issues and Pull Requests."""
         self._check_rate()
         page = 1
-        issues = []
-        while True:
-            result = self.repo.issues.get(page=page,
-                                          per_page=100,
-                                          milestone=milestone,
-                                          state=state,
-                                          assignee=assignee,
-                                          creator=creator,
-                                          mentioned=mentioned,
-                                          labels=labels,
-                                          sort=sort,
-                                          direction=direction,
-                                          since=since)
-            if len(result) > 0:
-                issues += result
-                page = page + 1
-            else:
-                break
+
+        if not base_issues:
+            issues = []
+            while True:
+                result = self.repo.issues.get(page=page,
+                                              per_page=100,
+                                              milestone=milestone,
+                                              state=state,
+                                              assignee=assignee,
+                                              creator=creator,
+                                              mentioned=mentioned,
+                                              labels=labels,
+                                              sort=sort,
+                                              direction=direction,
+                                              since=since)
+                if len(result) > 0:
+                    issues += result
+                    page = page + 1
+                else:
+                    break
 
         # If since was provided, filter the issue
         issues = self._filter_since(issues, since)
 
         # If until was provided, filter the issue
         issues = self._filter_until(issues, until)
+
+        # If milestone was provided, filter the issue
+        issues = self._filter_milestone(issues, milestone)
 
         # If it is a pr check if it is merged or closed, removed closed ones
         issues = self._filer_closed_prs(issues, branch)

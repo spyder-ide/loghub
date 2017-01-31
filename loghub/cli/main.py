@@ -47,6 +47,27 @@ def parse_arguments(skip=False):
         default='',
         help="Github milestone to get issues and pull requests for")
     parser.add_argument(
+        '-st',
+        '--since-tag',
+        action="store",
+        dest="since_tag",
+        default='',
+        help="Github issues and pull requests since tag")
+    parser.add_argument(
+        '-ut',
+        '--until-tag',
+        action="store",
+        dest="until_tag",
+        default='',
+        help="Github issues and pull requests until tag")
+    parser.add_argument(
+        '-b',
+        '--branch',
+        action="store",
+        dest="branch",
+        default='',
+        help="Github base branch for merged PRs")
+    parser.add_argument(
         '-ilg',
         '--issue-label-group',
         action="append",
@@ -71,27 +92,6 @@ def parse_arguments(skip=False):
         default='',
         help="Label pull requets filter using a regular expression filter")
     parser.add_argument(
-        '-st',
-        '--since-tag',
-        action="store",
-        dest="since_tag",
-        default='',
-        help="Github issues and pull requests since tag")
-    parser.add_argument(
-        '-ut',
-        '--until-tag',
-        action="store",
-        dest="until_tag",
-        default='',
-        help="Github issues and pull requests until tag")
-    parser.add_argument(
-        '-b',
-        '--branch',
-        action="store",
-        dest="branch",
-        default='',
-        help="Github base branch for merged PRs")
-    parser.add_argument(
         '-f',
         '--format',
         action="store",
@@ -108,6 +108,13 @@ def parse_arguments(skip=False):
         dest="template",
         default='',
         help="Use a custom Jinja2 template file ")
+    parser.add_argument(
+        '--batch',
+        action="store",
+        dest="batch",
+        default=None,
+        choices=['milestones', 'tags'],
+        help="Run loghub for all milestones or all tags")
 
     options = parser.parse_args()
 
@@ -115,13 +122,21 @@ def parse_arguments(skip=False):
     password = parse_password_check_repo(options)
     milestone = options.milestone
     issue_label_groups = options.issue_label_groups
+    batch = options.batch
 
     # Check if milestone or tag given
-    if not milestone and not options.since_tag:
-        print('\nLOGHUB: Querying all issues\n')
-    elif milestone:
-        print('\nLOGHUB: Querying issues for milestone {0}'
-              '\n'.format(milestone))
+    if not batch:
+        if not milestone and not options.since_tag:
+            print('\nLOGHUB: Querying all issues\n')
+        elif milestone:
+            print('\nLOGHUB: Querying issues for milestone {0}'
+                  '\n'.format(milestone))
+        elif options.since_tag and not options.until_tag:
+            print('\nLOGHUB: Querying issues since tag {0}'
+                  '\n'.format(options.since_tag))
+        elif options.since_tag and options.until_tag:
+            print('\nLOGHUB: Querying issues since tag {0} until tag {1}'
+                  '\n'.format(options.since_tag, options.until_tag))
 
     new_issue_label_groups = []
     if issue_label_groups:
@@ -152,7 +167,8 @@ def parse_arguments(skip=False):
             pr_label_regex=options.pr_label_regex,
             output_format=options.output_format,
             template_file=options.template,
-            issue_label_groups=new_issue_label_groups)
+            issue_label_groups=new_issue_label_groups,
+            batch=batch)
 
     return options
 
