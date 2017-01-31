@@ -40,7 +40,6 @@ def get_description():
 
 REQUIREMENTS = ['jinja2']
 
-
 setup(
     name='loghub',
     version=get_version(),
@@ -55,9 +54,12 @@ setup(
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=REQUIREMENTS,
-    entry_points={'console_scripts': ['loghub = loghub.cli.main:main',
-                                      'loghub-labels = loghub.cli.label_creator:main',
-                                      ]},
+    entry_points={
+        'console_scripts': [
+            'loghub = loghub.cli.main:main',
+            'loghub-labels = loghub.cli.label_creator:main',
+        ]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
