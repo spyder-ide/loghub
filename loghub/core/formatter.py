@@ -125,15 +125,16 @@ def create_changelog(repo=None,
         base_issues = issues = gh.issues(state='closed', branch=branch)
         if batch == 'milestones':
             milestones = [i.get('title') for i in gh.milestones()]
-            empty_items = [None]*len(milestones)
+            empty_items = [None] * len(milestones)
             items = zip(*(milestones, empty_items, empty_items))
         elif batch == 'tags':
-            tags = [i.get('ref', '').replace('refs/tags/', '')
-                    for i in gh.tags()]
+            tags = [
+                i.get('ref', '').replace('refs/tags/', '') for i in gh.tags()
+            ]
             since_tags = [None] + tags
             until_tags = tags + [None]
-            empty_items = [None]*len(since_tags)
-            items = zip(*(empty_items, since_tags, until_tags))            
+            empty_items = [None] * len(since_tags)
+            items = zip(*(empty_items, since_tags, until_tags))
     else:
         base_issues = None
         if milestone:
@@ -147,23 +148,23 @@ def create_changelog(repo=None,
         closed_at = None
         since = None
         until = None
-    
+
         # Set milestone or from tag
         if milestone and not since_tag:
             milestone_data = gh.milestone(milestone)
             milestone_number = milestone_data['number']
             closed_at = milestone_data['closed_at']
             version = milestone
-    
+
             if version.startswith(version_tag_prefix):
                 version = version[len(version_tag_prefix):]
-    
+
         elif not milestone and since_tag:
             since = gh.tag(since_tag)['tagger']['date']
             if until_tag:
                 until = gh.tag(until_tag)['tagger']['date']
                 closed_at = until
-    
+
         # This returns issues and pull requests
         issues = gh.issues(
             milestone_number=milestone_number,
@@ -173,15 +174,15 @@ def create_changelog(repo=None,
             until=until,
             branch=branch,
             base_issues=base_issues, )
-    
+
         # Filter by regex if available
         filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
         filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
-    
+
         # If issue label grouping, filter issues
         new_filtered_issues, issue_label_groups = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
-    
+
         ch = render_changelog(
             repo,
             new_filtered_issues,
@@ -193,7 +194,6 @@ def create_changelog(repo=None,
             issue_label_groups=issue_label_groups)
 
         all_changelogs.append(ch)
-
 
     changelog = '\n'.join(all_changelogs)
     write_changelog(changelog=changelog)
