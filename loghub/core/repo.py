@@ -261,6 +261,8 @@ class GitHubRepo(object):
                     page = page + 1
                 else:
                     break
+        else:
+            issues = base_issues
 
         # If since was provided, filter the issue
         issues = self._filter_since(issues, since)

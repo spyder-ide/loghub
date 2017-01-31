@@ -121,12 +121,19 @@ def create_changelog(repo=None,
     version_tag_prefix = 'v'
 
     if batch:
-        base_issues = []
+        # This will get all the issues, might eat up the api rate limit!
+        base_issues = issues = gh.issues(state='closed', branch=branch)
         if batch == 'milestones':
-            pass
+            milestones = [i.get('title') for i in gh.milestones()]
+            empty_items = [None]*len(milestones)
+            items = zip(*(milestones, empty_items, empty_items))
         elif batch == 'tags':
-            pass
-        items = [milestone, since_tag, until_tag]
+            tags = [i.get('ref', '').replace('refs/tags/', '')
+                    for i in gh.tags()]
+            since_tags = [None] + tags
+            until_tags = tags + [None]
+            empty_items = [None]*len(since_tags)
+            items = zip(*(empty_items, since_tags, until_tags))            
     else:
         base_issues = None
         if milestone:
@@ -134,7 +141,7 @@ def create_changelog(repo=None,
         else:
             items = [(None, since_tag, until_tag)]
 
-    for (milestone, since_tag, until_tag) in items:
+    for (milestone, since_tag, until_tag) in reversed(items):
         version = until_tag or None
         milestone_number = None
         closed_at = None
