@@ -11,6 +11,7 @@
 
 # Standard library imports
 from collections import OrderedDict
+import codecs
 import re
 import time
 
@@ -70,6 +71,7 @@ def filter_issues_by_regex(issues, issue_label_regex):
 def filter_issue_label_groups(issues, issue_label_groups):
     """Filter issues by the label groups."""
     grouped_filtered_issues = OrderedDict()
+    print(issue_label_groups)
     if issue_label_groups:
         new_filtered_issues = []
         for label_group_dic in issue_label_groups:
@@ -106,75 +108,105 @@ def create_changelog(repo=None,
                      issue_label_regex='',
                      pr_label_regex='',
                      template_file=None,
-                     issue_label_groups=None):
-    """Create changelog data."""
-    # Instantiate Github API
+                     issue_label_groups=None,
+                     batch=None):
+    """Create changelog data for single and batched mode."""
     gh = GitHubRepo(
         username=username,
         password=password,
         token=token,
         repo=repo, )
 
-    version = until_tag or None
-    milestone_number = None
-    closed_at = None
-    since = None
-    until = None
+    all_changelogs = []
     version_tag_prefix = 'v'
 
-    # Set milestone or from tag
-    if milestone and not since_tag:
-        milestone_data = gh.milestone(milestone)
-        milestone_number = milestone_data['number']
-        closed_at = milestone_data['closed_at']
-        version = milestone
+    if batch:
+        # This will get all the issues, might eat up the api rate limit!
+        base_issues = issues = gh.issues(state='closed', branch=branch)
+        if batch == 'milestones':
+            milestones = [i.get('title') for i in gh.milestones()]
+            empty_items = [None] * len(milestones)
+            items = zip(*(milestones, empty_items, empty_items))
+        elif batch == 'tags':
+            tags = [
+                i.get('ref', '').replace('refs/tags/', '') for i in gh.tags()
+            ]
+            since_tags = [None] + tags
+            until_tags = tags + [None]
+            empty_items = [None] * len(since_tags)
+            items = zip(*(empty_items, since_tags, until_tags))
+    else:
+        base_issues = None
+        if milestone:
+            items = [(milestone, None, None)]
+        else:
+            items = [(None, since_tag, until_tag)]
 
-        if version.startswith(version_tag_prefix):
-            version = version[len(version_tag_prefix):]
+    for (milestone, since_tag, until_tag) in reversed(items):
+        version = until_tag or None
+        closed_at = None
+        since = None
+        until = None
 
-    elif not milestone and since_tag:
-        since = gh.tag(since_tag)['tagger']['date']
-        if until_tag:
-            until = gh.tag(until_tag)['tagger']['date']
-            closed_at = until
+        # Set milestone or from tag
+        if milestone and not since_tag:
+            milestone_data = gh.milestone(milestone)
+            closed_at = milestone_data['closed_at']
+            version = milestone
 
-    # This returns issues and pull requests
-    issues = gh.issues(
-        milestone=milestone_number,
-        state='closed',
-        since=since,
-        until=until,
-        branch=branch, )
+            if version.startswith(version_tag_prefix):
+                version = version[len(version_tag_prefix):]
 
-    # Filter by regex if available
-    filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
-    filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
+        elif not milestone and since_tag:
+            since = gh.tag(since_tag)['tagger']['date']
+            if until_tag:
+                until = gh.tag(until_tag)['tagger']['date']
+                closed_at = until
 
-    # If issue label grouping, filter issues
-    new_filtered_issues, issue_label_groups = filter_issue_label_groups(
-        filtered_issues, issue_label_groups)
+        # This returns issues and pull requests
+        issues = gh.issues(
+            milestone=milestone,
+            state='closed',
+            since=since,
+            until=until,
+            branch=branch,
+            base_issues=base_issues, )
 
-    return format_changelog(
-        repo,
-        new_filtered_issues,
-        filtered_prs,
-        version,
-        closed_at=closed_at,
-        output_format=output_format,
-        template_file=template_file,
-        issue_label_groups=issue_label_groups)
+        # Filter by regex if available
+        filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
+        filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
+
+        # If issue label grouping, filter issues
+        new_filtered_issues, issue_label_groups = filter_issue_label_groups(
+            filtered_issues, issue_label_groups)
+
+        ch = render_changelog(
+            repo,
+            new_filtered_issues,
+            filtered_prs,
+            version,
+            closed_at=closed_at,
+            output_format=output_format,
+            template_file=template_file,
+            issue_label_groups=issue_label_groups)
+
+        all_changelogs.append(ch)
+
+    changelog = '\n'.join(all_changelogs)
+    write_changelog(changelog=changelog)
+
+    return changelog
 
 
-def format_changelog(repo,
+def render_changelog(repo,
                      issues,
                      prs,
-                     version,
+                     version=None,
                      closed_at=None,
                      output_format='changelog',
-                     output_file='CHANGELOG.temp',
                      template_file=None,
                      issue_label_groups=None):
-    """Create changelog data."""
+    """Render changelog data on a jinja template."""
     # Header
     if not version:
         version = '<RELEASE_VERSION>'
@@ -214,11 +246,14 @@ def format_changelog(repo,
         repo_name=repo_name,
         issue_label_groups=issue_label_groups, )
 
-    print('#' * 79)
-    print(rendered)
-    print('#' * 79)
-
-    with open(output_file, 'w') as f:
-        f.write(rendered)
-
     return rendered
+
+
+def write_changelog(changelog, output_file='CHANGELOG.temp'):
+    """Output rendered result to prompt and file."""
+    print('#' * 79)
+    print(changelog)
+    print('#' * 79)
+
+    with codecs.open(output_file, "w", "utf-8") as f:
+        f.write(changelog)
