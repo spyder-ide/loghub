@@ -11,6 +11,7 @@
 
 # Standard library imports
 from collections import OrderedDict
+import codecs
 import re
 import time
 
@@ -218,7 +219,7 @@ def format_changelog(repo,
     print(rendered)
     print('#' * 79)
 
-    with open(output_file, 'w') as f:
-        f.write(rendered)
+    with codecs.open(output_file, "w", "utf-8") as f:
+       f.write(rendered)
 
     return rendered
