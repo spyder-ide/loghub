@@ -109,7 +109,8 @@ def create_changelog(repo=None,
                      pr_label_regex='',
                      template_file=None,
                      issue_label_groups=None,
-                     batch=None):
+                     batch=None,
+                     show_prs=True):
     """Create changelog data for single and batched mode."""
     gh = GitHubRepo(
         username=username,
@@ -188,7 +189,8 @@ def create_changelog(repo=None,
             closed_at=closed_at,
             output_format=output_format,
             template_file=template_file,
-            issue_label_groups=issue_label_groups)
+            issue_label_groups=issue_label_groups,
+            show_prs=show_prs)
 
         all_changelogs.append(ch)
 
@@ -205,7 +207,8 @@ def render_changelog(repo,
                      closed_at=None,
                      output_format='changelog',
                      template_file=None,
-                     issue_label_groups=None):
+                     issue_label_groups=None,
+                     show_prs=True):
     """Render changelog data on a jinja template."""
     # Header
     if not version:
@@ -244,7 +247,8 @@ def render_changelog(repo,
         repo_full_name=repo,
         repo_owner=repo_owner,
         repo_name=repo_name,
-        issue_label_groups=issue_label_groups, )
+        issue_label_groups=issue_label_groups,
+        show_prs=show_prs, )
 
     return rendered
 
