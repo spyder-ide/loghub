@@ -155,6 +155,30 @@ class GitHubRepo(object):
 
         return self.repo('git')('tags')(sha).get()
 
+    def labels(self):
+        """Return labels for the repo."""
+        self._check_rate()
+        return self.repo.labels.get()
+
+    def set_labels(self, labels):
+        """Return labels for the repo."""
+        self._check_rate()
+        for label in labels:
+            new_name = label['new_name']
+            old_name = label['old_name']
+            color = label['color']
+            try:
+                self.repo.labels(old_name).patch(name=new_name, color=color)
+                print('Updated label: "{0}" -> "{1}" (#{2})'.format(
+                    old_name, new_name, color))
+            except ApiError:
+                try:
+                    self.repo.labels.post(name=new_name, color=color)
+                    print('Created label: "{0}" (#{1})'.format(new_name,
+                                                               color))
+                except ApiError:
+                    print('\nLabel "{0}" already exists!'.format(new_name))
+
     def milestones(self):
         """Return all milestones."""
         self._check_rate()
@@ -219,8 +243,7 @@ class GitHubRepo(object):
             else:
                 break
 
-#        print(issues)
-# If since was provided, filter the issue
+        # If since was provided, filter the issue
         issues = self._filter_since(issues, since)
 
         # If until was provided, filter the issue
