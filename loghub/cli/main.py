@@ -118,10 +118,7 @@ def parse_arguments(skip=False):
 
     options = parser.parse_args()
 
-    username = options.username
-    password = parse_password_check_repo(options)
     milestone = options.milestone
-    issue_label_groups = options.issue_label_groups
     batch = options.batch
 
     # Check if milestone or tag given
@@ -137,6 +134,16 @@ def parse_arguments(skip=False):
         elif options.since_tag and options.until_tag:
             print('\nLOGHUB: Querying issues since tag {0} until tag {1}'
                   '\n'.format(options.since_tag, options.until_tag))
+    elif batch and any([bool(options.since_tag), bool(options.until_tag),
+                        bool(options.milestone)]):
+        print('LOGHUB: When using batch mode no tags or milestone arguments '
+              'are allowed.\n')
+        sys.exit(1)
+
+    # Ask for password once input is valid
+    username = options.username
+    password = parse_password_check_repo(options)
+    issue_label_groups = options.issue_label_groups    
 
     new_issue_label_groups = []
     if issue_label_groups:
