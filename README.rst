@@ -57,6 +57,13 @@ Using conda
 
     conda install loghub -c conda-forge
 
+or
+
+::
+
+    conda install loghub -c spyder-ide
+
+
 Usage
 -----
 
@@ -244,3 +251,30 @@ Detailed CLI arguments
 
       -te, --template TEMPLATE
                             Use a custom Jinja2 template file
+
+Label utility CLI arguments
+---------------------------
+loghub includes an additional utility to get or update labels.
+
+.. code-block:: text
+
+    usage: loghub-labels [-h] [-u USERNAME] [-p PASSWORD] [-t TOKEN]
+                         [-a [{get,update}]] [-f FILENAME]
+                         repository
+    
+    positional arguments:
+      repository            Repository name to generate the Changelog for, in the
+                            form user/repo or org/repo (e.g. spyder-ide/spyder)
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -u USERNAME, --username USERNAME
+                            Github user name
+      -p PASSWORD, --password PASSWORD
+                            Github user password
+      -t TOKEN, --token TOKEN
+                            Github access token
+      -a [{get,update}], --action [{get,update}]
+                            Action to take
+      -f FILENAME, --filename FILENAME
+                            File for storing labels
