@@ -144,7 +144,6 @@ def create_changelog(repo=None,
 
     for (milestone, since_tag, until_tag) in reversed(items):
         version = until_tag or None
-        milestone_number = None
         closed_at = None
         since = None
         until = None
@@ -152,7 +151,6 @@ def create_changelog(repo=None,
         # Set milestone or from tag
         if milestone and not since_tag:
             milestone_data = gh.milestone(milestone)
-            milestone_number = milestone_data['number']
             closed_at = milestone_data['closed_at']
             version = milestone
 
@@ -167,7 +165,6 @@ def create_changelog(repo=None,
 
         # This returns issues and pull requests
         issues = gh.issues(
-            milestone_number=milestone_number,
             milestone=milestone,
             state='closed',
             since=since,

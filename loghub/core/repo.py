@@ -224,7 +224,6 @@ class GitHubRepo(object):
         return self.repo('pulls')(str(pr_number)).get()
 
     def issues(self,
-               milestone_number=None,
                milestone=None,
                state=None,
                assignee=None,
@@ -243,6 +242,10 @@ class GitHubRepo(object):
         page = 1
 
         if not base_issues:
+            milestone_number = None
+            if milestone:
+                milestone_data = self.milestone(milestone)
+                milestone_number = milestone_data.get('number')
             issues = []
             while True:
                 result = self.repo.issues.get(page=page,
