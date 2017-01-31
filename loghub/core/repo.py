@@ -79,7 +79,17 @@ class GitHubRepo(object):
             sys.exit(1)
 
     def _filter_milestone(self, issues, milestone):
-        """Filter out all issues in milestone """
+        """Filter out all issues in milestone."""
+        if milestone:
+            for issue in issues[:]:
+                milestone_data = issue.get('milestone', {})
+                if milestone_data:
+                    issue_milestone_title = milestone_data.get('title')
+                else:
+                    issue_milestone_title = ''
+
+                if issue_milestone_title != milestone:
+                    issues.remove(issue)
         return issues
 
     def _filter_since(self, issues, since):
@@ -214,6 +224,7 @@ class GitHubRepo(object):
         return self.repo('pulls')(str(pr_number)).get()
 
     def issues(self,
+               milestone_number=None,
                milestone=None,
                state=None,
                assignee=None,
@@ -236,7 +247,7 @@ class GitHubRepo(object):
             while True:
                 result = self.repo.issues.get(page=page,
                                               per_page=100,
-                                              milestone=milestone,
+                                              milestone=milestone_number,
                                               state=state,
                                               assignee=assignee,
                                               creator=creator,

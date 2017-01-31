@@ -159,7 +159,8 @@ def create_changelog(repo=None,
     
         # This returns issues and pull requests
         issues = gh.issues(
-            milestone=milestone_number,
+            milestone_number=milestone_number,
+            milestone=milestone,
             state='closed',
             since=since,
             until=until,
@@ -245,7 +246,7 @@ def render_changelog(repo,
 
 
 def write_changelog(changelog, output_file='CHANGELOG.temp'):
-    """"""
+    """Output rendered result to prompt and file."""
     print('#' * 79)
     print(changelog)
     print('#' * 79)
