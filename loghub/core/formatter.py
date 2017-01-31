@@ -118,121 +118,79 @@ def create_changelog(repo=None,
         repo=repo, )
 
     all_changelogs = []
+    version_tag_prefix = 'v'
 
     if batch:
         base_issues = []
         if batch == 'milestones':
-            milestones = [milestone]
+            pass
         elif batch == 'tags':
-            tags = [(since_tag, until_tag)]
+            pass
+        items = [milestone, since_tag, until_tag]
     else:
         base_issues = None
         if milestone:
-            milestones = [milestone]
+            items = [(milestone, None, None)]
         else:
-            tags = [(since_tag, until_tag)]
+            items = [(None, since_tag, until_tag)]
 
-    for milestone in milestones:
-        since_tag, until_tag = None, None
-        ch = create_single_changelog(
-            gh=gh,
-            repo=repo,
-            milestone=milestone,
-            since_tag=since_tag,
-            until_tag=until_tag,
+    for (milestone, since_tag, until_tag) in items:
+        version = until_tag or None
+        milestone_number = None
+        closed_at = None
+        since = None
+        until = None
+    
+        # Set milestone or from tag
+        if milestone and not since_tag:
+            milestone_data = gh.milestone(milestone)
+            milestone_number = milestone_data['number']
+            closed_at = milestone_data['closed_at']
+            version = milestone
+    
+            if version.startswith(version_tag_prefix):
+                version = version[len(version_tag_prefix):]
+    
+        elif not milestone and since_tag:
+            since = gh.tag(since_tag)['tagger']['date']
+            if until_tag:
+                until = gh.tag(until_tag)['tagger']['date']
+                closed_at = until
+    
+        # This returns issues and pull requests
+        issues = gh.issues(
+            milestone=milestone_number,
+            state='closed',
+            since=since,
+            until=until,
             branch=branch,
-            issue_label_regex=issue_label_regex,
-            pr_label_regex=pr_label_regex,
-            issue_label_groups=issue_label_groups,
+            base_issues=base_issues, )
+    
+        # Filter by regex if available
+        filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
+        filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
+    
+        # If issue label grouping, filter issues
+        new_filtered_issues, issue_label_groups = filter_issue_label_groups(
+            filtered_issues, issue_label_groups)
+    
+        ch = render_changelog(
+            repo,
+            new_filtered_issues,
+            filtered_prs,
+            version,
+            closed_at=closed_at,
             output_format=output_format,
             template_file=template_file,
-            base_issues=base_issues)
+            issue_label_groups=issue_label_groups)
+
         all_changelogs.append(ch)
-    for (since_tag, until_tag) in tags:
-        milestone = None
-        ch = create_single_changelog(
-            gh=gh,
-            repo=repo,
-            milestone=milestone,
-            since_tag=since_tag,
-            until_tag=until_tag,
-            branch=branch,
-            issue_label_regex=issue_label_regex,
-            pr_label_regex=pr_label_regex,
-            issue_label_groups=issue_label_groups,
-            output_format=output_format,
-            template_file=template_file,
-            base_issues=base_issues)
-        all_changelogs.append(ch)
+
 
     changelog = '\n'.join(all_changelogs)
     write_changelog(changelog=changelog)
 
     return changelog
-
-
-def create_single_changelog(gh,
-                            repo,
-                            milestone,
-                            since_tag,
-                            until_tag,
-                            branch,
-                            issue_label_regex,
-                            pr_label_regex,
-                            issue_label_groups,
-                            output_format,
-                            template_file,
-                            base_issues=None):
-    """Create changelog data for single mode."""
-    version = until_tag or None
-    milestone_number = None
-    closed_at = None
-    since = None
-    until = None
-    version_tag_prefix = 'v'
-
-    # Set milestone or from tag
-    if milestone and not since_tag:
-        milestone_data = gh.milestone(milestone)
-        milestone_number = milestone_data['number']
-        closed_at = milestone_data['closed_at']
-        version = milestone
-
-        if version.startswith(version_tag_prefix):
-            version = version[len(version_tag_prefix):]
-
-    elif not milestone and since_tag:
-        since = gh.tag(since_tag)['tagger']['date']
-        if until_tag:
-            until = gh.tag(until_tag)['tagger']['date']
-            closed_at = until
-
-    # This returns issues and pull requests
-    issues = gh.issues(
-        milestone=milestone_number,
-        state='closed',
-        since=since,
-        until=until,
-        branch=branch,
-        base_issues=base_issues, )
-
-    # Filter by regex if available
-    filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
-    filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
-
-    # If issue label grouping, filter issues
-    new_filtered_issues, issue_label_groups = filter_issue_label_groups(
-        filtered_issues, issue_label_groups)
-
-    return render_changelog(
-        repo,
-        new_filtered_issues,
-        filtered_prs,
-        version,
-        closed_at=closed_at,
-        output_format=output_format,
-        template_file=template_file,
-        issue_label_groups=issue_label_groups)
 
 
 def render_changelog(repo,
