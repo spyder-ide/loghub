@@ -1,7 +1,7 @@
 {% set name = "loghub" %}
-{% set version = "0.1.1" %}
+{% set version = "0.2" %}
 {% set hash_type = "sha256" %}
-{% set hash = "79c4867319f61257e7a643494910d35891fb08791951656731f315c73924b289" %}
+{% set hash = "7c33f2b797e39808c18453acc9fb8ed3a0670acdf7540f09950ccd9a6777a036" %}
 
 package:
   name: {{ name|lower }}
@@ -16,19 +16,20 @@ build:
   number: 0
   script: python setup.py install --single-version-externally-managed --record=record.txt
   entry_points:
-    - loghub = loghub.main:main
+    - loghub = loghub.cli.main:main
+    - loghub-labels = loghub.cli.label_creator:main
 
 requirements:
   build:
     - python
     - setuptools
   run:
-    - jinja2
     - python
 
 test:
   commands:
     - loghub --help
+    - loghub-labels --help
 
 about:
   home: https://github.com/spyder-ide/loghub
