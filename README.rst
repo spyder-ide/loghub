@@ -252,6 +252,11 @@ Detailed CLI arguments
       -te, --template TEMPLATE
                             Use a custom Jinja2 template file
 
+      --batch {milestones,tags}
+                            Run loghub for all milestones or all tags
+ 
+      --no-prs              Run loghub without any pull requests output
+
 Label utility CLI arguments
 ---------------------------
 loghub includes an additional utility to get or update labels.
@@ -267,14 +272,20 @@ loghub includes an additional utility to get or update labels.
                             form user/repo or org/repo (e.g. spyder-ide/spyder)
     
     optional arguments:
-      -h, --help            show this help message and exit
+      -h, --help            
+                            show this help message and exit
+
       -u USERNAME, --username USERNAME
                             Github user name
+
       -p PASSWORD, --password PASSWORD
                             Github user password
+
       -t TOKEN, --token TOKEN
                             Github access token
+
       -a [{get,update}], --action [{get,update}]
                             Action to take
+
       -f FILENAME, --filename FILENAME
                             File for storing labels
