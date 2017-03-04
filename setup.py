@@ -53,6 +53,7 @@ setup(
     description='Generate changelogs based on Github milestones or tags',
     long_description=get_description(),
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
+    package_data={'loghub.templates.content': ['*.txt']},
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
