@@ -35,13 +35,14 @@ def filter_issues_fixed_by_prs(issues, prs):
 
     This adds extra information to the issues and prs listings.
     """
-    words = ['close', 'closes', 'fix', 'fixes', 'fixed', 'resolve', 'resolves',
-             'resolved']
+    words = [
+        'close', 'closes', 'fix', 'fixes', 'fixed', 'resolve', 'resolves',
+        'resolved'
+    ]
     pattern = re.compile(
         r'(?P<word>' + r'|'.join(words) + r') '
         r'((?P<repo>.*?)#(?P<number>\d*)|(?P<full_repo>.*)/(?P<number_2>\d*))',
-        re.IGNORECASE,
-        )
+        re.IGNORECASE, )
     issue_pr_map = {}
     pr_issue_map = {}
     for pr in prs:
@@ -57,8 +58,7 @@ def filter_issues_fixed_by_prs(issues, prs):
                 issue_number = dic['number'] or dic['number_2']
                 repo = dic['full_repo'] or dic['repo'] or repo_url
 
-                print(pr_number, repo)
-                # In case spyder-ide/loghub#45 was used
+                # In case spyder-ide/loghub#45 was for example used
                 if 'http' not in repo:
                     repo = 'https://github.com/' + repo
 
@@ -70,15 +70,13 @@ def filter_issues_fixed_by_prs(issues, prs):
                     issue_url = repo + '/' + issue_number
 
                 # Set the issue data
-                issue_data = {'url': pr_url,
-                              'text': pr_number}
+                issue_data = {'url': pr_url, 'text': pr_number}
                 if issue_number in issue_pr_map:
                     issue_pr_map[issue_url].append(issue_data)
                 else:
                     issue_pr_map[issue_url] = [issue_data]
 
-                pr_data = {'url': issue_url,
-                           'text': issue_number}
+                pr_data = {'url': issue_url, 'text': issue_number}
                 pr_issue_map[pr_url].append(pr_data)
 
             pr['loghub_related_issues'] = pr_issue_map[pr_url]
@@ -91,14 +89,14 @@ def filter_issues_fixed_by_prs(issues, prs):
     # Now sort the numbers in descending order
     for issue in issues:
         related_pulls = issue.get('loghub_related_pulls', [])
-        related_pulls = sorted(related_pulls, key=lambda p: p['url'],
-                               reverse=True)
+        related_pulls = sorted(
+            related_pulls, key=lambda p: p['url'], reverse=True)
         issue['loghub_related_pulls'] = related_pulls
 
     for pr in prs:
         related_issues = pr.get('loghub_related_issues', [])
-        related_issues = sorted(related_issues, key=lambda i: i['url'],
-                                reverse=True)
+        related_issues = sorted(
+            related_issues, key=lambda i: i['url'], reverse=True)
         pr['loghub_related_issues'] = related_issues
 
     return issues, prs
