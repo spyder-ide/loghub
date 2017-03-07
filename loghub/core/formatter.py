@@ -145,7 +145,6 @@ def filter_issues_by_regex(issues, issue_label_regex):
 def filter_issue_label_groups(issues, issue_label_groups):
     """Filter issues by the label groups."""
     grouped_filtered_issues = OrderedDict()
-    print(issue_label_groups)
     if issue_label_groups:
         new_filtered_issues = []
         for label_group_dic in issue_label_groups:
