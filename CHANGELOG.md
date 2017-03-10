@@ -1,5 +1,19 @@
 # History of changes
 
+## Version 0.2.1 (2017/03/10)
+
+### Issues Closed
+
+* [Issue 67](https://github.com/spyder-ide/loghub/issues/67) - Templates not included in pip package
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 68](https://github.com/spyder-ide/loghub/pull/68) - PR: Add templates to pip package
+
+In this release 1 pull request was closed.
+
 ## Version 0.2 (2017/01/31)
 
 ### Issues Closed
