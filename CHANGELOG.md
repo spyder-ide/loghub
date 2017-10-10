@@ -1,5 +1,20 @@
 # History of changes
 
+## Version 0.3 (2017/10/10)
+
+### Issues Closed
+
+* [Issue 74](https://github.com/spyder-ide/loghub/issues/74) - Make 0.3 release
+* [Issue 63](https://github.com/spyder-ide/loghub/issues/63) - Add PR link / commit link inside issue
+
+In this release 2 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 69](https://github.com/spyder-ide/loghub/pull/69) - PR: Add extra links for related issues and prs
+
+In this release 1 pull request was closed.
+
 ## Version 0.2.1 (2017/03/10)
 
 ### Issues Closed
