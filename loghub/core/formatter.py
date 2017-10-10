@@ -29,6 +29,79 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
 # yapf: enable
 
 
+def filter_issues_fixed_by_prs(issues, prs):
+    """
+    Find related issues to prs and prs to issues that are fixed.
+
+    This adds extra information to the issues and prs listings.
+    """
+    words = [
+        'close', 'closes', 'fix', 'fixes', 'fixed', 'resolve', 'resolves',
+        'resolved'
+    ]
+    pattern = re.compile(
+        r'(?P<word>' + r'|'.join(words) + r') '
+        r'((?P<repo>.*?)#(?P<number>\d*)|(?P<full_repo>.*)/(?P<number_2>\d*))',
+        re.IGNORECASE, )
+    issue_pr_map = {}
+    pr_issue_map = {}
+    for pr in prs:
+        is_pr = bool(pr.get('pull_request'))
+        if is_pr:
+            pr_url = pr.html_url
+            pr_number = pr.number
+            repo_url = pr_url.split('/pull/')[0] + '/issues/'
+            pr_issue_map[pr_url] = []
+            body = pr.body
+            for matches in pattern.finditer(body):
+                dic = matches.groupdict()
+                issue_number = dic['number'] or dic['number_2']
+                repo = dic['full_repo'] or dic['repo'] or repo_url
+
+                # In case spyder-ide/loghub#45 was for example used
+                if 'http' not in repo:
+                    repo = 'https://github.com/' + repo
+
+                if '/issues' not in repo:
+                    issue_url = repo + '/issues/' + issue_number
+                elif repo.endswith('/'):
+                    issue_url = repo + issue_number
+                else:
+                    issue_url = repo + '/' + issue_number
+
+                # Set the issue data
+                issue_data = {'url': pr_url, 'text': pr_number}
+                if issue_number in issue_pr_map:
+                    issue_pr_map[issue_url].append(issue_data)
+                else:
+                    issue_pr_map[issue_url] = [issue_data]
+
+                pr_data = {'url': issue_url, 'text': issue_number}
+                pr_issue_map[pr_url].append(pr_data)
+
+            pr['loghub_related_issues'] = pr_issue_map[pr_url]
+
+    for issue in issues:
+        issue_url = issue.html_url
+        if issue_url in issue_pr_map:
+            issue['loghub_related_pulls'] = issue_pr_map[issue_url]
+
+    # Now sort the numbers in descending order
+    for issue in issues:
+        related_pulls = issue.get('loghub_related_pulls', [])
+        related_pulls = sorted(
+            related_pulls, key=lambda p: p['url'], reverse=True)
+        issue['loghub_related_pulls'] = related_pulls
+
+    for pr in prs:
+        related_issues = pr.get('loghub_related_issues', [])
+        related_issues = sorted(
+            related_issues, key=lambda i: i['url'], reverse=True)
+        pr['loghub_related_issues'] = related_issues
+
+    return issues, prs
+
+
 def filter_prs_by_regex(issues, pr_label_regex):
     """Filter prs by issue regex."""
     filtered_prs = []
@@ -38,12 +111,13 @@ def filter_prs_by_regex(issues, pr_label_regex):
         is_pr = bool(issue.get('pull_request'))
         labels = ' '.join(issue.get('loghub_label_names'))
 
-        if is_pr and pr_label_regex:
-            pr_valid = bool(pr_pattern.search(labels))
-            if pr_valid:
+        if is_pr:
+            if pr_label_regex:
+                pr_valid = bool(pr_pattern.search(labels))
+                if pr_valid:
+                    filtered_prs.append(issue)
+            else:
                 filtered_prs.append(issue)
-        if is_pr and not pr_label_regex:
-            filtered_prs.append(issue)
 
     return filtered_prs
 
@@ -71,7 +145,6 @@ def filter_issues_by_regex(issues, issue_label_regex):
 def filter_issue_label_groups(issues, issue_label_groups):
     """Filter issues by the label groups."""
     grouped_filtered_issues = OrderedDict()
-    print(issue_label_groups)
     if issue_label_groups:
         new_filtered_issues = []
         for label_group_dic in issue_label_groups:
@@ -180,6 +253,8 @@ def create_changelog(repo=None,
         # If issue label grouping, filter issues
         new_filtered_issues, issue_label_groups = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
+
+        filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
 
         ch = render_changelog(
             repo,
