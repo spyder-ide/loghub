@@ -3,7 +3,7 @@ loghub
 
 Build status
 ------------
-|travis status| |appveyor status| |circleci status| |coverage| |quantified code| |scrutinizer|
+|travis status| |appveyor status| |circleci status| |coverage| |scrutinizer|
 
 Project information
 -------------------
@@ -18,9 +18,6 @@ Project information
 .. |circleci status| image:: https://circleci.com/gh/spyder-ide/loghub/tree/master.svg?style=shield
    :target: https://circleci.com/gh/spyder-ide/loghub/tree/master
    :alt: Circle-CI build status
-.. |quantified code| image:: https://www.quantifiedcode.com/api/v1/project/b5e47eec1e564a66a8c52c989880637b/badge.svg
-   :target: https://www.quantifiedcode.com/app/project/b5e47eec1e564a66a8c52c989880637b
-   :alt: Quantified Code issues
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/spyder-ide/loghub/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/spyder-ide/loghub/?branch=master
    :alt: Scrutinizer Code Quality
