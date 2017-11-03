@@ -52,7 +52,7 @@ def filter_issues_fixed_by_prs(issues, prs):
             pr_number = pr.number
             repo_url = pr_url.split('/pull/')[0] + '/issues/'
             pr_issue_map[pr_url] = []
-            body = pr.body
+            body = pr.body or ''
             for matches in pattern.finditer(body):
                 dic = matches.groupdict()
                 issue_number = dic['number'] or dic['number_2']
