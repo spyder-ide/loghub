@@ -1,13 +1,13 @@
 loghub
 ======
 
+Project details
+---------------
+|license| |pypi version| |gitter| |backers| |sponsors|
+
 Build status
 ------------
 |travis status| |appveyor status| |circleci status| |coverage| |scrutinizer|
-
-Project information
--------------------
-|license| |pypi version| |gitter|
 
 .. |travis status| image:: https://travis-ci.org/spyder-ide/loghub.svg?branch=master
    :target: https://travis-ci.org/spyder-ide/loghub
@@ -33,6 +33,30 @@ Project information
 .. |coverage| image:: https://coveralls.io/repos/github/spyder-ide/loghub/badge.svg
    :target: https://coveralls.io/github/spyder-ide/loghub?branch=master
    :alt: Code Coverage
+.. |backers| image:: https://opencollective.com/spyder/backers/badge.svg?color=blue
+   :target: #backers
+   :alt: OpenCollective Backers
+.. |sponsors| image:: https://opencollective.com/spyder/sponsors/badge.svg?color=blue
+   :target: #sponsors
+   :alt: OpenCollective Sponsors
+
+Important Announcement: Spyder is unfunded!
+-------------------------------------------
+
+Since mid November/2017, [Anaconda, Inc](https://www.anaconda.com/) has
+stopped funding Spyder development, after doing it for the past 18
+months. Because of that, development will focus from now on maintaining
+Spyder 3 at a much slower pace than before.
+
+If you want to contribute to maintain Spyder, please consider donating at
+
+https://opencollective.com/spyder
+
+We appreciate all the help you can provide us and can't thank you enough for
+supporting the work of Spyder devs and Spyder development.
+
+If you want to know more about this, please read this
+[page](https://github.com/spyder-ide/spyder/wiki/Anaconda-stopped-funding-Spyder).
 
 
 Description
@@ -286,3 +310,22 @@ loghub includes an additional utility to get or update labels.
 
       -f FILENAME, --filename FILENAME
                             File for storing labels
+
+Contributing
+------------
+
+Everyone is welcome to contribute!
+
+Backers
+~~~~~~~
+
+Support us with a monthly donation and help us continue our activities.
+
+[![Backers](https://opencollective.com/spyder/backers.svg)](https://opencollective.com/spyder#support)
+
+Sponsors
+~~~~~~~~
+
+Become a sponsor to get your logo on our README on Github.
+
+[![Sponsors](https://opencollective.com/spyder/sponsors.svg)](https://opencollective.com/spyder#support)
