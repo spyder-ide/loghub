@@ -321,11 +321,16 @@ Backers
 
 Support us with a monthly donation and help us continue our activities.
 
-[![Backers](https://opencollective.com/spyder/backers.svg)](https://opencollective.com/spyder#support)
+.. image:: https://opencollective.com/spyder/backers.svg
+   :target: https://opencollective.com/spyder#support
+   :alt: Backers
 
 Sponsors
 ~~~~~~~~
 
 Become a sponsor to get your logo on our README on Github.
 
-[![Sponsors](https://opencollective.com/spyder/sponsors.svg)](https://opencollective.com/spyder#support)
+.. image:: https://opencollective.com/spyder/sponsors.svg
+   :target: https://opencollective.com/spyder#support
+   :alt: Sponsors
+
