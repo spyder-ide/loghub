@@ -68,6 +68,39 @@ Description
 
 Changelog generator based on milestone or tags for github.
 
+
+Example output
+--------------
+
+So how does this look in practice? It looks like this for 0.3 release of loghub:
+
+
+::
+
+    ## Version 0.3 (2017-10-10)
+
+    ### Issues Closed
+
+    #### Enhancements
+
+    * [Issue 63](https://github.com/spyder-ide/loghub/issues/63) - Add PR link / commit link inside issue ([PR 69](https://github.com/spyder-ide/loghub/pull/69))
+
+    In this release 1 issue was closed.
+
+    ### Pull Requests Merged
+
+    * [PR 69](https://github.com/spyder-ide/loghub/pull/69) - PR: Add extra links for related issues and prs ([63](https://github.com/spyder-ide/loghub/issues/63))
+
+    In this release 1 pull request was closed.
+
+
+You can look at `loghub's CHANGELOG.md`_, or `spyder's CHANGELOG.md`_ for
+a more complete example output
+
+.. _loghub's CHANGELOG.md: https://github.com/spyder-ide/loghub/blob/master/README.rst
+.. _spyder's CHANGELOG.md: https://github.com/spyder-ide/spyder/blob/master/README.rst
+
+
 Installation
 ------------
 
