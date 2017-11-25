@@ -9,7 +9,7 @@
 
 **2.)** Update [CHANGELOG.md](https://github.com/spyder-ide/loghub/blob/master/CHANGELOG.md), using loghub itself
 
-    loghub spyder-ide/loghub -m <milestone>
+    loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" -u <user> -m <milestone>
 
 **3.)** Update [`loghub/__init__.py`](https://github.com/spyder-ide/loghub/blob/master/loghub/__init__.py) (set release version, remove 'dev0')
 
