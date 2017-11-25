@@ -97,8 +97,8 @@ So how does this look in practice? It looks like this for 0.3 release of loghub:
 You can look at `loghub's CHANGELOG.md`_, or `spyder's CHANGELOG.md`_ for
 a more complete example output
 
-.. _loghub's CHANGELOG.md: https://github.com/spyder-ide/loghub/blob/master/README.rst
-.. _spyder's CHANGELOG.md: https://github.com/spyder-ide/spyder/blob/master/README.rst
+.. _loghub's CHANGELOG.md: https://github.com/spyder-ide/loghub/blob/master/CHANGELOG.md
+.. _spyder's CHANGELOG.md: https://github.com/spyder-ide/spyder/blob/master/CHANGELOG.md
 
 
 Installation
