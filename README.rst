@@ -75,7 +75,7 @@ Example output
 So how does this look in practice? It looks like this for 0.3 release of loghub:
 
 
-.. highlight:: markdown
+::
 
     ## Version 0.3 (2017-10-10)
 
