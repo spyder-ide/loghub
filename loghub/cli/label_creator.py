@@ -16,7 +16,6 @@ import argparse
 from loghub.cli.common import add_common_parser_args, parse_password_check_repo
 from loghub.core.labels import process_labels
 
-
 # yapf: enable
 
 

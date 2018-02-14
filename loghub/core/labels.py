@@ -12,7 +12,6 @@
 # Local imports
 from loghub.core.repo import GitHubRepo
 
-
 # yapf: enable
 
 

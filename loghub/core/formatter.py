@@ -25,7 +25,6 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
                               RELEASE_GROUPS_TEMPLATE_PATH,
                               RELEASE_TEMPLATE_PATH)
 
-
 # yapf: enable
 
 
@@ -55,7 +54,7 @@ def filter_issues_fixed_by_prs(issues, prs):
             body = pr.body or ''
             for matches in pattern.finditer(body):
                 dic = matches.groupdict()
-                issue_number = dic['number'] or dic['number_2']
+                issue_number = dic['number'] or dic['number_2'] or ''
                 repo = dic['full_repo'] or dic['repo'] or repo_url
 
                 # In case spyder-ide/loghub#45 was for example used
@@ -64,20 +63,23 @@ def filter_issues_fixed_by_prs(issues, prs):
 
                 if '/issues' not in repo:
                     issue_url = repo + '/issues/' + issue_number
-                elif repo.endswith('/'):
+                elif repo.endswith('/') and issue_number:
                     issue_url = repo + issue_number
-                else:
+                elif issue_number:
                     issue_url = repo + '/' + issue_number
+                else:
+                    issue_url = None
 
                 # Set the issue data
                 issue_data = {'url': pr_url, 'text': pr_number}
-                if issue_number in issue_pr_map:
-                    issue_pr_map[issue_url].append(issue_data)
-                else:
-                    issue_pr_map[issue_url] = [issue_data]
+                if issue_url is not None:
+                    if issue_number in issue_pr_map:
+                        issue_pr_map[issue_url].append(issue_data)
+                    else:
+                        issue_pr_map[issue_url] = [issue_data]
 
-                pr_data = {'url': issue_url, 'text': issue_number}
-                pr_issue_map[pr_url].append(pr_data)
+                    pr_data = {'url': issue_url, 'text': issue_number}
+                    pr_issue_map[pr_url].append(pr_data)
 
             pr['loghub_related_issues'] = pr_issue_map[pr_url]
 
