@@ -122,10 +122,11 @@ def test_changelog():
 
 ### Issues Closed
 
+* [Issue 77](https://github.com/spyder-ide/loghub/issues/77) - Test empty body
 * [Issue 26](https://github.com/spyder-ide/loghub/issues/26) - Test number 2
 * [Issue 24](https://github.com/spyder-ide/loghub/issues/24) - Issue test
 
-In this release 2 issues were closed.
+In this release 3 issues were closed.
 
 ### Pull Requests Merged
 
@@ -150,10 +151,11 @@ def test_changelog_release():
 
 ### Issues Closed
 
+* Issue #77 - Test empty body
 * Issue #26 - Test number 2
 * Issue #24 - Issue test
 
-In this release 2 issues were closed.
+In this release 3 issues were closed.
 
 ### Pull Requests Merged
 
@@ -178,10 +180,11 @@ def test_changelog_release_branch():
 
 ### Issues Closed
 
+* Issue #77 - Test empty body
 * Issue #26 - Test number 2
 * Issue #24 - Issue test
 
-In this release 2 issues were closed.
+In this release 3 issues were closed.
 
 ### Pull Requests Merged
 
@@ -238,7 +241,7 @@ def test_changelog_template():
         token=TEST_TOKEN,
         milestone=TEST_MILESTONE,
         template_file=path)
-    expected = '* Issue #26 - Test number 2\n* Issue #24 - Issue test\n'
+    expected = '* Issue #77 - Test empty body\n* Issue #26 - Test number 2\n* Issue #24 - Issue test\n'
     print([log])
     print([expected])
     assert log == expected

@@ -25,7 +25,6 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
                               RELEASE_GROUPS_TEMPLATE_PATH,
                               RELEASE_TEMPLATE_PATH)
 
-
 # yapf: enable
 
 
