@@ -1,5 +1,22 @@
 # History of changes
 
+## Version 0.3.1 (2018-02-16)
+
+### Issues Closed
+
+#### Enhancements
+
+* [Issue 72](https://github.com/spyder-ide/loghub/issues/72) - Output examples
+
+#### Bugs fixed
+
+* [Issue 78](https://github.com/spyder-ide/loghub/issues/78) - Avoid crash with empty body ([PR 76](https://github.com/spyder-ide/loghub/pull/76))
+* [Issue 75](https://github.com/spyder-ide/loghub/issues/75) - Bug: No issues found for -ilg group creates error ([PR 76](https://github.com/spyder-ide/loghub/pull/76))
+
+In this release 3 issues were closed.
+
+----
+
 ## Version 0.3 (2017-10-10)
 
 ### Issues Closed
@@ -10,6 +27,8 @@
 
 In this release 1 issue was closed.
 
+----
+
 ## Version 0.2.1 (2017-10-10)
 
 ### Issues Closed
@@ -19,6 +38,8 @@ In this release 1 issue was closed.
 * [Issue 67](https://github.com/spyder-ide/loghub/issues/67) - Templates not included in pip package ([PR 68](https://github.com/spyder-ide/loghub/pull/68))
 
 In this release 1 issue was closed.
+
+----
 
 ## Version 0.2 (2017-02-01)
 
@@ -52,6 +73,8 @@ In this release 1 issue was closed.
 
 In this release 17 issues were closed.
 
+----
+
 ## Version 0.1.2 (2016/11/22)
 
 ### Bugs fixed
@@ -65,6 +88,8 @@ In this release 17 issues were closed.
 * [PR 5](https://github.com/spyder-ide/loghub/pull/5) - Fix PR_SHORT formatting.
 
 In this release 5 pull requests were merged
+
+----
 
 ## Version 0.1.0
 
