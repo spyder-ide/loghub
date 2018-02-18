@@ -262,7 +262,7 @@ def format_changelog(repo,
         repo_name=repo_name, )
 
     print('Test change')
-    print('Foo')
+    print('Fooo')
     print('#' * 79)
     print(rendered)
     print('#' * 79)
