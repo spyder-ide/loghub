@@ -1,5 +1,17 @@
 # History of changes
 
+## Version 0.3.2 (2018-02-18)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 88](https://github.com/spyder-ide/loghub/issues/88) - Repo name is incorrectly detected from pull request body ([PR 86](https://github.com/spyder-ide/loghub/pull/86))
+
+In this release 1 issue was closed.
+
+----
+
 ## Version 0.3.1 (2018-02-16)
 
 ### Issues Closed
@@ -10,10 +22,11 @@
 
 #### Bugs fixed
 
+* [Issue 81](https://github.com/spyder-ide/loghub/issues/81) - `None` issue number causing TypeError ([PR 83](https://github.com/spyder-ide/loghub/pull/83))
 * [Issue 78](https://github.com/spyder-ide/loghub/issues/78) - Avoid crash with empty body ([PR 76](https://github.com/spyder-ide/loghub/pull/76))
 * [Issue 75](https://github.com/spyder-ide/loghub/issues/75) - Bug: No issues found for -ilg group creates error ([PR 76](https://github.com/spyder-ide/loghub/pull/76))
 
-In this release 3 issues were closed.
+In this release 4 issues were closed.
 
 ----
 

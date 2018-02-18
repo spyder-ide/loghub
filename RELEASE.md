@@ -15,7 +15,7 @@
 
     loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" --no-prs -u <user> -m <milestone>
 
-* Update version in __init__.py (set release version, remove 'dev0')
+* Update version in `__init__.py` (set release version, remove 'dev0')
 
 * Commit changes
 
