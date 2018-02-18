@@ -188,10 +188,11 @@ In this release 3 issues were closed.
 
 ### Pull Requests Merged
 
+* PR #85 - Test no repo in body
 * PR #84 - Test no issue number in PR's body
 * PR #33 - PR: Test change
 
-In this release 2 pull requests were closed.
+In this release 3 pull requests were closed.
 '''
     print([log])
     print([expected])
@@ -219,10 +220,11 @@ In this release 1 issue was closed.
 
 ### Pull Requests Merged
 
+* [PR 85](https://github.com/spyder-ide/loghub/pull/85) - Test no repo in body
 * [PR 84](https://github.com/spyder-ide/loghub/pull/84) - Test no issue number in PR's body
 * [PR 33](https://github.com/spyder-ide/loghub/pull/33) - PR: Test change
 
-In this release 2 pull requests were closed.
+In this release 3 pull requests were closed.
 '''
     print([log])
     print([expected])

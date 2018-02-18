@@ -103,7 +103,7 @@ def test_invalid_milestone(gh_repo):
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_issues(gh_repo):
     issues = gh_repo.issues(milestone=TEST_MILESTONE, state='closed')
-    assert len(issues) == 6
+    assert len(issues) == 7
 
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
