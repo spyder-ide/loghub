@@ -57,16 +57,20 @@ def filter_issues_fixed_by_prs(issues, prs):
                 issue_number = dic['number'] or dic['number_2'] or ''
                 repo = dic['full_repo'] or dic['repo'] or repo_url
 
-                # In case spyder-ide/loghub#45 was for example used
-                if 'http' not in repo:
-                    repo = 'https://github.com/' + repo
+                # Repo name can't have spaces.
+                if ' ' not in repo:
+                    # In case spyder-ide/loghub#45 was for example used
+                    if 'http' not in repo:
+                        repo = 'https://github.com/' + repo
 
-                if '/issues' not in repo:
-                    issue_url = repo + '/issues/' + issue_number
-                elif repo.endswith('/') and issue_number:
-                    issue_url = repo + issue_number
-                elif issue_number:
-                    issue_url = repo + '/' + issue_number
+                    if '/issues' not in repo:
+                        issue_url = repo + '/issues/' + issue_number
+                    elif repo.endswith('/') and issue_number:
+                        issue_url = repo + issue_number
+                    elif issue_number:
+                        issue_url = repo + '/' + issue_number
+                    else:
+                        issue_url = None
                 else:
                     issue_url = None
 
