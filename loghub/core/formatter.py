@@ -263,8 +263,7 @@ def create_changelog(repo=None,
 
         if group_prs:
             filtered_prs, grouped_prs = filter_issue_label_groups(
-                filtered_prs, issue_label_groups
-            )
+                filtered_prs, issue_label_groups)
 
             # add PRs to any label groups that already exist
             # and preserve label group orders

@@ -125,8 +125,7 @@ def parse_arguments(skip=False):
         '--group-prs',
         action="store_true",
         dest="group_prs",
-        help="Include pull rquests in grouped issues",
-    )
+        help="Include pull rquests in grouped issues")
 
     options = parser.parse_args()
 
