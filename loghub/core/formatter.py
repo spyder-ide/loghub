@@ -310,7 +310,7 @@ def render_changelog(repo,
                      template_file=None,
                      issue_label_groups=None,
                      show_prs=True,
-                     group_prs=0):
+                     group_prs=False):
     """Render changelog data on a jinja template."""
     # Header
     if not version:

@@ -19,11 +19,11 @@
 {%-        endif %}
 {%     endfor -%}
 {%   endfor %}
-{% if not group_prs %}
+{% if not group_prs -%}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
-{% else %}
+{%- else -%}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} and {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} were closed.
-{% endif %}
+{%- endif %}
 {% endif -%}
 
 {% if pull_requests|length and show_prs and not group_prs %}
