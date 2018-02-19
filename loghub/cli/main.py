@@ -90,7 +90,7 @@ def parse_arguments(skip=False):
         action="store",
         dest="pr_label_regex",
         default='',
-        help="Label pull requets filter using a regular expression filter")
+        help="Label pull request filter using a regular expression filter")
     parser.add_argument(
         '-f',
         '--format',
@@ -121,6 +121,12 @@ def parse_arguments(skip=False):
         dest="show_prs",
         default=True,
         help="Run loghub without any pull requests output")
+    parser.add_argument(
+        '--group-prs',
+        action="store_true",
+        dest="group_prs",
+        help="Include pull rquests in grouped issues",
+    )
 
     options = parser.parse_args()
 
@@ -184,7 +190,8 @@ def parse_arguments(skip=False):
             template_file=options.template,
             issue_label_groups=new_issue_label_groups,
             batch=batch,
-            show_prs=options.show_prs)
+            show_prs=options.show_prs,
+            group_prs=options.group_prs)
 
     return options
 

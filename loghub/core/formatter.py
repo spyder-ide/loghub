@@ -157,8 +157,8 @@ def filter_issue_label_groups(issues, issue_label_groups):
             grouped_filtered_issues[label_group_dic['name']] = []
 
         for issue in issues:
+            labels = issue.get('loghub_label_names')
             for label_group_dic in issue_label_groups:
-                labels = issue.get('loghub_label_names')
                 label = label_group_dic['label']
                 name = label_group_dic['name']
                 if label in labels:
@@ -189,7 +189,8 @@ def create_changelog(repo=None,
                      template_file=None,
                      issue_label_groups=None,
                      batch=None,
-                     show_prs=True):
+                     show_prs=True,
+                     group_prs=False):
     """Create changelog data for single and batched mode."""
     gh = GitHubRepo(
         username=username,
@@ -257,8 +258,26 @@ def create_changelog(repo=None,
         filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
 
         # If issue label grouping, filter issues
-        new_filtered_issues, issue_label_groups = filter_issue_label_groups(
+        new_filtered_issues, grouped_issues = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
+
+        if group_prs:
+            filtered_prs, grouped_prs = filter_issue_label_groups(
+                filtered_prs, issue_label_groups
+            )
+
+            # add PRs to any label groups that already exist
+            # and preserve label group orders
+            new_ilg = OrderedDict()
+            for label_group_dic in issue_label_groups:
+                label = label_group_dic['name']
+                if label in grouped_issues:
+                    new_ilg[label] = grouped_issues[label]
+                    if label in grouped_prs:
+                        new_ilg[label].extend(grouped_prs[label])
+                elif label in grouped_prs:
+                    new_ilg[label] = grouped_prs[label]
+            issue_label_groups = new_ilg
 
         filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
 
@@ -270,8 +289,9 @@ def create_changelog(repo=None,
             closed_at=closed_at,
             output_format=output_format,
             template_file=template_file,
-            issue_label_groups=issue_label_groups,
-            show_prs=show_prs)
+            issue_label_groups=grouped_issues,
+            show_prs=show_prs,
+            group_prs=group_prs)
 
         all_changelogs.append(ch)
 
@@ -289,7 +309,8 @@ def render_changelog(repo,
                      output_format='changelog',
                      template_file=None,
                      issue_label_groups=None,
-                     show_prs=True):
+                     show_prs=True,
+                     group_prs=0):
     """Render changelog data on a jinja template."""
     # Header
     if not version:
@@ -329,7 +350,8 @@ def render_changelog(repo,
         repo_owner=repo_owner,
         repo_name=repo_name,
         issue_label_groups=issue_label_groups,
-        show_prs=show_prs, )
+        show_prs=show_prs,
+        group_prs=group_prs)
 
     return rendered
 
