@@ -1,5 +1,17 @@
 # History of changes
 
+## Version 0.3.3 (2018-02-20)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 89](https://github.com/spyder-ide/loghub/issues/89) - Batch processing breaks on python 3 ([PR 91](https://github.com/spyder-ide/loghub/pull/91))
+
+In this release 1 issue was closed.
+
+----
+
 ## Version 0.3.2 (2018-02-18)
 
 ### Issues Closed
