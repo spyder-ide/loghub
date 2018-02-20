@@ -233,6 +233,11 @@ def create_changelog(repo=None,
                      batch=None,
                      show_prs=True):
     """Create changelog data for single and batched mode."""
+    if issue_label_groups is None:
+        issue_label_groups = []
+    if pr_label_groups is None:
+        pr_label_groups = []
+
     gh = GitHubRepo(
         username=username,
         password=password,
