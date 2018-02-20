@@ -21,8 +21,12 @@ from jinja2 import Template
 # Local imports
 from loghub.core.repo import GitHubRepo
 from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
+                              CHANGELOG_ISSUE_GROUPS_TEMPLATE_PATH,
+                              CHANGELOG_PR_GROUPS_TEMPLATE_PATH,
                               CHANGELOG_TEMPLATE_PATH,
                               RELEASE_GROUPS_TEMPLATE_PATH,
+                              RELEASE_ISSUE_GROUPS_TEMPLATE_PATH,
+                              RELEASE_PR_GROUPS_TEMPLATE_PATH,
                               RELEASE_TEMPLATE_PATH)
 
 # yapf: enable
@@ -175,6 +179,43 @@ def filter_issue_label_groups(issues, issue_label_groups):
     return new_filtered_issues, grouped_filtered_issues
 
 
+def join_label_groups(grouped_issues, grouped_prs, issue_label_groups,
+                      pr_label_groups):
+    """Combine issue and PR groups in to one dictionary.
+
+    PR-only groups are added after all issue groups. Any groups that are
+    shared between issues and PRs are added according to the order in the
+    issues list of groups. This results in "label-groups" remaining in the
+    same order originally specified even if a group does not have issues
+    in it. Otherwise, a shared group may end up at the end of the combined
+    dictionary and not in the order originally specified by the user.
+
+    """
+    issue_group_names = [x['name'] for x in issue_label_groups]
+    pr_group_names = [x['name'] for x in pr_label_groups]
+    shared_groups = []
+    for idx, group_name in enumerate(issue_group_names):
+        if len(pr_group_names) > idx and group_name == pr_group_names[idx]:
+            shared_groups.append(group_name)
+        else:
+            break
+
+    label_groups = OrderedDict()
+    # add shared groups first
+    for group_name in shared_groups:
+        # make sure to copy the issue group in case it is added to
+        label_groups[group_name] = grouped_issues.get(group_name, [])[:]
+    # add any remaining issue groups
+    for group_name, group in grouped_issues.items():
+        if group_name in shared_groups:
+            continue
+        label_groups[group_name] = group[:]
+    # add any remaining PR groups (extending any existing groups)
+    for group_name, group in grouped_prs.items():
+        label_groups.setdefault(group_name, []).extend(group)
+    return label_groups
+
+
 def create_changelog(repo=None,
                      username=None,
                      password=None,
@@ -188,9 +229,9 @@ def create_changelog(repo=None,
                      pr_label_regex='',
                      template_file=None,
                      issue_label_groups=None,
+                     pr_label_groups=None,
                      batch=None,
-                     show_prs=True,
-                     group_prs=False):
+                     show_prs=True):
     """Create changelog data for single and batched mode."""
     gh = GitHubRepo(
         username=username,
@@ -260,37 +301,25 @@ def create_changelog(repo=None,
         # If issue label grouping, filter issues
         new_filtered_issues, grouped_issues = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
-
-        if group_prs:
-            filtered_prs, grouped_prs = filter_issue_label_groups(
-                filtered_prs, issue_label_groups)
-
-            # add PRs to any label groups that already exist
-            # and preserve label group orders
-            new_ilg = OrderedDict()
-            for label_group_dic in issue_label_groups:
-                label = label_group_dic['name']
-                if label in grouped_issues:
-                    new_ilg[label] = grouped_issues[label]
-                    if label in grouped_prs:
-                        new_ilg[label].extend(grouped_prs[label])
-                elif label in grouped_prs:
-                    new_ilg[label] = grouped_prs[label]
-            issue_label_groups = new_ilg
+        new_filtered_prs, grouped_prs = filter_issue_label_groups(
+            filtered_prs, pr_label_groups)
+        label_groups = join_label_groups(grouped_issues, grouped_prs,
+                                         issue_label_groups, pr_label_groups)
 
         filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
 
         ch = render_changelog(
             repo,
             new_filtered_issues,
-            filtered_prs,
+            new_filtered_prs,
             version,
             closed_at=closed_at,
             output_format=output_format,
             template_file=template_file,
+            label_groups=label_groups,
             issue_label_groups=grouped_issues,
-            show_prs=show_prs,
-            group_prs=group_prs)
+            pr_label_groups=grouped_prs,
+            show_prs=show_prs)
 
         all_changelogs.append(ch)
 
@@ -308,8 +337,9 @@ def render_changelog(repo,
                      output_format='changelog',
                      template_file=None,
                      issue_label_groups=None,
-                     show_prs=True,
-                     group_prs=False):
+                     pr_label_groups=None,
+                     label_groups=None,
+                     show_prs=True):
     """Render changelog data on a jinja template."""
     # Header
     if not version:
@@ -324,11 +354,21 @@ def render_changelog(repo,
     if template_file:
         filepath = template_file
     else:
-        if issue_label_groups:
+        if issue_label_groups and pr_label_groups:
             if output_format == 'changelog':
                 filepath = CHANGELOG_GROUPS_TEMPLATE_PATH
             else:
                 filepath = RELEASE_GROUPS_TEMPLATE_PATH
+        elif issue_label_groups:
+            if output_format == 'changelog':
+                filepath = CHANGELOG_ISSUE_GROUPS_TEMPLATE_PATH
+            else:
+                filepath = RELEASE_ISSUE_GROUPS_TEMPLATE_PATH
+        elif pr_label_groups:
+            if output_format == 'changelog':
+                filepath = CHANGELOG_PR_GROUPS_TEMPLATE_PATH
+            else:
+                filepath = RELEASE_PR_GROUPS_TEMPLATE_PATH
         else:
             if output_format == 'changelog':
                 filepath = CHANGELOG_TEMPLATE_PATH
@@ -348,9 +388,10 @@ def render_changelog(repo,
         repo_full_name=repo,
         repo_owner=repo_owner,
         repo_name=repo_name,
+        label_groups=label_groups,
         issue_label_groups=issue_label_groups,
-        show_prs=show_prs,
-        group_prs=group_prs)
+        pr_label_groups=pr_label_groups,
+        show_prs=show_prs)
 
     return rendered
 
