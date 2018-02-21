@@ -13,7 +13,7 @@ import sys
 import tempfile
 
 # Third party imports
-from mock import patch, MagicMock
+from mock import MagicMock, patch
 import pytest
 
 # Local imports
