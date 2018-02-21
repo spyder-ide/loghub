@@ -168,11 +168,6 @@ def filter_issue_label_groups(issues, issue_label_groups):
                 if label in labels:
                     grouped_filtered_issues[name].append(issue)
                     new_filtered_issues.append(issue)
-
-        # Remove any empty groups
-        for group, grouped_issues in grouped_filtered_issues.copy().items():
-            if not grouped_issues:
-                grouped_filtered_issues.pop(group)
     else:
         new_filtered_issues = issues
 

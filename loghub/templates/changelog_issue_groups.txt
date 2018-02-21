@@ -3,6 +3,7 @@
 {% if issues|length -%}
 ### Issues Closed
 {%   for label_group, grouped_issues in issue_label_groups.items() %}
+{%-    if grouped_issues|length %}
 #### {{ label_group }}
 
 {%     for i in grouped_issues -%}
@@ -14,6 +15,7 @@
 {%-            endfor -%})
 {%-        endif %}
 {%     endfor -%}
+{%-    endif -%}
 {%   endfor %}
 In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
 {% endif -%}

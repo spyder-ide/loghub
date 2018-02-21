@@ -18,6 +18,7 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 {% if pull_requests|length and show_prs %}
 ### Pull Requests Merged
 {%   for label_group, grouped_prs in pr_label_groups.items() %}
+{%-    if grouped_prs|length %}
 #### {{ label_group }}
 
 {%     for pr in grouped_prs -%}
@@ -29,6 +30,7 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 {%-          endfor -%})
 {%-       endif %}
 {%     endfor -%}
+{%-    endif -%}
 {%   endfor %}
 In this release {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
 {% endif %}
