@@ -104,9 +104,9 @@ def parse_arguments(skip=False):
         default=[],
         dest="pr_label_groups",
         help="Groups the generated PRs by the specified label. This option"
-             "takes 1 or 2 arguments, where the first one is the label to "
-             "match and the second one is the label to print on the final"
-             "output")
+        "takes 1 or 2 arguments, where the first one is the label to "
+        "match and the second one is the label to print on the final"
+        "output")
     parser.add_argument(
         '-lg',
         '--label-group',
@@ -115,9 +115,9 @@ def parse_arguments(skip=False):
         default=[],
         dest="label_groups",
         help="Groups the generated issues and PRs by the specified label. "
-             "This option takes 1 or 2 arguments, where the first one is the "
-             "label to match and the second one is the label to print on "
-             "the final output")
+        "This option takes 1 or 2 arguments, where the first one is the "
+        "label to match and the second one is the label to print on "
+        "the final output")
     parser.add_argument(
         '-ilr',
         '--issue-label-regex',
