@@ -206,11 +206,11 @@ def test_changelog_label_groups(gh_mock):
     gh_mock.return_value = gh_obj = MagicMock()
     gh_obj.milestone.return_value = {'closed_at': '2016-12-05'}
     issues = [{
-            'loghub_label_names': ['type:bug'],
-            'number': 1,
-            'title': 'first issue',
-            'html_url': 'a_url',
-        }]
+        'loghub_label_names': ['type:bug'],
+        'number': 1,
+        'title': 'first issue',
+        'html_url': 'a_url',
+    }]
     prs = [{
         'loghub_label_names': ['type:bug'],
         'number': 2,
