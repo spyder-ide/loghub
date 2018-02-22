@@ -221,6 +221,8 @@ def test_changelog_label_groups(gh_mock):
     }]
     gh_obj.issues.return_value = [JsonObject(x) for x in issues + prs]
     issue_label_groups = [{'label': 'type:bug', 'name': 'Bugs fixed'}]
+
+    # group issues and PRs
     log = create_changelog(
         repo=REPO,
         token=TEST_TOKEN,
@@ -236,6 +238,60 @@ def test_changelog_label_groups(gh_mock):
 * [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
 
 In this release 1 issue and 1 pull request were closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+    # group issues only, list PRs
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        issue_label_groups=issue_label_groups)
+    expected = '''## Version test-milestone (2016-12-05)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 1](https://github.com/spyder-ide/loghub/issues/1) - first issue
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
+
+In this release 1 pull request was closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+    # group PRs only, list issues
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        pr_label_groups=issue_label_groups)
+    expected = '''## Version test-milestone (2016-12-05)
+
+### Issues Closed
+
+* [Issue 1](https://github.com/spyder-ide/loghub/issues/1) - first issue
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+#### Bugs fixed
+
+* [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
+
+In this release 1 pull request was closed.
 '''
     print([log])
     print([expected])
