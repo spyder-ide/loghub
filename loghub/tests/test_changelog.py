@@ -13,11 +13,12 @@ import sys
 import tempfile
 
 # Third party imports
-from mock import patch
+from mock import MagicMock, patch
 import pytest
 
 # Local imports
 from loghub.cli.main import create_changelog, parse_arguments
+from loghub.external.github import JsonObject
 
 REPO = 'spyder-ide/loghub'
 TEST_TOKEN = os.environ.get('TEST_TOKEN', '').replace('x', '')
@@ -200,7 +201,105 @@ In this release 3 pull requests were closed.
 
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
-def test_changelog_groups():
+@patch('loghub.core.formatter.GitHubRepo')
+def test_changelog_label_groups(gh_mock):
+    gh_mock.return_value = gh_obj = MagicMock()
+    gh_obj.milestone.return_value = {'closed_at': '2016-12-05'}
+    issues = [{
+        'loghub_label_names': ['type:bug'],
+        'number': 1,
+        'title': 'first issue',
+        'html_url': 'a_url',
+    }]
+    prs = [{
+        'loghub_label_names': ['type:bug'],
+        'number': 2,
+        'title': 'first pull request',
+        'html_url': 'a_url',
+        'pull_request': True,
+        'body': '',
+    }]
+    gh_obj.issues.return_value = [JsonObject(x) for x in issues + prs]
+    issue_label_groups = [{'label': 'type:bug', 'name': 'Bugs fixed'}]
+
+    # group issues and PRs
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        issue_label_groups=issue_label_groups,
+        pr_label_groups=issue_label_groups)
+    expected = '''## Version test-milestone (2016-12-05)
+
+#### Bugs fixed
+
+* [Issue 1](https://github.com/spyder-ide/loghub/issues/1) - first issue
+* [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
+
+In this release 1 issue and 1 pull request were closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+    # group issues only, list PRs
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        issue_label_groups=issue_label_groups)
+    expected = '''## Version test-milestone (2016-12-05)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 1](https://github.com/spyder-ide/loghub/issues/1) - first issue
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
+
+In this release 1 pull request was closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+    # group PRs only, list issues
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch',
+        pr_label_groups=issue_label_groups)
+    expected = '''## Version test-milestone (2016-12-05)
+
+### Issues Closed
+
+* [Issue 1](https://github.com/spyder-ide/loghub/issues/1) - first issue
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+#### Bugs fixed
+
+* [PR 2](https://github.com/spyder-ide/loghub/pull/2) - first pull request
+
+In this release 1 pull request was closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+def test_changelog_issue_groups():
     issue_label_groups = [{'label': 'type:bug', 'name': 'Bugs fixed'}]
     log = create_changelog(
         repo=REPO,

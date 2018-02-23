@@ -1,0 +1,18 @@
+## Version {{ version }} ({{ close_date }})
+
+{%- if label_groups|length %}
+{%   for label_group, grouped_issues in label_groups.items() %}
+{%-    if grouped_issues|length %}
+#### {{ label_group }}
+
+{%     for i in grouped_issues -%}
+{% if i.get('pull_request') -%}
+* PR #{{ i['number'] }} - {{ i['title'] }}
+{%- else -%}
+* Issue #{{ i['number'] }} - {{ i['title'] }}
+{%- endif %}
+{%     endfor -%}
+{%-    endif -%}
+{%   endfor %}
+In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} and {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} were closed.
+{% endif -%}

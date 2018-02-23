@@ -29,6 +29,24 @@ def main():
     parse_arguments(skip=False)
 
 
+def create_label_groups(groups):
+    """Create info dictionaries for label groups."""
+    group_dicts = []
+    if groups:
+        for item in groups:
+            dic = {}
+            if len(item) == 1:
+                dic['label'] = item[0]
+                dic['name'] = item[0]
+            elif len(item) == 2:
+                dic['label'] = item[0]
+                dic['name'] = item[1]
+            else:
+                raise ValueError('Label group takes 1 or 2 arguments')
+            group_dicts.append(dic)
+    return group_dicts
+
+
 def parse_arguments(skip=False):
     """Parse CLI arguments."""
     parser = argparse.ArgumentParser(
@@ -72,11 +90,34 @@ def parse_arguments(skip=False):
         '--issue-label-group',
         action="append",
         nargs='+',
+        default=[],
         dest="issue_label_groups",
         help="Groups the generated issues by the specified label. This option"
-        "Takes 1 or 2 arguments, where the first one is the label to "
+        "takes 1 or 2 arguments, where the first one is the label to "
         "match and the second one is the label to print on the final"
         "output")
+    parser.add_argument(
+        '-plg',
+        '--pr-label-group',
+        action="append",
+        nargs='+',
+        default=[],
+        dest="pr_label_groups",
+        help="Groups the generated PRs by the specified label. This option"
+        "takes 1 or 2 arguments, where the first one is the label to "
+        "match and the second one is the label to print on the final"
+        "output")
+    parser.add_argument(
+        '-lg',
+        '--label-group',
+        action="append",
+        nargs='+',
+        default=[],
+        dest="label_groups",
+        help="Groups the generated issues and PRs by the specified label. "
+        "This option takes 1 or 2 arguments, where the first one is the "
+        "label to match and the second one is the label to print on "
+        "the final output")
     parser.add_argument(
         '-ilr',
         '--issue-label-regex',
@@ -90,7 +131,7 @@ def parse_arguments(skip=False):
         action="store",
         dest="pr_label_regex",
         default='',
-        help="Label pull requets filter using a regular expression filter")
+        help="Label pull request filter using a regular expression filter")
     parser.add_argument(
         '-f',
         '--format',
@@ -151,22 +192,20 @@ def parse_arguments(skip=False):
     # Ask for password once input is valid
     username = options.username
     password = parse_password_check_repo(options)
-    issue_label_groups = options.issue_label_groups
+    try:
+        issue_label_groups = options.label_groups + \
+                             options.issue_label_groups
+        new_issue_label_groups = create_label_groups(issue_label_groups)
+    except ValueError:
+        print('LOGHUB: Issue label group takes 1 or 2 arguments\n')
+        sys.exit(1)
 
-    new_issue_label_groups = []
-    if issue_label_groups:
-        for item in issue_label_groups:
-            dic = {}
-            if len(item) == 1:
-                dic['label'] = item[0]
-                dic['name'] = item[0]
-            elif len(item) == 2:
-                dic['label'] = item[0]
-                dic['name'] = item[1]
-            else:
-                print('LOGHUB: Issue label group takes 1 or 2 arguments\n')
-                sys.exit(1)
-            new_issue_label_groups.append(dic)
+    try:
+        pr_label_groups = options.label_groups + options.pr_label_groups
+        new_pr_label_groups = create_label_groups(pr_label_groups)
+    except ValueError:
+        print('LOGHUB: PR label group takes 1 or 2 arguments\n')
+        sys.exit(1)
 
     if not skip:
         create_changelog(
@@ -183,6 +222,7 @@ def parse_arguments(skip=False):
             output_format=options.output_format,
             template_file=options.template,
             issue_label_groups=new_issue_label_groups,
+            pr_label_groups=new_pr_label_groups,
             batch=batch,
             show_prs=options.show_prs)
 

@@ -1,0 +1,36 @@
+## Version {{ version }} ({{ close_date }})
+
+{% if issues|length -%}
+### Issues Closed
+
+{%   for i in issues -%}
+* [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
+{%-      if i['loghub_related_pulls']|length %} (
+{%-          for ipr in i['loghub_related_pulls'] -%}
+                 [PR {{ ipr['text'] }}]({{ ipr['url'] }})
+{%-              if i['loghub_related_pulls']|length > 1 and loop.index != i['loghub_related_pulls']|length -%}, {% endif -%}
+{%-          endfor -%})
+{%-       endif %}
+{%   endfor %}
+In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} {% if issues|length == 1 %}was{% else %}were{% endif %} closed.
+{% endif -%}
+
+{% if pull_requests|length and show_prs %}
+### Pull Requests Merged
+{%   for label_group, grouped_prs in pr_label_groups.items() %}
+{%-    if grouped_prs|length %}
+#### {{ label_group }}
+
+{%     for pr in grouped_prs -%}
+* [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}
+{%-      if pr['loghub_related_issues']|length %} (
+{%-          for pri in pr['loghub_related_issues'] -%}
+                 [{{ pri['text'] }}]({{ pri['url'] }})
+{%-              if pr['loghub_related_issues']|length > 1 and loop.index != pr['loghub_related_issues']|length -%}, {% endif -%}
+{%-          endfor -%})
+{%-       endif %}
+{%     endfor -%}
+{%-    endif -%}
+{%   endfor %}
+In this release {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} {% if pull_requests|length == 1 %}was{% else %}were{% endif %} closed.
+{% endif %}

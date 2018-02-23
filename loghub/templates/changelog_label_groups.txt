@@ -1,0 +1,24 @@
+## Version {{ version }} ({{ close_date }})
+
+{%- if label_groups|length %}
+{%   for label_group, grouped_issues in label_groups.items() %}
+{%-    if grouped_issues|length %}
+#### {{ label_group }}
+
+{%     for i in grouped_issues -%}
+{% if i.get('pull_request') -%}
+* [PR {{ i['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ i['number'] }}) - {{ i['title'] }}
+{%- else -%}
+* [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
+{%- endif %}
+{%-        if i['loghub_related_pulls']|length %} (
+{%-            for ipr in i['loghub_related_pulls'] -%}
+                   [PR {{ ipr['text'] }}]({{ ipr['url'] }})
+{%-                if i['loghub_related_pulls']|length > 1 and loop.index != i['loghub_related_pulls']|length -%}, {% endif -%}
+{%-            endfor -%})
+{%-        endif %}
+{%     endfor -%}
+{%-    endif -%}
+{%   endfor %}
+In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %} and {{ pull_requests|length }} pull request{% if pull_requests|length != 1 %}s{% endif %} were closed.
+{% endif -%}
