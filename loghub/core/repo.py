@@ -196,7 +196,7 @@ class GitHubRepo(object):
     def milestones(self):
         """Return all milestones."""
         self._check_rate()
-        return self.repo.milestones.get(state='all')
+        return self.repo.milestones.get(state='all', direction='desc')
 
     def milestone(self, milestone_title):
         """Return milestone with given title."""
