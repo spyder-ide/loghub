@@ -18,6 +18,7 @@ Thumbs.db
 .DS_Store
 .cache
 .coverage
+.pytest_cache
 
 # git .orig files
 *.orig
