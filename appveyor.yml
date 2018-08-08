@@ -19,9 +19,9 @@ environment:
                       # to the matrix section.
 
   matrix:
-    - PYTHON_VERSION: "3.5"
-    - PYTHON_VERSION: "3.4"
     - PYTHON_VERSION: "2.7"
+    - PYTHON_VERSION: "3.5"
+    - PYTHON_VERSION: "3.6"
 
 platform:
   -x64
@@ -32,12 +32,11 @@ install:
   - "powershell ci-helpers/appveyor/install-miniconda.ps1"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "activate test"
-  # Install the selected Qt version
-  - "conda install --file requirements.txt -c spyder-ide"
+  - "conda install -q jinja2 coveralls mock pytest pytest-cov"
   - "python setup.py develop"
 
 # Not a .NET project, we build in the install step instead
 build: false
 
 test_script:
-  - ciocheck loghub --disable-tests
+  - pytest -x -vv --cov=loghub --cov-report=term-missing loghub
