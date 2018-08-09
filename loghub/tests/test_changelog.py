@@ -331,6 +331,41 @@ In this release 3 pull requests were closed.
 
 
 @pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
+@patch('loghub.core.formatter.GitHubRepo')
+def test_no_comments(gh_mock):
+    gh_mock.return_value = gh_obj = MagicMock()
+    gh_obj.milestone.return_value = {'closed_at': '2016-12-05'}
+    prs = [{
+        'loghub_label_names': [],
+        'number': 1,
+        'title': 'pull request',
+        'html_url': 'spyder-ide/loghub',
+        'pull_request': True,
+        'body': '<!--- Fixes #777 --->\nFixes #12',
+    }]
+    gh_obj.issues.return_value = [JsonObject(x) for x in prs]
+
+    # group issues and PRs
+    log = create_changelog(
+        repo=REPO,
+        token=TEST_TOKEN,
+        milestone=TEST_MILESTONE,
+        branch='test-branch')
+    expected = '''## Version test-milestone (2016-12-05)
+
+
+### Pull Requests Merged
+
+* [PR 1](https://github.com/spyder-ide/loghub/pull/1) - pull request ([12](https://github.com/spyder-ide/loghub/issues/12))
+
+In this release 1 pull request was closed.
+'''
+    print([log])
+    print([expected])
+    assert log == expected
+
+
+@pytest.mark.skipif(NOT_ON_CI, reason='test on ci server only')
 def test_changelog_template():
     template = '''{%   for i in issues -%}
 * Issue #{{ i['number'] }} - {{ i['title'] }}
