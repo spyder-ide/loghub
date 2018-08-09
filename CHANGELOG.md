@@ -1,5 +1,17 @@
 # History of changes
 
+## Version 0.4 (2018/08/09)
+
+### Issues Closed
+
+#### Enhancements
+
+* [Issue 90](https://github.com/spyder-ide/loghub/issues/90) - Add ability to group pull requests by labels ([PR 92](https://github.com/spyder-ide/loghub/pull/92))
+
+In this release 1 issue was closed.
+
+----
+
 ## Version 0.3.3 (2018-02-20)
 
 ### Issues Closed
