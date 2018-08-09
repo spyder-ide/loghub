@@ -56,6 +56,12 @@ def filter_issues_fixed_by_prs(issues, prs):
             repo_url = pr_url.split('/pull/')[0] + '/issues/'
             pr_issue_map[pr_url] = []
             body = pr.body or ''
+            # Remove blanks and markdown comments
+            if body:
+                lines = body.splitlines()
+                no_comments = [l for l in lines
+                               if (l and not l.startswith("<!---"))]
+                body = '\n'.join(no_comments)
             for matches in pattern.finditer(body):
                 dic = matches.groupdict()
                 issue_number = dic['number'] or dic['number_2'] or ''
