@@ -296,7 +296,7 @@ def create_changelog(repo=None,
                 until = gh.tag(until_tag)['tagger']['date']
                 closed_at = until
 
-        if zenhub_release is None:
+        if not bool(zenhub_release):
             # This returns issues and pull requests
             issues = gh.issues(
                 milestone=milestone,
