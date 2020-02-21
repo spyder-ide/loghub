@@ -32,13 +32,18 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2
+        run: conda install -q jinja2 requests
       - name: Install Test Dependencies
         shell: bash -l {0}
         run: conda install -q codecov mock pytest pytest-cov
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
+      - name: Show Environment
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
       - name: Run tests
         shell: bash -l {0}
         run: pytest -x -vv --cov=loghub --cov-report=term-missing loghub
@@ -66,13 +71,18 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2
+        run: conda install -q jinja2 requests
       - name: Install Test Dependencies
         shell: bash -l {0}
         run: conda install -q codecov mock pytest pytest-cov
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
+      - name: Show Environment
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
       - name: Run tests
         shell: bash -l {0}
         run: pytest -x -vv --cov=loghub --cov-report=term-missing loghub
@@ -103,10 +113,18 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2 codecov mock pytest pytest-cov
+        run: conda install -q jinja2 requests
+      - name: Install Test Dependencies
+        shell: bash -l {0}
+        run: conda install -q codecov mock pytest pytest-cov
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
+      - name: Show Environment
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
       - name: Run tests
         shell: bash -l {0}
         run: pytest -x -vv --cov=loghub --cov-report=term-missing loghub
@@ -137,13 +155,18 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2
+        run: conda install -q jinja2 requests
       - name: Install Test Dependencies
         shell: bash -l {0}
         run: conda install -q codecov mock pytest pytest-cov
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
+      - name: Show Environment
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
       - name: Run tests
         shell: bash -l {0}
         run: pytest -x -vv --cov=loghub --cov-report=term-missing loghub

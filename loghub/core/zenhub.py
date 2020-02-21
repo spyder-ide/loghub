@@ -67,7 +67,7 @@ class ZenHub(object):
 
     def releases(self, repo_id):
         """Provide list of releases for a given `repo_id`."""
-        url = '{repo_id}/reports/releases'
+        url = 'repositories/{repo_id}/reports/releases'
         return self._get(url.format(repo_id=repo_id))
 
     def issues(self, release_id):

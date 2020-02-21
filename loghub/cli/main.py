@@ -178,26 +178,29 @@ def parse_arguments(skip=False):
 
     # Check if milestone or tag given
     if not batch:
-        if not milestone and not options.since_tag:
+        if not milestone and not zenhub_release and not options.since_tag and not options.until_tag:
             print('\nLOGHUB: Querying all issues\n')
-        elif milestone:
-            print('\nLOGHUB: Querying issues for milestone {0}'
+        elif milestone and not zenhub_release and not options.since_tag and not options.until_tag:
+            print('\nLOGHUB: Querying issues for milestone "{0}"'
                   '\n'.format(milestone))
-        elif zenhub_release:
-            print('\nLOGHUB: Querying issues for zenhub release {0}'
+        elif zenhub_release and not milestone and not options.since_tag and not options.until_tag:
+            print('\nLOGHUB: Querying issues for zenhub release "{0}"'
                   '\n'.format(zenhub_release))
-        elif options.since_tag and not options.until_tag:
-            print('\nLOGHUB: Querying issues since tag {0}'
+        elif options.since_tag and not options.until_tag and not milestone and not zenhub_release:
+            print('\nLOGHUB: Querying issues since tag "{0}"'
                   '\n'.format(options.since_tag))
-        elif options.since_tag and options.until_tag:
-            print('\nLOGHUB: Querying issues since tag {0} until tag {1}'
+        elif options.since_tag and options.until_tag and not milestone and not zenhub_release:
+            print('\nLOGHUB: Querying issues since tag "{0}" until tag "{1}"'
                   '\n'.format(options.since_tag, options.until_tag))
+        else:
+            print('Invalid set of options!')
+            sys.exit(1)
     elif batch and any([
             bool(options.since_tag), bool(options.until_tag),
-            bool(options.milestone)
+            bool(milestone), bool(zenhub_release),
     ]):
-        print('LOGHUB: When using batch mode no tags or milestone arguments '
-              'are allowed.\n')
+        print('LOGHUB: When using batch mode no tags or milestone '
+              ' or zenhub release arguments are allowed.\n')
         sys.exit(1)
 
     # Ask for password once input is valid
@@ -226,6 +229,7 @@ def parse_arguments(skip=False):
             token=options.token,
             milestone=milestone,
             zenhub_release=zenhub_release,
+            zenhub_token=options.zenhub_token,
             since_tag=options.since_tag,
             until_tag=options.until_tag,
             branch=options.branch,
