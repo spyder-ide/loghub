@@ -33,7 +33,7 @@ def get_version(module='loghub'):
 
 def get_description():
     """Get long description."""
-    with open(os.path.join(HERE, 'README.rst'), 'r') as f:
+    with open(os.path.join(HERE, 'README.md'), 'r') as f:
         data = f.read()
     return data
 
@@ -55,6 +55,7 @@ setup(
     maintainer_email='goanpeca@gmail.com',
     description='Generate changelogs based on Github milestones or tags',
     long_description=get_description(),
+    long_description_content_type='text/markdown',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     package_data={'loghub.templates': ['*.txt']},
     install_requires=REQUIREMENTS,
@@ -73,4 +74,5 @@ setup(
         'Programming Language :: Python :: 3.6'
         'Programming Language :: Python :: 3.7'
         'Programming Language :: Python :: 3.8'
-    ])
+    ],
+)
