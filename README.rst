@@ -149,7 +149,28 @@ Or generate a Github access token and use that instead, for example:
 Because of the Github API rate limitations it is advised to always use authentication
 by either access token or user and password.
 
-    
+ZenHub Integration
+------------------
+
+If your project is using [Zenhub]()https://www.zenhub.com/ to manage the workflow, you can also
+use Zenhub releases to create your changelog.
+
+.. code-block:: text
+
+    loghub spyder-ide/spyder --zenhub-release "spyder v4.1.0" --zenhub-token <zenhub-token>
+
+**Important**
+
+For Zenhub integration to work you need to always use a zenhub token. You can generate one by
+going to your [dashboard](). Same GitHub API rate limits apply here so it is advised to always
+use authentication by either access token or user and password.
+
+
+.. code-block:: text
+
+    loghub spyder-ide/spyder --zenhub-release "spyder v4.1.0" --zenhub-token <zenhub-token> --token <github-token>
+
+
 Advanced Usage
 --------------
 
@@ -222,71 +243,72 @@ Detailed CLI arguments
 
 .. code-block:: text
 
-    usage: loghub [-h] [-m MILESTONE]
-                  [-ilg ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...]]
-                  [-ilr ISSUE_LABEL_REGEX] [-plr PR_LABEL_REGEX] [-st SINCE_TAG]
-                  [-ut UNTIL_TAG] [-b BRANCH] [-f OUTPUT_FORMAT]
-                  [--template TEMPLATE] [-u USERNAME] [-p PASSWORD] [-t TOKEN]
-                  repository
+    usage: loghub [-h] [-u USERNAME] [-p PASSWORD] [-t TOKEN] [-zt ZENHUB_TOKEN]
+                [-m MILESTONE] [-zr ZENHUB_RELEASE] [-st SINCE_TAG]
+                [-ut UNTIL_TAG] [-b BRANCH]
+                [-ilg ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...]]
+                [-plg PR_LABEL_GROUPS [PR_LABEL_GROUPS ...]]
+                [-lg LABEL_GROUPS [LABEL_GROUPS ...]] [-ilr ISSUE_LABEL_REGEX]
+                [-plr PR_LABEL_REGEX] [-f OUTPUT_FORMAT] [--template TEMPLATE]
+                [--batch {milestones,tags}] [--no-prs]
+                repository
 
     Script to print the list of issues and pull requests closed in a given
     milestone, tag including additional filtering options.
 
     positional arguments:
-      repository            Repository name to generate the Changelog for, in the
+    repository            Repository name to generate the Changelog for, in the
                             form user/repo or org/repo (e.g. spyder-ide/spyder)
 
     optional arguments:
-      -h, --help
-                            Show this help message and exit
-
-      -u USERNAME, --username USERNAME
+    -h, --help            show this help message and exit
+    -u USERNAME, --username USERNAME
                             Github user name
-
-      -p PASSWORD, --password PASSWORD
+    -p PASSWORD, --password PASSWORD
                             Github user password
-
-      -t TOKEN, --token TOKEN
+    -t TOKEN, --token TOKEN
                             Github access token
-
-      -m MILESTONE, --milestone MILESTONE
+    -zt ZENHUB_TOKEN, --zenhub-token ZENHUB_TOKEN
+                            Zenhub access token
+    -m MILESTONE, --milestone MILESTONE
                             Github milestone to get issues and pull requests for
-
-      -st SINCE_TAG, --since-tag SINCE_TAG
+    -zr ZENHUB_RELEASE, --zenhub-release ZENHUB_RELEASE
+                            Zenhub release to get issues and pull requests for
+    -st SINCE_TAG, --since-tag SINCE_TAG
                             Github issues and pull requests since tag
-
-      -ut UNTIL_TAG, --until-tag UNTIL_TAG
+    -ut UNTIL_TAG, --until-tag UNTIL_TAG
                             Github issues and pull requests until tag
-
-      -ilg ISSUE_LABEL [TEXT TO PRINT], --issue-label-group ISSUE_LABEL [TEXT TO PRINT]
+    -b BRANCH, --branch BRANCH
+                            Github base branch for merged PRs
+    -ilg ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...], --issue-label-group ISSUE_LABEL_GROUPS [ISSUE_LABEL_GROUPS ...]
                             Groups the generated issues by the specified label.
-                            This option takes 1 or 2 arguments, where the first one
+                            This optiontakes 1 or 2 arguments, where the first one
                             is the label to match and the second one is the label
-                            to print on the final output
-
-      -ilr ISSUE_LABEL_REGEX, --issue-label-regex ISSUE_LABEL_REGEX
+                            to print on the finaloutput
+    -plg PR_LABEL_GROUPS [PR_LABEL_GROUPS ...], --pr-label-group PR_LABEL_GROUPS [PR_LABEL_GROUPS ...]
+                            Groups the generated PRs by the specified label. This
+                            optiontakes 1 or 2 arguments, where the first one is
+                            the label to match and the second one is the label to
+                            print on the finaloutput
+    -lg LABEL_GROUPS [LABEL_GROUPS ...], --label-group LABEL_GROUPS [LABEL_GROUPS ...]
+                            Groups the generated issues and PRs by the specified
+                            label. This option takes 1 or 2 arguments, where the
+                            first one is the label to match and the second one is
+                            the label to print on the final output
+    -ilr ISSUE_LABEL_REGEX, --issue-label-regex ISSUE_LABEL_REGEX
                             Label issue filter using a regular expression filter
-
-      -plr PR_LABEL_REGEX, --pr-label-regex PR_LABEL_REGEX
-                            Label pull requets filter using a regular expression
+    -plr PR_LABEL_REGEX, --pr-label-regex PR_LABEL_REGEX
+                            Label pull request filter using a regular expression
                             filter
-
-      -b BRANCH, --branch BRANCH
-                            Filter merged PRs on base branch
-
-      -f OUTPUT_FORMAT, --format OUTPUT_FORMAT
+    -f OUTPUT_FORMAT, --format OUTPUT_FORMAT
                             Format for print, either 'changelog' (for Changelog.md
                             file) or 'release' (for the Github Releases page).
                             Default is 'changelog'. The 'release' option doesn't
                             generate Markdown hyperlinks.
-
-      -te, --template TEMPLATE
-                            Use a custom Jinja2 template file
-
-      --batch {milestones,tags}
+    --template TEMPLATE   Use a custom Jinja2 template file
+    --batch {milestones,tags}
                             Run loghub for all milestones or all tags
- 
-      --no-prs              Run loghub without any pull requests output
+    --no-prs              Run loghub without any pull requests output
 
 Label utility CLI arguments
 ---------------------------

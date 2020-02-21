@@ -5,7 +5,7 @@
 # Licensed under the terms of the MIT License
 # (See LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""ZenHub api."""
+"""ZenHub API."""
 
 from __future__ import print_function
 
@@ -35,15 +35,12 @@ class ZenHub(object):
         self._session.headers.update({'X-Authentication-Token': token})
 
     # --- Helpers
-    def _make_url(self, url):
-        """Create full api url."""
-        return '{}{}'.format(self._endpoint, url)
-
     @staticmethod
     def _parse_response_contents(response):
         """Parse response and convert to json if possible."""
-        status_code = response.status_code
         contents = {}
+
+        status_code = response.status_code
         if status_code == 200:
             try:
                 contents = response.json()                
@@ -59,6 +56,10 @@ class ZenHub(object):
             raise ZenHubError('Unknown error!')
 
         return contents
+
+    def _make_url(self, url):
+        """Create full api url."""
+        return '{}{}'.format(self._endpoint, url)
 
     def _get(self, url):
         """Send GET request with given url."""
