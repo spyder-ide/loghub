@@ -65,6 +65,13 @@ def parse_arguments(skip=False):
         default='',
         help="Github milestone to get issues and pull requests for")
     parser.add_argument(
+        '-zr',
+        '--zenhub-release',
+        action="store",
+        dest="zenhub_release",
+        default='',
+        help="Zenhub release to get issues and pull requests for")
+    parser.add_argument(
         '-st',
         '--since-tag',
         action="store",
@@ -166,6 +173,7 @@ def parse_arguments(skip=False):
     options = parser.parse_args()
 
     milestone = options.milestone
+    zenhub_release = options.zenhub_release
     batch = options.batch
 
     # Check if milestone or tag given
@@ -175,6 +183,9 @@ def parse_arguments(skip=False):
         elif milestone:
             print('\nLOGHUB: Querying issues for milestone {0}'
                   '\n'.format(milestone))
+        elif zenhub_release:
+            print('\nLOGHUB: Querying issues for zenhub release {0}'
+                  '\n'.format(zenhub_release))
         elif options.since_tag and not options.until_tag:
             print('\nLOGHUB: Querying issues since tag {0}'
                   '\n'.format(options.since_tag))
@@ -214,6 +225,7 @@ def parse_arguments(skip=False):
             password=password,
             token=options.token,
             milestone=milestone,
+            zenhub_release=zenhub_release,
             since_tag=options.since_tag,
             until_tag=options.until_tag,
             branch=options.branch,
