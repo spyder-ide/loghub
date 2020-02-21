@@ -7,17 +7,11 @@ Project details
 
 Build status
 ------------
-|travis status| |appveyor status| |circleci status| |coverage| |scrutinizer|
+|github status| |codecov| |scrutinizer|
 
-.. |travis status| image:: https://travis-ci.org/spyder-ide/loghub.svg?branch=master
-   :target: https://travis-ci.org/spyder-ide/loghub
-   :alt: Travis-CI build status
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/vlvwisroqjaf6jvl?svg=true
-   :target: https://ci.appveyor.com/project/spyder-ide/loghub
-   :alt: Appveyor build status
-.. |circleci status| image:: https://circleci.com/gh/spyder-ide/loghub/tree/master.svg?style=shield
-   :target: https://circleci.com/gh/spyder-ide/loghub/tree/master
-   :alt: Circle-CI build status
+.. |github status| image:: ttps://github.com/spyder-ide/loghub/workflows/Tests%20master/badge.svg
+   :target: https://github.com/spyder-ide/loghub/actions?query=workflow%3A%22Tests+master%22
+   :alt: Github Actions Status
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/spyder-ide/loghub/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/spyder-ide/loghub/?branch=master
    :alt: Scrutinizer Code Quality
@@ -30,8 +24,8 @@ Build status
 .. |gitter| image:: https://badges.gitter.im/spyder-ide/public.svg
    :target: https://gitter.im/spyder-ide/public
    :alt: Join the chat at https://gitter.im/spyder-ide/public
-.. |coverage| image:: https://coveralls.io/repos/github/spyder-ide/loghub/badge.svg
-   :target: https://coveralls.io/github/spyder-ide/loghub?branch=master
+.. |codecov| image:: https://codecov.io/gh/spyder-ide/loghub/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/spyder-ide/loghub/branch/master
    :alt: Code Coverage
 .. |backers| image:: https://opencollective.com/spyder/backers/badge.svg?color=blue
    :target: #backers
