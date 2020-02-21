@@ -152,7 +152,7 @@ by either access token or user and password.
 ZenHub Integration
 ------------------
 
-If your project is using [Zenhub]()https://www.zenhub.com/ to manage the workflow, you can also
+If your project is using [Zenhub](https://www.zenhub.com/) to manage the workflow, you can also
 use Zenhub releases to create your changelog.
 
 .. code-block:: text
@@ -162,7 +162,7 @@ use Zenhub releases to create your changelog.
 **Important**
 
 For Zenhub integration to work you need to always use a zenhub token. You can generate one by
-going to your [dashboard](). Same GitHub API rate limits apply here so it is advised to always
+going to your [dashboard](Dashboard). Same GitHub API rate limits apply here so it is advised to always
 use authentication by either access token or user and password.
 
 
