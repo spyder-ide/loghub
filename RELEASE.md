@@ -19,14 +19,15 @@ git clean -xfdi
 
     * if using Github Milestones:
 
-```bash
-loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" --no-prs -u <github-username> -m <github-milestone>
-```
+      ```bash
+      loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" --no-prs -u <github-username> -m <github-milestone>
+      ```
+
     * if using ZenHub Releases:
 
-```bash
-loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" --no-prs -u <github-username> -zr <zenhub-release> -zt <zenhub-token>
-```
+      ```bash
+      loghub spyder-ide/loghub -ilg type:feature "Features " -ilg type:enhancement "Enhancements" -ilg type:bug "Bugs fixed" -ilr "reso:completed" --no-prs -u <github-username> -zr <zenhub-release> -zt <zenhub-token>
+      ```
 
 * Update version in `__init__.py` (set release version, remove 'dev0')
 
