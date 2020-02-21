@@ -235,7 +235,8 @@ def create_changelog(repo=None,
                      issue_label_groups=None,
                      pr_label_groups=None,
                      batch=None,
-                     show_prs=True):
+                     show_prs=True,
+                     show_links=True):
     """Create changelog data for single and batched mode."""
     if issue_label_groups is None:
         issue_label_groups = []
@@ -296,7 +297,7 @@ def create_changelog(repo=None,
                 until = gh.tag(until_tag)['tagger']['date']
                 closed_at = until
 
-        if zenhub_release is None:
+        if not bool(zenhub_release):
             # This returns issues and pull requests
             issues = gh.issues(
                 milestone=milestone,
@@ -347,19 +348,20 @@ def create_changelog(repo=None,
         filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
 
         # If issue label grouping, filter issues
-        new_filtered_issues, grouped_issues = filter_issue_label_groups(
+        filtered_issues, grouped_issues = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
-        new_filtered_prs, grouped_prs = filter_issue_label_groups(
+        filtered_prs, grouped_prs = filter_issue_label_groups(
             filtered_prs, pr_label_groups)
         label_groups = join_label_groups(grouped_issues, grouped_prs,
                                          issue_label_groups, pr_label_groups)
 
-        filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
+        if show_links:
+            filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
 
         ch = render_changelog(
             repo,
-            new_filtered_issues,
-            new_filtered_prs,
+            filtered_issues,
+            filtered_prs,
             version,
             closed_at=closed_at,
             output_format=output_format,
