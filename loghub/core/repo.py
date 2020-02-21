@@ -167,7 +167,14 @@ class GitHubRepo(object):
             print('LOGHUB: The available tags are: {0}\n'.format(tags))
             sys.exit(1)
 
-        return self.repo('git')('tags')(sha).get()
+        try:
+            tag = self.repo('git')('tags')(sha).get()
+        except ApiNotFoundError:
+            print("\nLOGHUB: The Git tags API only supports annotated tag "
+                  "objects, not lightweight tags.\n")
+            sys.exit(1)
+
+        return tag
 
     def labels(self):
         """Return labels for the repo."""
