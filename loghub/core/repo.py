@@ -223,6 +223,12 @@ class GitHubRepo(object):
         self._check_rate()
         return self.repo('pulls')(str(pr_number)).get()
 
+    def issue(self, issue_number):
+        """Get a specific issue number from repo."""
+        # /repos/:owner/:repo/issues/:issue_number
+        self._check_rate()
+        return self.repo.issues(str(issue_number)).get()
+
     def issues(self,
                milestone=None,
                state=None,

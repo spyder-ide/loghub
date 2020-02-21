@@ -45,6 +45,13 @@ def add_common_parser_args(parser):
         dest="token",
         default='',
         help="Github access token")
+    parser.add_argument(
+        '-zt',
+        '--zenhub-token',
+        action="store",
+        dest="zenhub_token",
+        default='',
+        help="Zenhub access token")
 
     return parser
 

@@ -20,6 +20,7 @@ from jinja2 import Template
 
 # Local imports
 from loghub.core.repo import GitHubRepo
+from loghub.core.zenhub import ZenHub
 from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
                               CHANGELOG_ISSUE_GROUPS_TEMPLATE_PATH,
                               CHANGELOG_PR_GROUPS_TEMPLATE_PATH,
@@ -222,6 +223,8 @@ def create_changelog(repo=None,
                      password=None,
                      token=None,
                      milestone=None,
+                     zenhub_release=None,
+                     zenhub_token=None,
                      since_tag=None,
                      until_tag=None,
                      branch=None,
@@ -248,7 +251,10 @@ def create_changelog(repo=None,
     all_changelogs = []
     version_tag_prefix = 'v'
 
-    if batch:
+    base_issues = None
+    if zenhub_release:
+        items = [(None, None, None)]
+    elif batch:
         # This will get all the issues, might eat up the api rate limit!
         base_issues = issues = gh.issues(state='closed', branch=branch)
         if batch == 'milestones':
@@ -264,7 +270,6 @@ def create_changelog(repo=None,
             empty_items = [None] * len(since_tags)
             items = list(zip(empty_items, since_tags, until_tags))
     else:
-        base_issues = None
         if milestone:
             items = [(milestone, None, None)]
         else:
@@ -291,14 +296,51 @@ def create_changelog(repo=None,
                 until = gh.tag(until_tag)['tagger']['date']
                 closed_at = until
 
-        # This returns issues and pull requests
-        issues = gh.issues(
-            milestone=milestone,
-            state='closed',
-            since=since,
-            until=until,
-            branch=branch,
-            base_issues=base_issues, )
+        if zenhub_release is None:
+            # This returns issues and pull requests
+            issues = gh.issues(
+                milestone=milestone,
+                state='closed',
+                since=since,
+                until=until,
+                branch=branch,
+                base_issues=base_issues,
+            )
+        else:
+            version = zenhub_release
+            zh = ZenHub(zenhub_token)
+
+            # Get repo id
+            repo_id = gh.repo.get()['id']
+
+            # Get list of releases and select the right one
+            releases = zh.releases(repo_id)
+            release_id = None
+            for release in releases:
+                if zenhub_release == release['title']:
+                    release_id = release['release_id']
+                    break
+
+            # Get all the specific issues 1 by 1
+            if release_id is not None:
+                zh_issues = zh.issues(release_id)
+
+                # Filter issues that belong to this repository
+                zh_issues = [issue for issue in zh_issues if issue['repo_id'] == repo_id]
+                
+                # Get all issues from github
+                issues = []
+                print('\n{} issues found!'.format(len(zh_issues)))
+                for idx, zh_issue in enumerate(reversed(zh_issues)):
+                    print(idx)
+                    issue = gh.issue(zh_issue['issue_number'])
+                    if issue['state'] == 'closed':
+                        # Add filtered label names inside additional key
+                        issue['loghub_label_names'] = [l['name'] for l in issue.get('labels')]
+                        issues.append(issue)
+            else:
+                print("Error!")
+                sys.exit(1)
 
         # Filter by regex if available
         filtered_prs = filter_prs_by_regex(issues, pr_label_regex)
