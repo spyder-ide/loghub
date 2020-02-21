@@ -9,7 +9,7 @@ Build status
 ------------
 |github status| |codecov| |scrutinizer|
 
-.. |github status| image:: ttps://github.com/spyder-ide/loghub/workflows/Tests%20master/badge.svg
+.. |github status| image:: https://github.com/spyder-ide/loghub/workflows/Tests%20master/badge.svg
    :target: https://github.com/spyder-ide/loghub/actions?query=workflow%3A%22Tests+master%22
    :alt: Github Actions Status
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/spyder-ide/loghub/badges/quality-score.png?b=master
