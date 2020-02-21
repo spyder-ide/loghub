@@ -1,18 +1,13 @@
 codecov:
-  branch: master
+  require_ci_to_pass: yes
 
 coverage:
   precision: 2
   round: down
-  range: "18...100"
-  
+  range: "18...100"  
   status:
-    project:
-      default:
-        threshold: 1%
-    patch: no
-    changes: no
-    
+    patch: off
+
 parsers:
   gcov:
     branch_detection:

@@ -4,16 +4,16 @@
 
 * Ensure you have the latest version from upstream and update your fork
 
-```bash
-git pull upstream master
-git push origin master
-````
+  ```bash
+  git pull upstream master
+  git push origin master
+  ```
 
 * Clean the repo
 
-```bash
-git clean -xfdi
-```
+  ```bash
+  git clean -xfdi
+  ```
 
 * Update CHANGELOG.md using loghub itself:
 
@@ -33,45 +33,45 @@ git clean -xfdi
 
 * Commit changes
 
-```bash
-git add .
-git commit -m "Set release version"
-```
+  ```bash
+  git add .
+  git commit -m "Set release version"
+  ```
 
 * Create distributions
 
-```bash
-python setup.py sdist bdist_wheel
-```
+  ```bash
+  python setup.py sdist bdist_wheel
+  ```
 
 * Upload distributions
 
-```bash
-twine upload dist/* -u <username> -p <password>
-```
+  ```bash
+  twine upload dist/* -u <username> -p <password>
+  ```
 
 * Add release tag
 
-```bash
-git tag -a vX.X.X -m 'Release version'
-```
+  ```bash
+  git tag -a vX.X.X -m 'Release version'
+  ```
 
 * Update `__init__.py` (add 'dev0' and increment minor)
 
 * Commint changes
 
-```bash
-git add .
-git commit -m "Restore dev version"
-```
+  ```bash
+  git add .
+  git commit -m "Restore dev version"
+  ```
 
 * Push changes
     
-```bash
-git push upstream master
-git push origin master
-git push --tags
-```
+  ```bash
+  git push upstream master
+  git push origin master
+  git push --tags
+  ```
 
 ## To release a new version of **loghub** on conda-forge:
 

@@ -260,7 +260,8 @@ optional arguments:
 --batch {milestones,tags}
                         Run loghub for all milestones or all tags
 --no-prs              Run loghub without any pull requests output
---no-links            Do not display links between issues and prs
+--no-related-prs      Do not display related prs on issues
+--no-related-issues   Do not display related issues on prs
 ```
 
 ## Label utility CLI arguments
