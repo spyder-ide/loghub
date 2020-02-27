@@ -52,17 +52,18 @@ try:
     from urllib2 import build_opener, HTTPSHandler, Request, HTTPError
     from urllib import quote as urlquote
     from StringIO import StringIO
+    from collections import Iterable
 
     def bytes(string, encoding=None):
         return str(string)
 except:
     # Python 3
+    from collections.abc import Iterable
     from urllib.request import build_opener, HTTPSHandler, HTTPError, Request
     from urllib.parse import quote as urlquote
     from io import StringIO
 
 # Standard library imports
-from collections import Iterable
 from datetime import datetime, timedelta, tzinfo
 import base64
 import hashlib
