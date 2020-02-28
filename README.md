@@ -7,7 +7,7 @@
 [![conda version](https://img.shields.io/conda/vn/conda-forge/loghub.svg)](https://www.anaconda.com/download/)
 [![OpenCollective Backers](https://opencollective.com/spyder/backers/badge.svg?color=blue)](#backers)
 [![OpenCollective Sponsors](https://opencollective.com/spyder/sponsors/badge.svg?color=blue)](#sponsors)
-[![Join the chat at https://gitter.im/spyder-ide/public](https://badges.gitter.im/spyder-ide/spyder.svg)](https://gitter.im/spyder-ide/public)<br>
+[![Join the chat at https://gitter.im/spyder-ide/public](https://badges.gitter.im/spyder-ide/spyder.svg)](https://gitter.im/spyder-ide/public)
 [![PyPI status](https://img.shields.io/pypi/status/loghub.svg)](https://github.com/spyder-ide/loghub)
 
 ## Build status
@@ -260,6 +260,8 @@ optional arguments:
 --batch {milestones,tags}
                         Run loghub for all milestones or all tags
 --no-prs              Run loghub without any pull requests output
+--no-related-prs      Do not display related prs on issues
+--no-related-issues   Do not display related issues on prs
 ```
 
 ## Label utility CLI arguments

@@ -169,6 +169,18 @@ def parse_arguments(skip=False):
         dest="show_prs",
         default=True,
         help="Run loghub without any pull requests output")
+    parser.add_argument(
+        '--no-related-prs',
+        action="store_false",
+        dest="show_related_prs",
+        default=True,
+        help="Do not display related prs on issues")
+    parser.add_argument(
+        '--no-related-issues',
+        action="store_false",
+        dest="show_related_issues",
+        default=True,
+        help="Do not display related issues on prs")
 
     options = parser.parse_args()
 
@@ -240,7 +252,10 @@ def parse_arguments(skip=False):
             issue_label_groups=new_issue_label_groups,
             pr_label_groups=new_pr_label_groups,
             batch=batch,
-            show_prs=options.show_prs)
+            show_prs=options.show_prs,
+            show_related_prs=options.show_related_prs,
+            show_related_issues=options.show_related_issues,
+        )
 
     return options
 

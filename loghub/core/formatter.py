@@ -33,7 +33,7 @@ from loghub.templates import (CHANGELOG_GROUPS_TEMPLATE_PATH,
 # yapf: enable
 
 
-def filter_issues_fixed_by_prs(issues, prs):
+def filter_issues_fixed_by_prs(issues, prs, show_related_prs, show_related_issues):
     """
     Find related issues to prs and prs to issues that are fixed.
 
@@ -63,6 +63,7 @@ def filter_issues_fixed_by_prs(issues, prs):
                 no_comments = [l for l in lines
                                if (l and not l.startswith("<!---"))]
                 body = '\n'.join(no_comments)
+
             for matches in pattern.finditer(body):
                 dic = matches.groupdict()
                 issue_number = dic['number'] or dic['number_2'] or ''
@@ -96,11 +97,12 @@ def filter_issues_fixed_by_prs(issues, prs):
                     pr_data = {'url': issue_url, 'text': issue_number}
                     pr_issue_map[pr_url].append(pr_data)
 
-            pr['loghub_related_issues'] = pr_issue_map[pr_url]
+            if show_related_issues:
+                pr['loghub_related_issues'] = pr_issue_map[pr_url]
 
     for issue in issues:
         issue_url = issue.html_url
-        if issue_url in issue_pr_map:
+        if issue_url in issue_pr_map and show_related_prs:
             issue['loghub_related_pulls'] = issue_pr_map[issue_url]
 
     # Now sort the numbers in descending order
@@ -235,10 +237,13 @@ def create_changelog(repo=None,
                      issue_label_groups=None,
                      pr_label_groups=None,
                      batch=None,
-                     show_prs=True):
+                     show_prs=True,
+                     show_related_prs=True,
+                     show_related_issues=True):
     """Create changelog data for single and batched mode."""
     if issue_label_groups is None:
         issue_label_groups = []
+
     if pr_label_groups is None:
         pr_label_groups = []
 
@@ -347,19 +352,20 @@ def create_changelog(repo=None,
         filtered_issues = filter_issues_by_regex(issues, issue_label_regex)
 
         # If issue label grouping, filter issues
-        new_filtered_issues, grouped_issues = filter_issue_label_groups(
+        filtered_issues, grouped_issues = filter_issue_label_groups(
             filtered_issues, issue_label_groups)
-        new_filtered_prs, grouped_prs = filter_issue_label_groups(
+        filtered_prs, grouped_prs = filter_issue_label_groups(
             filtered_prs, pr_label_groups)
         label_groups = join_label_groups(grouped_issues, grouped_prs,
                                          issue_label_groups, pr_label_groups)
 
-        filter_issues_fixed_by_prs(filtered_issues, filtered_prs)
+        filter_issues_fixed_by_prs(filtered_issues, filtered_prs,
+                                   show_related_prs, show_related_issues)
 
         ch = render_changelog(
             repo,
-            new_filtered_issues,
-            new_filtered_prs,
+            filtered_issues,
+            filtered_prs,
             version,
             closed_at=closed_at,
             output_format=output_format,

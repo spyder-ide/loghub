@@ -60,3 +60,5 @@ def process_labels(username, password, token, action, repo, filename):
             labels.append(label_dict)
 
         gh.set_labels(labels)
+    else:
+        raise ValueError('Invalid action!')
