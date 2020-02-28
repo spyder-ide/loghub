@@ -63,6 +63,7 @@ def filter_issues_fixed_by_prs(issues, prs, show_related_prs, show_related_issue
                 no_comments = [l for l in lines
                                if (l and not l.startswith("<!---"))]
                 body = '\n'.join(no_comments)
+
             for matches in pattern.finditer(body):
                 dic = matches.groupdict()
                 issue_number = dic['number'] or dic['number_2'] or ''
