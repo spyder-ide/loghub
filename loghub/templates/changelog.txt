@@ -7,11 +7,7 @@
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
 {%-      if i['loghub_related_pulls']|length %} (
 {%-          for ipr in i['loghub_related_pulls'] -%}
-<<<<<<< HEAD
                  [PR {{ ipr['text'] }}]({{ ipr['url'] }}) by [@{{ ipr['user']['login'] }}]({{ ipr['user']['html_url'] }})
-=======
-                 [PR {{ ipr['text'] }}]({{ ipr['url'] }}), by [{{ ipr['user']['login'] }}]({{ ipr['user']['html_url'] }})
->>>>>>> 184b37c3ef8afaac0c6dea77a5b964753eba548b
 {%-              if i['loghub_related_pulls']|length > 1 and loop.index != i['loghub_related_pulls']|length -%}, {% endif -%}
 {%-          endfor -%})
 {%-       endif %}
