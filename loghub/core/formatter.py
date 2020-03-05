@@ -58,6 +58,7 @@ def filter_issues_fixed_by_prs(issues, prs, show_related_prs, show_related_issue
             repo_url = pr_url.split('/pull/')[0] + '/issues/'
             pr_issue_map[pr_url] = []
             body = pr.body or ''
+
             # Remove blanks and markdown comments
             if body:
                 lines = body.splitlines()

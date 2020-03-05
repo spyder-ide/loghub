@@ -10,7 +10,7 @@
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
 {%-        if i['loghub_related_pulls']|length %} (
 {%-            for ipr in i['loghub_related_pulls'] -%}
-                   [PR {{ ipr['text'] }}]({{ ipr['url'] }})
+                   [PR {{ ipr['text'] }}]({{ ipr['url'] }}) by [@{{ ipr['user']['login'] }}]({{ ipr['user']['html_url'] }})
 {%-                if i['loghub_related_pulls']|length > 1 and loop.index != i['loghub_related_pulls']|length -%}, {% endif -%}
 {%-            endfor -%})
 {%-        endif %}
@@ -24,7 +24,7 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 ### Pull Requests Merged
 
 {%   for pr in pull_requests -%}
-* [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}
+* [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }} by [@{{ pr['user']['login'] }}]({{ pr['user']['html_url'] }})
 {%-      if pr['loghub_related_issues']|length %} (
 {%-          for pri in pr['loghub_related_issues'] -%}
                  [{{ pri['text'] }}]({{ pri['url'] }})
