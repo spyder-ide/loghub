@@ -1,6 +1,80 @@
 # Release process
 
-## To release a new version of **loghub** on PyPI:
+## Using rever
+
+You need to have `conda` install since the process relies on conda environments.
+
+Make sure your current environment has [rever](https://regro.github.io/rever-docs/) installed.
+
+```bash
+conda install rever -c conda-forge
+```
+
+Run checks before to make sure things are in order.
+
+```bash
+rever check
+```
+
+Delete the `rever/` folder to start a clean release.
+
+```bash
+rm -rf rever/
+```
+
+Run rever with the type version (major|minor|patch|MAJOR.MINOR.PATCH) to update.
+
+### Major release
+
+If the current version is `3.0.0.dev0`, running:
+
+```bash
+rever major
+```
+
+Will produce version `4.0.0` and update the dev version to `4.0.0.dev0`
+
+### Minor release
+
+If the current version is `3.0.0.dev0`, running:
+
+```bash
+rever minor
+```
+
+Will produce version `3.1.0` and update the dev version to `3.1.0.dev0`
+
+### Patch release
+
+If the current version is `3.0.0.dev0`, running:
+
+```bash
+rever patch
+```
+
+Will produce version `3.0.1` and update the dev version to `3.0.1.dev0`
+
+### MAJOR.MINOR.PATCH release
+
+If the current version is `3.0.0.dev0`, running:
+
+```bash
+rever 5.0.1
+```
+
+Will produce version `5.0.1` and update the dev version to `5.0.1.dev0`
+
+### Important
+
+- In case some of the steps appear as completed, delete the `rever` folder.
+
+```bash
+rm -rf rever/
+```
+
+- Some of the intermediate steps may ask for feedback, like checking the changelog.
+
+## Manual process
 
 * Ensure you have the latest version from upstream and update your fork
 
