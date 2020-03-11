@@ -7,7 +7,7 @@
 
 {%     for i in grouped_issues -%}
 {% if i.get('pull_request') -%}
-* [PR {{ i['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ i['number'] }}) - {{ i['title'] }} by [@{{ i['user']['login'] }}]({{ i['user']['html_url'] }})
+* [PR {{ i['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ i['number'] }}) - {{ i['title'] }}, by [@{{ i['user']['login'] }}]({{ i['user']['html_url'] }})
 {%- else -%}
 * [Issue {{ i['number'] }}](https://github.com/{{ repo_full_name }}/issues/{{ i['number'] }}) - {{ i['title'] }}
 {%- endif %}
