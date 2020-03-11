@@ -54,9 +54,11 @@ def filter_issues_fixed_by_prs(issues, prs, show_related_prs, show_related_issue
         if is_pr:
             pr_url = pr.html_url
             pr_number = pr.number
+            user = pr.user
             repo_url = pr_url.split('/pull/')[0] + '/issues/'
             pr_issue_map[pr_url] = []
             body = pr.body or ''
+
             # Remove blanks and markdown comments
             if body:
                 lines = body.splitlines()
@@ -87,7 +89,7 @@ def filter_issues_fixed_by_prs(issues, prs, show_related_prs, show_related_issue
                     issue_url = None
 
                 # Set the issue data
-                issue_data = {'url': pr_url, 'text': pr_number}
+                issue_data = {'url': pr_url, 'text': pr_number, 'user': user}
                 if issue_url is not None:
                     if issue_number in issue_pr_map:
                         issue_pr_map[issue_url].append(issue_data)

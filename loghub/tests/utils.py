@@ -11,10 +11,11 @@
 class Issue:
     """Issue github mock."""
 
-    def __init__(self, number, full_repo='foo/bar', body=None, is_pr=False):
+    def __init__(self, number, user='test-user', full_repo='foo/bar', body=None, is_pr=False):
         self.pull_request = is_pr
         self.number = number
         self.body = body or ''
+        self.user = {'login': user, 'html_url': 'https://github.com/{}'.format(user)}
 
         if is_pr:
             self.html_url = 'https://github.com/{}/pull/{}'.format(full_repo, number)
