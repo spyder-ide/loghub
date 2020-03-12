@@ -8,8 +8,15 @@
 """Basic config parser."""
 
 # Third party imports
-import configparser
 import os
+import sys
+
+# Constants
+PY2 = sys.version[0] == '2'
+if PY2:
+    import ConfigParser as configparser
+else:
+    import configparser
 
 
 def user_config_path():
@@ -17,11 +24,11 @@ def user_config_path():
     return os.path.expanduser('~/.loghubrc')
 
 
-def load_config():
+def load_config(path=None):
     """Load configutration file."""
-    path = user_config_path()
+    config_path = path or user_config_path()
     config = configparser.ConfigParser()
-    if os.path.isfile(path):
-        config.read(path)
+    if os.path.isfile(config_path):
+        config.read(config_path)
 
     return config

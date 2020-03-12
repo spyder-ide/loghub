@@ -234,20 +234,20 @@ def parse_arguments(skip=False):
         print('LOGHUB: PR label group takes 1 or 2 arguments\n')
         sys.exit(1)
 
+    github_token = options.token
+    zenhub_token = options.zenhub_token
+
     config = load_config()
     if config:
         try:
-            github_token = config['github']['token']
+            github_token = config.get('github', 'token')
         except Exception:
             github_token = options.token
 
         try:
-            zenhub_token = config['zenhub']['token']
+            zenhub_token = config.get('zenhub', 'token')
         except Exception:
             zenhub_token = options.zenhub_token
-    else:
-        github_token = options.token
-        zenhub_token = options.zenhub_token
 
     if not skip:
         create_changelog(
