@@ -14,6 +14,7 @@ from __future__ import print_function
 # Standard library imports
 import argparse
 import sys
+import textwrap
 
 # Local imports
 from loghub.cli.common import add_common_parser_args, parse_password_check_repo
@@ -23,6 +24,27 @@ from loghub.core.formatter import create_changelog
 # yapf: enable
 
 PY2 = sys.version[0] == '2'
+
+
+def check_github_deprecation(username='', password=''):
+    """
+    Inform users that username and password are deprecated by Github API.
+    """
+    text = (
+        'Deprecation Notice: GitHub will discontinue password '
+        'authentication to the API. You must now authenticate '
+        'to the GitHub API with an API token, such as an OAuth '
+        'access token, GitHub App installation access token, or '
+        'personal access token, depending on what you need to do '
+        'with the token. Password authentication to the API will be '
+        'removed on November 13, 2020. For more information, including '
+        'scheduled brownouts, see: '
+        'https://developer.github.com/changes/'
+        '2020-02-14-deprecating-password-auth/         '
+        'To create a new token go to: https://github.com/settings/tokens'
+    )
+    if username or password:
+        print('\n' + '\n'.join(textwrap.wrap(text, 79)) + '\n')
 
 
 def main():
@@ -189,7 +211,7 @@ def parse_arguments(skip=False):
     zenhub_release = options.zenhub_release
     batch = options.batch
 
-    # Check if milestone or tag given
+    # Check if milestone, release or tag given
     if not batch:
         if not milestone and not zenhub_release and not options.since_tag and not options.until_tag:
             print('\nLOGHUB: Querying all issues\n')
@@ -234,9 +256,13 @@ def parse_arguments(skip=False):
         print('LOGHUB: PR label group takes 1 or 2 arguments\n')
         sys.exit(1)
 
+    # Inform users that username and password are deprecated by Github API
+    check_github_deprecation(options.username, options.password)
+
     github_token = options.token
     zenhub_token = options.zenhub_token
 
+    # Check for configuration file in home folder
     config = load_config()
     if config:
         try:
