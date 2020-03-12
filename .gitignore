@@ -27,3 +27,5 @@ loghub.egg-info/
 
 CHANGELOG.temp
 labels.txt
+
+.pypirc
