@@ -13,6 +13,7 @@
 from collections import OrderedDict
 import codecs
 import re
+import sys
 import time
 
 # Third party imports
@@ -346,7 +347,9 @@ def create_changelog(repo=None,
                         issue['loghub_label_names'] = [l['name'] for l in issue.get('labels')]
                         issues.append(issue)
             else:
-                print("Error!")
+                release_titles = [release['title'] for release in releases]
+                print("Zenhub release not found! Available releases are: {}".format(
+                    release_titles))
                 sys.exit(1)
 
         # Filter by regex if available

@@ -17,6 +17,7 @@ import sys
 
 # Local imports
 from loghub.cli.common import add_common_parser_args, parse_password_check_repo
+from loghub.core.config import load_config
 from loghub.core.formatter import create_changelog
 
 # yapf: enable
@@ -233,15 +234,30 @@ def parse_arguments(skip=False):
         print('LOGHUB: PR label group takes 1 or 2 arguments\n')
         sys.exit(1)
 
+    github_token = options.token
+    zenhub_token = options.zenhub_token
+
+    config = load_config()
+    if config:
+        try:
+            github_token = config.get('github', 'token')
+        except Exception:
+            github_token = options.token
+
+        try:
+            zenhub_token = config.get('zenhub', 'token')
+        except Exception:
+            zenhub_token = options.zenhub_token
+
     if not skip:
         create_changelog(
             repo=options.repository,
             username=username,
             password=password,
-            token=options.token,
+            token=github_token,
             milestone=milestone,
             zenhub_release=zenhub_release,
-            zenhub_token=options.zenhub_token,
+            zenhub_token=zenhub_token,
             since_tag=options.since_tag,
             until_tag=options.until_tag,
             branch=options.branch,
