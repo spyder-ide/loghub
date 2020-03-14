@@ -7,5 +7,5 @@
 # -----------------------------------------------------------------------------
 """Changelog generator based on github milestones or tags."""
 
-VERSION_INFO = (0, 5, 0, 'dev0')
+VERSION_INFO = (0, 5, 0)
 __version__ = '.'.join(map(str, VERSION_INFO))

@@ -1,5 +1,25 @@
 # History of changes
 
+## Version 0.5 (2020/03/14)
+
+### Issues Closed
+
+#### Features
+
+* [Issue 111](https://github.com/spyder-ide/loghub/issues/111) - Add configuration file ([PR 114](https://github.com/spyder-ide/loghub/pull/114) by [@goanpeca](https://github.com/goanpeca))
+
+#### Enhancements
+
+* [Issue 102](https://github.com/spyder-ide/loghub/issues/102) - Add support for zenhub releases (when used instead of milestones) ([PR 106](https://github.com/spyder-ide/loghub/pull/106) by [@goanpeca](https://github.com/goanpeca))
+* [Issue 95](https://github.com/spyder-ide/loghub/issues/95) - Add user to rendered changelog ([PR 110](https://github.com/spyder-ide/loghub/pull/110) by [@goanpeca](https://github.com/goanpeca))
+* [Issue 93](https://github.com/spyder-ide/loghub/issues/93) - Add option to disable related issues and PRs ([PR 108](https://github.com/spyder-ide/loghub/pull/108) by [@goanpeca](https://github.com/goanpeca))
+
+#### Bugs fixed
+
+* [Issue 94](https://github.com/spyder-ide/loghub/issues/94) - ApiNotFoundError ([PR 109](https://github.com/spyder-ide/loghub/pull/109) by [@goanpeca](https://github.com/goanpeca))
+
+In this release 5 issues were closed.
+
 ## Version 0.4 (2018/08/09)
 
 ### Issues Closed
