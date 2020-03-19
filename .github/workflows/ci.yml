@@ -32,10 +32,10 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2 requests
+        run: conda install --file requirements/dependencies.txt -q
       - name: Install Test Dependencies
         shell: bash -l {0}
-        run: conda install -q codecov mock pytest pytest-cov
+        run: conda install --file requirements/dev.txt -q
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
@@ -71,10 +71,10 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2 requests
+        run: conda install --file requirements/dependencies.txt -q
       - name: Install Test Dependencies
         shell: bash -l {0}
-        run: conda install -q codecov mock pytest pytest-cov
+        run: conda install --file requirements/dev.txt -q
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
@@ -113,10 +113,10 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2 requests
+        run: conda install --file requirements/dependencies.txt -q
       - name: Install Test Dependencies
         shell: bash -l {0}
-        run: conda install -q codecov mock pytest pytest-cov
+        run: conda install --file requirements/dev.txt -q
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop
@@ -155,10 +155,10 @@ jobs:
            python-version: ${{ matrix.PYTHON_VERSION }} 
       - name: Install Dependencies
         shell: bash -l {0}
-        run: conda install -q jinja2 requests
+        run: conda install --file requirements/dependencies.txt -q
       - name: Install Test Dependencies
         shell: bash -l {0}
-        run: conda install -q codecov mock pytest pytest-cov
+        run: conda install --file requirements/dev.txt -q
       - name: Install Package
         shell: bash -l {0}
         run: python setup.py develop

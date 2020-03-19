@@ -1,0 +1,37 @@
+- name: Gonzalo Peña-Castellanos
+  email: goanpeca@gmail.com
+  aliases:
+  - goanpeca
+  - Gonzalo Pena-Castellanos
+  github: goanpeca
+  num_commits: 195
+  first_commit: 2016-11-02 11:31:52
+- name: Rami Chowdhury
+  email: rchowdhury@continuum.io
+  github: necaris
+  num_commits: 1
+  first_commit: 2017-11-03 11:40:14
+- name: Carlos Cordoba
+  email: ccordoba12@gmail.com
+  github: ccordoba12
+  num_commits: 49
+  first_commit: 2016-04-14 15:33:46
+- name: David Hoese
+  email: david.hoese@ssec.wisc.edu
+  aliases:
+  - davidh-ssec
+  github: djhoese
+  num_commits: 12
+  first_commit: 2018-02-19 11:23:02
+- name: Ryan May
+  email: rmay31@gmail.com
+  github: dopplershift
+  num_commits: 1
+  first_commit: 2016-11-04 15:39:55
+- name: Fabio Pliger
+  email: fabio.pliger@gmail.com
+  github: fpliger
+  aliases:
+  - fpliger
+  num_commits: 1
+  first_commit: 2016-11-30 14:51:53
