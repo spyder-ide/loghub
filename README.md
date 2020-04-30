@@ -137,7 +137,7 @@ loghub spyder-ide/spyder --zenhub-release "spyder v4.1.0" --zenhub-token <zenhub
 ### Filter PR base branch
 
 Pull requests to display can be filtered depending on the branch they were
-merge against (base branch):
+merged against (base branch):
               
 ```bash
 loghub spyder-ide/spyder --branch 3.x
@@ -184,7 +184,7 @@ loghub spyder-ide/spyder --milestone v3.1 --format release
 ### Custom templates
 
 Loghub uses Jinja2 templates to format the output. If the current template
-does not your needs, you can copy the default `templates <https://github.com/spyder-ide/loghub/tree/master/loghub/templates>`_ 
+does not meet your needs, you can copy the default `templates <https://github.com/spyder-ide/loghub/tree/master/loghub/templates>`_ 
 and create a new one and provide the path to it as:
 
 ```bash
