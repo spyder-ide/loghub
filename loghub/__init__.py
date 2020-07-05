@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 """Changelog generator based on github milestones or tags."""
 
-__version__ = '0.5.1'
+__version__ = '0.5.1dev0'
 
 
 def _to_version_info(version):
