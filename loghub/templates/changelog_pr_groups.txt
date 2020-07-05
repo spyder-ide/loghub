@@ -22,7 +22,7 @@ In this release {{ issues|length }} issue{% if issues|length != 1 %}s{% endif %}
 #### {{ label_group }}
 
 {%     for pr in grouped_prs -%}
-* [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}, by [@{{ pri['user']['login'] }}]({{ pri['user']['html_url'] }})
+* [PR {{ pr['number'] }}](https://github.com/{{ repo_full_name }}/pull/{{ pr['number'] }}) - {{ pr['title'] }}
 {%-      if pr['loghub_related_issues']|length %} (
 {%-          for pri in pr['loghub_related_issues'] -%}
                  [{{ pri['text'] }}]({{ pri['url'] }})
